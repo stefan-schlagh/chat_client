@@ -6,6 +6,8 @@ import { Redirect } from 'react-router';
 import validate from "validate.js";
 import {ErrorMsg} from "./MsgBox";
 import {setLoggedIn,login} from "./Auth";
+import $ from 'jquery';
+import {extendJQuery} from './authUI';
 
 class Login extends Component{
     constructor(props) {
@@ -18,6 +20,7 @@ class Login extends Component{
             valid: false,
             redirect: false
         };
+        extendJQuery();
     }
     changeHandler = event => {
         let nam = event.target.name;
@@ -189,6 +192,9 @@ class Login extends Component{
                 </div>
             )
         }
+    }
+    componentDidMount() {
+        $('#psw-group').pwToggle();
     }
 }
 

@@ -3,6 +3,8 @@ import validate from "validate.js";
 import {ErrorMsg} from "./MsgBox";
 import {register, setLoggedIn} from "./Auth";
 import {Redirect} from "react-router";
+import $ from 'jquery';
+import {extendJQuery} from './authUI';
 
 class Register extends Component{
     constructor(props) {
@@ -16,7 +18,8 @@ class Register extends Component{
             pwRepeat: '',
             valid: false,
             redirect: false
-        }
+        };
+        extendJQuery();
     }
     changeHandler = event => {
         let nam = event.target.name;
@@ -218,6 +221,9 @@ class Register extends Component{
                 </div>
             )
         }
+    }
+    componentDidMount() {
+        $('#psw-group-repeat, #psw-group').pwToggle();
     }
 }
 
