@@ -1,8 +1,12 @@
 import React,{Component} from "react";
 import {
-    Link
+    Link,
+    Route,
+    Redirect
 } from "react-router-dom";
 import validate from "validate.js";
+import {ErrorMsg} from "./MsgBox";
+import {login} from "./Auth";
 
 class Login extends Component{
     constructor(props) {
@@ -12,8 +16,9 @@ class Login extends Component{
             username: '',
             pwErr: '',
             password: '',
-            valid: false
-        }
+            valid: false,
+            redirect: false
+        };
     }
     changeHandler = event => {
         let nam = event.target.name;
@@ -84,68 +89,109 @@ class Login extends Component{
                 uNameErr: '',
                 pwErr: ''
             });
-            //TODO request to server
+           /*
+                request to server
+            */
+           login(this.state.username,this.state.password).then(data => {
+               if(data.success){
+                   this.setState({
+                       valid: true,
+                       redirect: true
+                   });
+               }else{
+                   if(data.username !== undefined)
+                       this.setState({
+                           valid: false,
+                           uNameErr: data.username
+                       });
+                   if(data.password !== undefined)
+                       this.setState({
+                           valid: false,
+                           pwErr: data.password
+                       });
+               }
+           });
         }
 
     };
     uNameErr = () => {
         if(this.state.uNameErr !== '')
             return (
-                <small className="alert alert-danger p-1 message ml-2">
+                <ErrorMsg>
                     {this.state.uNameErr}
-                </small>
+                </ErrorMsg>
             )
     };
     pwErr = () => {
         if(this.state.pwErr !== '')
             return(
-                <small className="alert alert-danger p-1 message ml-2">
+                <ErrorMsg>
                     {this.state.pwErr}
-                </small>
+                </ErrorMsg>
             )
     };
     render(){
-        return(
-            <div className="h-100" style={{display:"flex"}}>
-                <div className="col-sm-12 my-auto">
-                    <div className="container border rounded p-3" style={{maxWidth: "800px"}}>
-                        <h1>Login</h1>
-                        <form onSubmit={this.submitHandler}>
-                            <div className="form-group">
-                                <label htmlFor="username">Benutzername:</label>
-                                {this.uNameErr()}
-                                <input type="text"
-                                       name="username"
-                                       className="form-control"
-                                       placeholder="Benutzernamen eingeben"
-                                       onChange={this.changeHandler}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="password">Passwort:</label>
-                                {this.pwErr()}
-                                <div id="psw-group">
-                                    <input type="password"
-                                           name="password"
+        /*
+            wenn bereits eingeloggt --> redirect
+         */
+        if(this.state.redirect){
+            //TODO redirect should work
+            //console.log('redirect');
+            // eslint-disable-next-line no-restricted-globals
+            location.reload();
+            return(
+                <div>
+                    <div>redirect</div>
+                    <Route>
+                        <Redirect
+                            to="/chat"
+                        />
+                    </Route>
+                </div>
+            )
+        }else {
+            return (
+                <div className="h-100" style={{display: "flex"}}>
+                    <div className="col-sm-12 my-auto">
+                        <div className="container border rounded p-3" style={{maxWidth: "800px"}}>
+                            <h1>Login</h1>
+                            <form onSubmit={this.submitHandler}>
+                                <div className="form-group">
+                                    <label htmlFor="username">Benutzername:</label>
+                                    {this.uNameErr()}
+                                    <input type="text"
+                                           name="username"
                                            className="form-control"
-                                           placeholder="Passwort eingeben"
+                                           placeholder="Benutzernamen eingeben"
                                            onChange={this.changeHandler}
                                     />
                                 </div>
-                            </div>
-                            <div className="form-group">
-                                haben Sie noch keinen Account? <Link to="/register">Jetzt registrieren</Link>
-                            </div>
-                            <input
-                                type="submit"
-                                className="btn btn-primary"
-                                value="Login"
-                            />
-                        </form>
+                                <div className="form-group">
+                                    <label htmlFor="password">Passwort:</label>
+                                    {this.pwErr()}
+                                    <div id="psw-group">
+                                        <input type="password"
+                                               name="password"
+                                               className="form-control"
+                                               placeholder="Passwort eingeben"
+                                               onChange={this.changeHandler}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="form-group">
+                                    haben Sie noch keinen Account? <Link to="/register">Jetzt registrieren</Link>
+                                </div>
+                                <input
+                                    type="submit"
+                                    className="btn btn-primary"
+                                    value="Login"
+                                />
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
-        )
+            )
+        }
     }
 }
 
