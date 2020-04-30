@@ -10,6 +10,9 @@ import Login from "./Auth/Login";
 import Register from "./Auth/Register";
 import 'bootstrap/dist/css/bootstrap.css';
 import {loggedIn} from "./Auth/Auth";
+import Chat from "./Home/Home";
+import 'bootstrap';
+import 'popper.js';
 
 export default function App() {
   return (
@@ -21,7 +24,6 @@ export default function App() {
             <div className="h-100">
                 <Switch>
                     <Route path="/chat">
-                        {console.log('yyy')}
                         {redirectToLogin('chat')}
                     </Route>
                     <Route exact path="/login">
@@ -41,10 +43,6 @@ export default function App() {
         </div>
       </Router>
   );
-}
-
-function Chat() {
-  return <h2>Home</h2>;
 }
 
 function NoMatch() {
@@ -89,7 +87,6 @@ function showRegister(){
 function redirectToLogin(location){
     if(loggedIn) {
         if (location === 'chat') {
-            console.log('chat');
             return (
                 <Chat/>
             );
