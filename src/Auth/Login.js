@@ -1,12 +1,11 @@
 import React,{Component} from "react";
 import {
-    Link,
-    Route,
-    Redirect
+    Link
 } from "react-router-dom";
+import { Redirect } from 'react-router';
 import validate from "validate.js";
 import {ErrorMsg} from "./MsgBox";
-import {login} from "./Auth";
+import {setLoggedIn,login} from "./Auth";
 
 class Login extends Component{
     constructor(props) {
@@ -136,17 +135,15 @@ class Login extends Component{
          */
         if(this.state.redirect){
             //TODO redirect should work
+            setLoggedIn(true);
             //console.log('redirect');
             // eslint-disable-next-line no-restricted-globals
             location.reload();
+            //this.props.history.push("/chat");
             return(
                 <div>
                     <div>redirect</div>
-                    <Route>
-                        <Redirect
-                            to="/chat"
-                        />
-                    </Route>
+                    <Redirect to="/chat" />
                 </div>
             )
         }else {

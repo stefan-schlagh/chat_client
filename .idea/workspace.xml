@@ -2,14 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="247d5c70-fec1-4d2e-85eb-1fcd303dba48" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/Auth/MsgBox.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Auth/Auth.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Auth/Auth.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Auth/Login.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Auth/Login.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Auth/Register.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Auth/Register.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,7 +35,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../chat_server" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.standard" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -46,6 +44,10 @@
     <property name="node.js.selected.package.standard" value="" />
     <property name="nodejs_interpreter_path" value="node" />
     <property name="nodejs_package_manager_path" value="npm" />
+    <property name="project.structure.last.edited" value="Problems" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RunManager" selected="npm.npm start">
     <configuration name="Debug Application" type="JavascriptDebugType" uri="http://localhost:3000">
@@ -87,7 +89,8 @@
       <workItem from="1588068958727" duration="3479000" />
       <workItem from="1588095455163" duration="4048000" />
       <workItem from="1588141871412" duration="26287000" />
-      <workItem from="1588231211114" duration="1094000" />
+      <workItem from="1588231211114" duration="2643000" />
+      <workItem from="1588239563188" duration="4496000" />
     </task>
     <task id="LOCAL-00001" summary="simple Routing&#10;started with login">
       <created>1588147154997</created>
@@ -96,7 +99,14 @@
       <option name="project" value="LOCAL" />
       <updated>1588147154997</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="login implemented, redirect after login not really working">
+      <created>1588232428674</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1588232428674</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -117,53 +127,58 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="simple Routing&#10;started with login" />
-    <option name="LAST_COMMIT_MESSAGE" value="simple Routing&#10;started with login" />
+    <MESSAGE value="login implemented, redirect after login not really working" />
+    <option name="LAST_COMMIT_MESSAGE" value="login implemented, redirect after login not really working" />
   </component>
   <component name="WindowStateProjectService">
     <state x="552" y="178" key="#ESLint" timestamp="1588142271914">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="552" y="178" key="#ESLint/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588142271914" />
-    <state x="585" y="114" key="CommitChangelistDialog2" timestamp="1588147151947">
+    <state x="585" y="114" key="CommitChangelistDialog2" timestamp="1588232422699">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="585" y="114" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588147151947" />
-    <state x="740" y="274" key="FileChooserDialogImpl" timestamp="1588153286692">
+    <state x="585" y="114" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588232422699" />
+    <state x="740" y="274" key="FileChooserDialogImpl" timestamp="1588248638375">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="740" y="274" key="FileChooserDialogImpl/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588153286692" />
-    <state width="1877" height="232" key="GridCell.Tab.0.bottom" timestamp="1588232311419">
+    <state x="740" y="274" key="FileChooserDialogImpl/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588248638375" />
+    <state width="1877" height="232" key="GridCell.Tab.0.bottom" timestamp="1588250602893">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="232" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588232311419" />
-    <state width="1877" height="232" key="GridCell.Tab.0.center" timestamp="1588232311419">
+    <state width="1877" height="232" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588250602893" />
+    <state width="1877" height="232" key="GridCell.Tab.0.center" timestamp="1588250602893">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="232" key="GridCell.Tab.0.center/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588232311419" />
-    <state width="1877" height="232" key="GridCell.Tab.0.left" timestamp="1588232311419">
+    <state width="1877" height="232" key="GridCell.Tab.0.center/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588250602893" />
+    <state width="1877" height="232" key="GridCell.Tab.0.left" timestamp="1588250602893">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="232" key="GridCell.Tab.0.left/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588232311419" />
-    <state width="1877" height="232" key="GridCell.Tab.0.right" timestamp="1588232311419">
+    <state width="1877" height="232" key="GridCell.Tab.0.left/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588250602893" />
+    <state width="1877" height="232" key="GridCell.Tab.0.right" timestamp="1588250602893">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="232" key="GridCell.Tab.0.right/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588232311419" />
-    <state x="540" y="262" key="IDE.errors.dialog" timestamp="1588166649482">
+    <state width="1877" height="232" key="GridCell.Tab.0.right/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588250602893" />
+    <state x="540" y="262" key="IDE.errors.dialog" timestamp="1588250615059">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="540" y="262" key="IDE.errors.dialog/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588166649482" />
+    <state x="540" y="262" key="IDE.errors.dialog/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588250615059" />
     <state x="729" y="241" key="RollbackChangesDialog" timestamp="1588078673593">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="729" y="241" key="RollbackChangesDialog/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588078673593" />
+    <state x="440" y="94" key="SettingsEditor" timestamp="1588241610883">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="440" y="94" key="SettingsEditor/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588241610883" />
     <state x="125" y="165" width="1736" height="856" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1588070762645">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="125" y="165" width="1736" height="856" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588070762645" />
-    <state x="656" y="343" key="com.intellij.ide.util.TipDialog" timestamp="1588141906811">
+    <state x="656" y="343" key="com.intellij.ide.util.TipDialog" timestamp="1588239602237">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="656" y="343" key="com.intellij.ide.util.TipDialog/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588141906811" />
+    <state x="656" y="343" key="com.intellij.ide.util.TipDialog/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588239602237" />
     <state x="342" y="244" key="new project wizard" timestamp="1588149866740">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>

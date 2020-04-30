@@ -1,6 +1,8 @@
 import React,{Component} from "react";
 import validate from "validate.js";
 import {ErrorMsg} from "./MsgBox";
+import {register, setLoggedIn} from "./Auth";
+import {Redirect} from "react-router";
 
 class Register extends Component{
     constructor(props) {
@@ -12,7 +14,8 @@ class Register extends Component{
             password: '',
             pwRepeatErr: '',
             pwRepeat: '',
-            valid: false
+            valid: false,
+            redirect: false
         }
     }
     changeHandler = event => {
@@ -106,7 +109,24 @@ class Register extends Component{
                 pwErr: '',
                 pwRepeatErr: ''
             });
-            //TODO request to server
+            /*
+                request to server
+             */
+            register(this.state.username,this.state.password).then(data => {
+                if(data.success){
+                    this.setState({
+                        valid: true,
+                        redirect: true
+                    });
+                }else {
+                    if (data.username !== undefined)
+                        this.setState({
+                            valid: false,
+                            uNameErr: data.username
+                        });
+                }
+                console.log(data);
+            });
         }
     };
     uNameErr = () => {
@@ -134,52 +154,70 @@ class Register extends Component{
             )
     };
     render(){
-        return(
-            <div className="h-100" style={{display:"flex"}}>
-                <div className="col-sm-12 my-auto">
-                    <div className="container border rounded p-3" style={{maxWidth: "800px"}}>
-                        <h1>Registrieren</h1>
-                        <form onSubmit={this.submitHandler}>
-                            <div className="form-group">
-                                <label htmlFor="username">Benutzername:</label>
-                                {this.uNameErr()}
-                                <input type="text"
-                                       name="username"
-                                       className="form-control"
-                                       placeholder="Benutzernamen eingeben"
-                                       onChange={this.changeHandler}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="password">Passwort:</label>
-                                {this.pwErr()}
-                                <div id="psw-group">
-                                    <input type="password"
-                                           name="password"
+        /*
+            wenn registriert --> redirect
+         */
+        if(this.state.redirect){
+            //TODO redirect should work
+            setLoggedIn(true);
+            console.log('redirect');
+            // eslint-disable-next-line no-restricted-globals
+            location.reload();
+            //this.props.history.push("/chat");
+            return(
+                <div>
+                    <div>redirect</div>
+                    <Redirect to="/chat" />
+                </div>
+            )
+        }else {
+            return (
+                <div className="h-100" style={{display: "flex"}}>
+                    <div className="col-sm-12 my-auto">
+                        <div className="container border rounded p-3" style={{maxWidth: "800px"}}>
+                            <h1>Registrieren</h1>
+                            <form onSubmit={this.submitHandler}>
+                                <div className="form-group">
+                                    <label htmlFor="username">Benutzername:</label>
+                                    {this.uNameErr()}
+                                    <input type="text"
+                                           name="username"
                                            className="form-control"
-                                           placeholder="Passwort eingeben"
+                                           placeholder="Benutzernamen eingeben"
                                            onChange={this.changeHandler}
                                     />
                                 </div>
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="password">Passwort wiederholen:</label>
-                                {this.pwRepeatErr()}
-                                <div id="psw-group-repeat">
-                                    <input type="password"
-                                           name="pwRepeat"
-                                           className="form-control"
-                                           placeholder="Passwort eingeben"
-                                           onChange={this.changeHandler}
-                                    />
+                                <div className="form-group">
+                                    <label htmlFor="password">Passwort:</label>
+                                    {this.pwErr()}
+                                    <div id="psw-group">
+                                        <input type="password"
+                                               name="password"
+                                               className="form-control"
+                                               placeholder="Passwort eingeben"
+                                               onChange={this.changeHandler}
+                                        />
+                                    </div>
                                 </div>
-                            </div>
-                            <input type="submit" className="btn btn-primary" value="Registrieren" />
-                        </form>
+                                <div className="form-group">
+                                    <label htmlFor="password">Passwort wiederholen:</label>
+                                    {this.pwRepeatErr()}
+                                    <div id="psw-group-repeat">
+                                        <input type="password"
+                                               name="pwRepeat"
+                                               className="form-control"
+                                               placeholder="Passwort eingeben"
+                                               onChange={this.changeHandler}
+                                        />
+                                    </div>
+                                </div>
+                                <input type="submit" className="btn btn-primary" value="Registrieren"/>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
-        )
+            )
+        }
     }
 }
 

@@ -28,7 +28,7 @@ export default function App() {
                         {showLogin()}
                     </Route>
                     <Route exact path="/register">
-                        <Register />
+                        {showRegister()}
                     </Route>
                     <Route exact path="/">
                         {redirectToLogin('/')}
@@ -70,6 +70,20 @@ function showLogin(){
     else
         return(
             <Login />
+        );
+}
+function showRegister(){
+    if(loggedIn)
+        return (
+            <Redirect
+                to={{
+                    pathname: "/chat"
+                }}
+            />
+        );
+    else
+        return(
+            <Register />
         );
 }
 function redirectToLogin(location){
