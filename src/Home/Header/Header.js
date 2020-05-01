@@ -4,12 +4,39 @@ import $ from 'jquery';
 import Responsive from "../../responsive/Responsive";
 
 export default class Header extends Component{
+
     constructor(props) {
         super(props);
         this.state = {
-            username: username
+            username: username,
+            checkBoxClicked: false
         };
     }
+    clickCheckBox = event => {
+        if(this.state.checkBoxClicked)
+            event.stopPropagation();
+        else {
+            setTimeout(() => {
+                this.setState(state => ({
+                    checkBoxClicked: true
+                }));
+            }, 20);
+        }
+    };
+    clickDocument = event => {
+        /*this.userInfoTimeout = setTimeout(() => {
+            /*this.setState(state => ({
+                checkBoxClicked: false
+            }));
+        },20);*/
+        if (this.state.checkBoxClicked)
+            this.changeChecked(event);
+    };
+    changeChecked = event => {
+        this.setState(state => ({
+            checkBoxClicked: !state.checkBoxClicked
+        }));
+    };
     render() {
         return (
             <div className="container-top">
@@ -22,13 +49,17 @@ export default class Header extends Component{
                     <h3 id="chat-info-name">Socket.IO</h3>
                     <i className="fas fa-info-circle fa-2x" data-toggle="tooltip" title="chat info" />
                 </div>
-                <div id="top-right" className="top-right">
+                <div id="top-right" className="top-right" onClick={this.clickCheckBox}>
 
                     <div className="top-right-left">
 
                     </div>
 
-                    <input type="checkbox" id="btnControlTopRight"/>
+                    <input type="checkbox"
+                           id="btnControlTopRight"
+                           checked={this.state.checkBoxClicked}
+                           onChange={this.changeChecked}
+                    />
                     <label className="button-top-right"
                            htmlFor="btnControlTopRight">
 
@@ -68,6 +99,10 @@ export default class Header extends Component{
     }
     componentDidMount() {
         $('[data-toggle="tooltip"]').tooltip();
+        document.addEventListener('click',this.clickDocument,false);
+    }
+    componentWillUnmount() {
+        document.removeEventListener('click',this.clickDocument,false);
     }
 
 }

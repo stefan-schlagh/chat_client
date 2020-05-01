@@ -2,12 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="247d5c70-fec1-4d2e-85eb-1fcd303dba48" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/responsive/Responsive.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/responsive/utilResponsive.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/css/header.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/css/header.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Home/Header/Header.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Home/Header/Header.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -50,6 +46,7 @@
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+    <property name="ts.external.directory.path" value="D:\Program Files\JetBrains\IntelliJ IDEA 2019.2.4\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -98,7 +95,7 @@
       <workItem from="1588141871412" duration="26287000" />
       <workItem from="1588231211114" duration="2643000" />
       <workItem from="1588239563188" duration="14919000" />
-      <workItem from="1588328117609" duration="1283000" />
+      <workItem from="1588328117609" duration="3871000" />
     </task>
     <task id="LOCAL-00001" summary="simple Routing&#10;started with login">
       <created>1588147154997</created>
@@ -135,7 +132,14 @@
       <option name="project" value="LOCAL" />
       <updated>1588275282612</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="added Responsive">
+      <created>1588337460914</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1588337460914</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -160,7 +164,8 @@
     <MESSAGE value="login implemented and register implemented, &#10;now reload after this, because redirect not working" />
     <MESSAGE value="added pwToggle" />
     <MESSAGE value="added simple header" />
-    <option name="LAST_COMMIT_MESSAGE" value="added simple header" />
+    <MESSAGE value="added Responsive" />
+    <option name="LAST_COMMIT_MESSAGE" value="added Responsive" />
   </component>
   <component name="WindowStateProjectService">
     <state x="552" y="178" key="#ESLint" timestamp="1588328195664">
@@ -168,9 +173,14 @@
     </state>
     <state x="552" y="178" key="#ESLint/0.0.1920.1040/1920.0.1920.1040/3840.0.1536.824@0.0.1920.1040" timestamp="1588328195664" />
     <state x="552" y="178" key="#ESLint/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588142271914" />
-    <state x="585" y="114" key="CommitChangelistDialog2" timestamp="1588275278094">
+    <state x="765" y="235" key="#com.intellij.ide.util.MemberChooser" timestamp="1588340689709">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
+    <state x="765" y="235" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040/1920.0.1920.1040/3840.0.1536.824@0.0.1920.1040" timestamp="1588340689709" />
+    <state x="585" y="114" key="CommitChangelistDialog2" timestamp="1588337457197">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="585" y="114" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1920.1040/3840.0.1536.824@0.0.1920.1040" timestamp="1588337457197" />
     <state x="585" y="114" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588275278094" />
     <state x="740" y="274" key="FileChooserDialogImpl" timestamp="1588248638375">
       <screen x="0" y="0" width="1920" height="1040" />
