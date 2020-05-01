@@ -62,3 +62,17 @@
 .logout{
      padding-left: 4px;
 }
+.top-left{
+     padding: 9px;
+}
+.chat-info{
+     display: flex;
+     padding-left: 5px;
+}
+.chat-info h3{
+     flex-grow: 1;
+}
+.chat-info i{
+     padding-left: 5px;
+     cursor: pointer;
+}

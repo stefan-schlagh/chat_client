@@ -2,12 +2,12 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="247d5c70-fec1-4d2e-85eb-1fcd303dba48" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/public/css/header.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Home/Header/Header.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Home/Home.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/responsive/Responsive.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/responsive/utilResponsive.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/css/header.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/css/header.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Home/Header/Header.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Home/Header/Header.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,8 +17,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="JavaScript File" />
         <option value="CSS File" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
@@ -36,7 +36,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../chat_server" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="list.type.of.created.stylesheet" value="CSS" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.standard" value="true" />
@@ -97,7 +97,8 @@
       <workItem from="1588095455163" duration="4048000" />
       <workItem from="1588141871412" duration="26287000" />
       <workItem from="1588231211114" duration="2643000" />
-      <workItem from="1588239563188" duration="13381000" />
+      <workItem from="1588239563188" duration="14919000" />
+      <workItem from="1588328117609" duration="1283000" />
     </task>
     <task id="LOCAL-00001" summary="simple Routing&#10;started with login">
       <created>1588147154997</created>
@@ -127,7 +128,14 @@
       <option name="project" value="LOCAL" />
       <updated>1588258288471</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="added simple header">
+      <created>1588275282612</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1588275282612</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -151,40 +159,47 @@
     <MESSAGE value="login implemented, redirect after login not really working" />
     <MESSAGE value="login implemented and register implemented, &#10;now reload after this, because redirect not working" />
     <MESSAGE value="added pwToggle" />
-    <option name="LAST_COMMIT_MESSAGE" value="added pwToggle" />
+    <MESSAGE value="added simple header" />
+    <option name="LAST_COMMIT_MESSAGE" value="added simple header" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="552" y="178" key="#ESLint" timestamp="1588142271914">
+    <state x="552" y="178" key="#ESLint" timestamp="1588328195664">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
+    <state x="552" y="178" key="#ESLint/0.0.1920.1040/1920.0.1920.1040/3840.0.1536.824@0.0.1920.1040" timestamp="1588328195664" />
     <state x="552" y="178" key="#ESLint/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588142271914" />
-    <state x="585" y="114" key="CommitChangelistDialog2" timestamp="1588258285887">
+    <state x="585" y="114" key="CommitChangelistDialog2" timestamp="1588275278094">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="585" y="114" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588258285887" />
+    <state x="585" y="114" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588275278094" />
     <state x="740" y="274" key="FileChooserDialogImpl" timestamp="1588248638375">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="740" y="274" key="FileChooserDialogImpl/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588248638375" />
-    <state width="1877" height="232" key="GridCell.Tab.0.bottom" timestamp="1588258202140">
+    <state width="1877" height="232" key="GridCell.Tab.0.bottom" timestamp="1588337416080">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="232" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588258202140" />
-    <state width="1877" height="232" key="GridCell.Tab.0.center" timestamp="1588258202140">
+    <state width="1877" height="232" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.0.1920.1040/3840.0.1536.824@0.0.1920.1040" timestamp="1588337416080" />
+    <state width="1877" height="232" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588276795511" />
+    <state width="1877" height="232" key="GridCell.Tab.0.center" timestamp="1588337416080">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="232" key="GridCell.Tab.0.center/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588258202140" />
-    <state width="1877" height="232" key="GridCell.Tab.0.left" timestamp="1588258202140">
+    <state width="1877" height="232" key="GridCell.Tab.0.center/0.0.1920.1040/1920.0.1920.1040/3840.0.1536.824@0.0.1920.1040" timestamp="1588337416080" />
+    <state width="1877" height="232" key="GridCell.Tab.0.center/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588276795494" />
+    <state width="1877" height="232" key="GridCell.Tab.0.left" timestamp="1588337416080">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="232" key="GridCell.Tab.0.left/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588258202140" />
-    <state width="1877" height="232" key="GridCell.Tab.0.right" timestamp="1588258202140">
+    <state width="1877" height="232" key="GridCell.Tab.0.left/0.0.1920.1040/1920.0.1920.1040/3840.0.1536.824@0.0.1920.1040" timestamp="1588337416080" />
+    <state width="1877" height="232" key="GridCell.Tab.0.left/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588276795493" />
+    <state width="1877" height="232" key="GridCell.Tab.0.right" timestamp="1588337416080">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="232" key="GridCell.Tab.0.right/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588258202140" />
-    <state x="540" y="262" key="IDE.errors.dialog" timestamp="1588275079311">
+    <state width="1877" height="232" key="GridCell.Tab.0.right/0.0.1920.1040/1920.0.1920.1040/3840.0.1536.824@0.0.1920.1040" timestamp="1588337416080" />
+    <state width="1877" height="232" key="GridCell.Tab.0.right/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588276795494" />
+    <state x="540" y="262" key="IDE.errors.dialog" timestamp="1588337195764">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
+    <state x="540" y="262" key="IDE.errors.dialog/0.0.1920.1040/1920.0.1920.1040/3840.0.1536.824@0.0.1920.1040" timestamp="1588337195764" />
     <state x="540" y="262" key="IDE.errors.dialog/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588275079311" />
     <state x="729" y="241" key="RollbackChangesDialog" timestamp="1588078673593">
       <screen x="0" y="0" width="1920" height="1040" />
@@ -206,5 +221,9 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="342" y="244" key="new project wizard/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588149866740" />
+    <state x="623" y="225" key="search.everywhere.popup" timestamp="1588275609227">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="623" y="225" key="search.everywhere.popup/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588275609227" />
   </component>
 </project>

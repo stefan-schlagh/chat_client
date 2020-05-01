@@ -1,6 +1,7 @@
 import React,{Component} from "react";
 import {username} from "../../Auth/Auth";
 import $ from 'jquery';
+import Responsive from "../../responsive/Responsive";
 
 export default class Header extends Component{
     constructor(props) {
@@ -12,7 +13,15 @@ export default class Header extends Component{
     render() {
         return (
             <div className="container-top">
-                <h3>Ich bin 1 header</h3>
+                <Responsive displayIn={["Mobile"]}>
+                    <div className="float-left top-left">
+                        <i id="btnBackToChatList" className="fas fa-arrow-left fa-2x d-block d-md-none" />
+                    </div>
+                </Responsive>
+                <div id="chat-info" className="chat-info float-left top-center pt-2">
+                    <h3 id="chat-info-name">Socket.IO</h3>
+                    <i className="fas fa-info-circle fa-2x" data-toggle="tooltip" title="chat info" />
+                </div>
                 <div id="top-right" className="top-right">
 
                     <div className="top-right-left">
