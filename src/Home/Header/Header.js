@@ -2,6 +2,7 @@ import React,{Component} from "react";
 import {username} from "../../Auth/Auth";
 import $ from 'jquery';
 import Responsive from "../../responsive/Responsive";
+import HeaderLeft from "./HeaderLeft";
 
 export default class Header extends Component{
 
@@ -40,6 +41,7 @@ export default class Header extends Component{
             this.props.setParentState(state => ({
                 modals: {
                     ...state.modals,
+                    anyShown: true,
                     settings: {
                         show: true
                     }
@@ -53,6 +55,7 @@ export default class Header extends Component{
             this.props.setParentState(state => ({
                 modals: {
                     ...state.modals,
+                    anyShown: true,
                     userInfo: {
                         show: true
                     }
@@ -61,27 +64,14 @@ export default class Header extends Component{
         };
         return (
             <div className="container-top">
-                <Responsive displayIn={["Mobile"]}>
-                    <div className="float-left top-left">
-                        <i id="btnBackToChatList" className="fas fa-arrow-left fa-2x d-block d-md-none" />
-                    </div>
-                </Responsive>
-                {/*
-                     Bei Mobilgeräten wird Info zu derzeitigem chat nur gezeigt, wenn er auch ausgewählt ist,
-                     sonst immer
-                     */}
-                <Responsive displayIn={["Mobile"]}>
 
-                </Responsive>
-                <Responsive displayIn={["Laptop","Tablet"]}>
+                <HeaderLeft
+                    show={true}
+                    showBtnBack={this.props.headerLeft.showBtnBack}
+                    modalOpen={this.props.headerLeft.modalOpen}
+                    showChatInfo={this.props.headerLeft.showChatInfoTop}
+                />
 
-                </Responsive>
-                <div id="chat-info" className="chat-info float-left top-center pt-2">
-                    <h3 id="chat-info-name">
-                        {this.props.chatname}
-                    </h3>
-                    <i className="fas fa-info-circle fa-2x" data-toggle="tooltip" title="chat info" />
-                </div>
                 <div id="top-right" className="top-right" onClick={this.clickCheckBox}>
 
                     <div className="top-right-left">

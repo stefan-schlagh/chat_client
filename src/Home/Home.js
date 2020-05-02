@@ -11,9 +11,9 @@ export default class Chat extends Component{
         super(props);
         this.state = {
             currentChat: 'Socket.IO',
-            showOptionsDialog: false,
-            showChatInfo: false,
+            showChatInfoTop: false,
             modals: {
+                anyShown: false,
                 settings: {
                     show: false
                 },
@@ -23,24 +23,8 @@ export default class Chat extends Component{
                 newChat: {
                     show: false
                 }
-            },
-            activeTab: 'chat',
-            tabs: {
-                chat: {
-                    name: 'Socket.IO',
-                    id: -1
-                },
-                chatInfo: {
-                    name: '',
-                    id: -1
-                },
-                allChats: {
-                    name: '',
-                    id: -1
-                }
             }
         };
-        console.log(this.state.tabs[this.state.activeTab].name);
 
     }
     logout = () => {
@@ -59,6 +43,7 @@ export default class Chat extends Component{
                             this.setState(state => ({
                                 modals: {
                                     ...state.modals,
+                                    anyShown: false,
                                     settings: {
                                         show: false
                                     }
@@ -77,6 +62,7 @@ export default class Chat extends Component{
                             this.setState(state => ({
                                 modals: {
                                     ...state.modals,
+                                    anyShown: false,
                                     userInfo: {
                                         show: false
                                     }
@@ -95,17 +81,28 @@ export default class Chat extends Component{
                     chatname={this.state.currentChat}
                     setParentState={setState}
                     logout={this.logout}
-                    activeTab={this.state.activeTab}
+                    headerLeft={{
+                        showChatInfoTop: this.state.showChatInfoTop,
+                        showBtnBack: true,
+                        modalOpen: this.state.modals.anyShown,
+                        chatName: this.state.currentChat,
+                        chatId: -1
+                    }}
                 />
 
                 <Responsive displayIn={["Mobile"]}>
-                    <RouterSmallScreens/>
+                    <RouterSmallScreens
+                        modals={this.state.modals}
+                        setParentState={setState}
+                    />
                 </Responsive>
 
                 <Responsive displayIn={["Laptop","Tablet"]}>
                     {showModals()}
 
-                    <GridBigScreens />
+                    <GridBigScreens
+                        setParentState={setState}
+                    />
 
                 </Responsive>
 
