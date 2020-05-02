@@ -24,11 +24,6 @@ export default class Header extends Component{
         }
     };
     clickDocument = event => {
-        /*this.userInfoTimeout = setTimeout(() => {
-            /*this.setState(state => ({
-                checkBoxClicked: false
-            }));
-        },20);*/
         if (this.state.checkBoxClicked)
             this.changeChecked(event);
     };
@@ -38,6 +33,32 @@ export default class Header extends Component{
         }));
     };
     render() {
+        /*
+            settings werden gezeigt
+         */
+        const showSettings = event => {
+            this.props.setParentState(state => ({
+                modals: {
+                    ...state.modals,
+                    settings: {
+                        show: true
+                    }
+                }
+            }));
+        };
+        /*
+            userInfo wird gezeigt
+         */
+        const showUserInfo = event => {
+            this.props.setParentState(state => ({
+                modals: {
+                    ...state.modals,
+                    userInfo: {
+                        show: true
+                    }
+                }
+            }));
+        };
         return (
             <div className="container-top">
                 <Responsive displayIn={["Mobile"]}>
@@ -45,8 +66,20 @@ export default class Header extends Component{
                         <i id="btnBackToChatList" className="fas fa-arrow-left fa-2x d-block d-md-none" />
                     </div>
                 </Responsive>
+                {/*
+                     Bei Mobilgeräten wird Info zu derzeitigem chat nur gezeigt, wenn er auch ausgewählt ist,
+                     sonst immer
+                     */}
+                <Responsive displayIn={["Mobile"]}>
+
+                </Responsive>
+                <Responsive displayIn={["Laptop","Tablet"]}>
+
+                </Responsive>
                 <div id="chat-info" className="chat-info float-left top-center pt-2">
-                    <h3 id="chat-info-name">Socket.IO</h3>
+                    <h3 id="chat-info-name">
+                        {this.props.chatname}
+                    </h3>
                     <i className="fas fa-info-circle fa-2x" data-toggle="tooltip" title="chat info" />
                 </div>
                 <div id="top-right" className="top-right" onClick={this.clickCheckBox}>
@@ -67,6 +100,8 @@ export default class Header extends Component{
                             <div className="d-only-when-small">
                                 <i  id="user-info"
                                     className="fas fa-user fa-2x user-icon"
+                                    data-toggle="tooltip"
+                                    title="Benutzer-Info"
                                 />
                             </div>
                             <div className="d-only-when-big top-2right">
@@ -74,19 +109,23 @@ export default class Header extends Component{
                                 <h4 id="username"
                                     className="p-2 username"
                                     data-toggle="tooltip"
-                                    title="dein Benutzername">
+                                    title="Benutzer-Info"
+                                    onClick={showUserInfo}
+                                >
                                         {this.state.username}
                                 </h4>
                                 <div className="float-right">
                                     <i className="fas fa-user-cog fa-2x"
                                        data-toggle="tooltip"
                                        title="Einstellungen"
+                                       onClick={showSettings}
                                     />
                                     &nbsp;
                                     <i id="user-logout"
                                        className="fas fa-sign-out-alt fa-2x logout"
                                        data-toggle="tooltip"
                                        title="logout"
+                                       onClick={this.props.logout}
                                     />
                                 </div>
 

@@ -1,8 +1,8 @@
 import React,{Component} from "react";
 import {
-    Link
+    Link,
+    Redirect
 } from "react-router-dom";
-import { Redirect } from 'react-router';
 import validate from "validate.js";
 import {ErrorMsg} from "./MsgBox";
 import {setLoggedIn,login} from "./Auth";
