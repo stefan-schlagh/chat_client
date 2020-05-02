@@ -2,6 +2,8 @@ import React,{Component} from "react";
 import Header from "./Header/Header";
 import {logout} from "../Auth/Auth";
 import Modal from "../utilComp/Modal";
+import Responsive from "../responsive/Responsive";
+import GridBigScreens from "./GridBigScreens";
 
 export default class Chat extends Component{
     constructor(props) {
@@ -16,6 +18,9 @@ export default class Chat extends Component{
                 },
                 userInfo: {
                     show: false
+                },
+                newChat: {
+                    show: false
                 }
             },
             activeTab: 'chat',
@@ -25,6 +30,10 @@ export default class Chat extends Component{
                     id: -1
                 },
                 chatInfo: {
+                    name: '',
+                    id: -1
+                },
+                allChats: {
                     name: '',
                     id: -1
                 }
@@ -81,19 +90,22 @@ export default class Chat extends Component{
         };
         return (
             <div className="h-100">
-                {showModals()}
                 <Header
                     chatname={this.state.currentChat}
                     setParentState={setState}
                     logout={this.logout}
                     activeTab={this.state.activeTab}
                 />
-                <div>
-                    {/*
-                        TODO: Router
-                    */}
-                    <h1>Home</h1>
-                </div>
+                <Responsive displayIn={["Laptop","Tablet"]}>
+                    {showModals()}
+
+                    <GridBigScreens />
+
+                </Responsive>
+                <Responsive displayIn={["Mobile"]}>
+
+                </Responsive>
+
             </div>
         );
     }
