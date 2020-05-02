@@ -1,0 +1,31 @@
+:root{
+    --notification-blue: #6076ff;
+}
+.row-height{
+    height: calc(100% - 35px);
+    overflow: hidden;
+}
+.col-overflow{
+    height:100%;
+    overflow-y: auto;
+}
+.chat-select-form{
+    display: flex;
+    padding: 4px;
+}
+.chat-select-form input{
+    flex-grow: 1;
+    border-radius: 15px;
+    border: 1.5px solid #888;
+    padding-left: 14px;
+}
+.chat-select-form button{
+    padding: 0;
+    height: 30px;
+    width: 30px;
+    color: white;
+    background-color: var(--notification-blue);
+    border: none;
+    border-radius: 15px;
+    margin-left: 5px;
+}

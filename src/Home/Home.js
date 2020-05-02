@@ -4,6 +4,7 @@ import {logout} from "../Auth/Auth";
 import Modal from "../utilComp/Modal";
 import Responsive from "../responsive/Responsive";
 import GridBigScreens from "./GridBigScreens";
+import RouterSmallScreens from "./RouterSmallScreens";
 
 export default class Chat extends Component{
     constructor(props) {
@@ -96,13 +97,15 @@ export default class Chat extends Component{
                     logout={this.logout}
                     activeTab={this.state.activeTab}
                 />
+
+                <Responsive displayIn={["Mobile"]}>
+                    <RouterSmallScreens/>
+                </Responsive>
+
                 <Responsive displayIn={["Laptop","Tablet"]}>
                     {showModals()}
 
                     <GridBigScreens />
-
-                </Responsive>
-                <Responsive displayIn={["Mobile"]}>
 
                 </Responsive>
 
