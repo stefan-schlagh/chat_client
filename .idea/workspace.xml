@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="247d5c70-fec1-4d2e-85eb-1fcd303dba48" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/chatData/BinSearch.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/chatData/chatSocket.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/css/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/css/main.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -97,7 +98,7 @@
       <workItem from="1588239563188" duration="14919000" />
       <workItem from="1588328117609" duration="9521000" />
       <workItem from="1588410583107" duration="15165000" />
-      <workItem from="1588518992355" duration="469000" />
+      <workItem from="1588518992355" duration="5784000" />
     </task>
     <task id="LOCAL-00001" summary="simple Routing&#10;started with login">
       <created>1588147154997</created>
@@ -176,7 +177,14 @@
       <option name="project" value="LOCAL" />
       <updated>1588443992986</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="removed scrollbar">
+      <created>1588519554932</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1588519554932</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -207,7 +215,8 @@
     <MESSAGE value="added router for big screens" />
     <MESSAGE value="added router for small screens" />
     <MESSAGE value="added conditional rendering of header left" />
-    <option name="LAST_COMMIT_MESSAGE" value="added conditional rendering of header left" />
+    <MESSAGE value="removed scrollbar" />
+    <option name="LAST_COMMIT_MESSAGE" value="removed scrollbar" />
   </component>
   <component name="WindowStateProjectService">
     <state x="552" y="178" key="#ESLint" timestamp="1588328195664">
@@ -215,15 +224,16 @@
     </state>
     <state x="552" y="178" key="#ESLint/0.0.1920.1040/1920.0.1920.1040/3840.0.1536.824@0.0.1920.1040" timestamp="1588328195664" />
     <state x="552" y="178" key="#ESLint/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588142271914" />
-    <state x="765" y="235" key="#com.intellij.ide.util.MemberChooser" timestamp="1588340689709">
+    <state x="765" y="235" key="#com.intellij.ide.util.MemberChooser" timestamp="1588527533760">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="765" y="235" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040/1920.0.1920.1040/3840.0.1536.824@0.0.1920.1040" timestamp="1588340689709" />
-    <state x="796" y="124" key="CommitChangelistDialog2" timestamp="1588443987570">
+    <state x="765" y="235" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588527533760" />
+    <state x="796" y="124" key="CommitChangelistDialog2" timestamp="1588519552332">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="585" y="114" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1920.1040/3840.0.1536.824@0.0.1920.1040" timestamp="1588341609092" />
-    <state x="796" y="124" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588443987570" />
+    <state x="796" y="124" key="CommitChangelistDialog2/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588519552332" />
     <state x="740" y="274" key="FileChooserDialogImpl" timestamp="1588248638375">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -269,6 +279,10 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="656" y="343" key="com.intellij.ide.util.TipDialog/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588239602237" />
+    <state x="591" y="73" width="737" height="894" key="find.popup" timestamp="1588528222680">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="591" y="73" width="737" height="894" key="find.popup/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1588528222680" />
     <state x="342" y="244" key="new project wizard" timestamp="1588149866740">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
