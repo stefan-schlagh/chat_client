@@ -2,7 +2,7 @@
     --notification-blue: #6076ff;
 }
 .row-height{
-    height: calc(100% - 35px);
+    height: calc(100% - 50px);
     overflow: hidden;
 }
 .col-overflow{
