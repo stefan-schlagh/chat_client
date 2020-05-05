@@ -5,6 +5,7 @@ import Modal from "../utilComp/Modal";
 import Responsive from "../responsive/Responsive";
 import GridBigScreens from "./GridBigScreens";
 import RouterSmallScreens from "./RouterSmallScreens";
+import chatSocket from "../chatData/chatSocket";
 
 export default class Chat extends Component{
     constructor(props) {
@@ -25,6 +26,10 @@ export default class Chat extends Component{
                 }
             }
         };
+
+        if(!chatSocket.socket) {
+            chatSocket.init();
+        }
 
     }
     logout = () => {
@@ -109,5 +114,9 @@ export default class Chat extends Component{
             </div>
         );
     }
+    /*componentDidMount() {
+        if(!chatSocket.socket)
+            chatSocket.init();
+    }*/
 
 }
