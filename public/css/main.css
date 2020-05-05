@@ -29,3 +29,36 @@
     border-radius: 15px;
     margin-left: 5px;
 }
+.chat-list .list-group-item:hover{
+    background-color: #ebebeb;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.chat-list .selected{
+    background-color: #ebebeb;
+}
+.chat-list .newMsg-number{
+    width: 20px;
+    height: 20px;
+    font-size: 10pt;
+    color: white;
+    text-align: center;
+    background-color: #6076ff;
+    border-radius: 10px;
+    float: right;
+}
+.chat-list .lastMsg{
+    font-size: 10pt;
+    overflow: auto;
+    height: 20px;
+}
+.chat-list .lastMsg-date{
+    float: right;
+}
+.chat-list a{
+    color: #000;
+}
+.chat-list a:hover{
+    text-decoration: none;
+    color: #000;
+}

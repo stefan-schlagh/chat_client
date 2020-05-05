@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import ChatList from "./allChats/ChatList";
 import Dummy from "../utilComp/Dummy";
+import chatSocket from "../chatData/chatSocket";
 
 export default function RouterSmallScreens(props){
 

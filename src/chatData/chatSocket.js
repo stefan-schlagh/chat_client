@@ -14,6 +14,8 @@ class ChatSocket{
         normal: new BinSearchArray(),
         group: new BinSearchArray()
     };
+    _events = {};
+    _finishedLoading = false;
 
     init(){
 
@@ -33,8 +35,6 @@ class ChatSocket{
         this.socket.emit('userInfo', this.userInfo);
 
         this.socket.on('all chats', data => {
-
-            console.log(data);
 
             for(let i=0;i<data.length;i++){
 
@@ -65,11 +65,14 @@ class ChatSocket{
 
                 }
             }
-            this.getChatArraySortedByDate();
+            this.finishedLoading = true;
+            this.trigger('chats loaded');
         });
     }
 
     getChatArraySortedByDate(){
+
+        //TODO clone Objects
 
         const getMessageTime = chat => {
             const c = chat.messages[chat.messages.length - 1];
@@ -144,8 +147,46 @@ class ChatSocket{
         const ncSorted = getSorted(this.chats.normal);
         const gcSorted = getSorted(this.chats.group);
 
-        const merged = mergeArr(ncSorted,gcSorted);
-        console.log(merged);
+        return mergeArr(ncSorted, gcSorted);
+    }
+
+    /*
+        event-handler wird hinzugefügt
+     */
+    on(event,fn){
+        /*
+            wenn event noch nicht vorhanden, wird an event index ein array angelegt
+         */
+        if(this.events[event] === undefined){
+            this.events[event] = [];
+        }
+        /*
+            function wird bei array gepusht
+         */
+        this.events[event].push(fn);
+    }
+    /*
+        event-handler wird entfernt
+        TODO
+     */
+    rm(event,fn){
+
+    }
+    /*
+        alle registrierten functions eines events werden ausgelöst
+        TODO arguments
+     */
+    trigger(event){
+        /*
+            wenn event existiert
+         */
+        if(this.events[event] !== undefined){
+            /*
+                es werden alle functions aufgerufen
+             */
+            for(let i=0;i<this.events[event].length;i++)
+                this.events[event][i]();
+        }
     }
 
     get socket() {
@@ -178,6 +219,22 @@ class ChatSocket{
 
     set chats(value) {
         this._chats = value;
+    }
+
+    get events() {
+        return this._events;
+    }
+
+    set events(value) {
+        this._events = value;
+    }
+
+    get finishedLoading() {
+        return this._finishedLoading;
+    }
+
+    set finishedLoading(value) {
+        this._finishedLoading = value;
     }
 }
 
