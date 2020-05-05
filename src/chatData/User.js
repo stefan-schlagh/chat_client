@@ -7,10 +7,11 @@ export default class User{
     _color;
     _online;
 
-    constructor(uid,username) {
+    constructor(uid,username,online) {
         this.uid = uid;
         this.username = username;
         this.color = Colors.random();
+        this.online = online;
     }
 
     get uid() {
@@ -35,5 +36,13 @@ export default class User{
 
     set color(value) {
         this._color = value;
+    }
+
+    get online() {
+        return this._online;
+    }
+
+    set online(value) {
+        this._online = value;
     }
 }

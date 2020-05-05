@@ -4,7 +4,7 @@ class Chat {
     _type;
     _id;
     _chatName;
-    _messages;
+    _messages = [];
 
     constructor(type, id,chatName) {
         this.type = type;
