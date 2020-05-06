@@ -1,10 +1,12 @@
+import BinSearchArray from "./BinSearch";
+
 class Chat {
 
     _isSelfPart;
     _type;
     _id;
     _chatName;
-    _messages = [];
+    _messages = new BinSearchArray();
 
     constructor(type, id,chatName) {
         this.type = type;

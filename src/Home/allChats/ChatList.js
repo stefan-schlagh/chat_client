@@ -42,8 +42,10 @@ export default class ChatList extends Component{
                             <ChatItem
                                 key={i}
                                 _key_={i}
+                                id={chat.id}
+                                type={chat.type}
                                 name={chat.chatName}
-                                lastMessage={chat.messages[chat.messages.length-1]}
+                                lastMessage={chat.lastMessage}
                             />
                         ))}
                     </ul>

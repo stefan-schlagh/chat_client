@@ -51,7 +51,7 @@ class ChatSocket{
                         wenn msg vorhanden, wird diese zu chat hinzugefügt
                      */
                     if(!message.empty)
-                        chat.messages.push(new Message(message.mid,message.content,message.uid,new Date(message.date)));
+                        chat.messages.add(message.mid,new Message(message.mid,message.content,message.uid,chat,new Date(message.date)));
                     this.chats.normal.add(data[i].id,chat);
                     /*
                         wenn user noch nicht vorhanden, wird er angelegt
@@ -72,10 +72,8 @@ class ChatSocket{
 
     getChatArraySortedByDate(){
 
-        //TODO clone Objects
-
         const getMessageTime = chat => {
-            const c = chat.messages[chat.messages.length - 1];
+            const c = chat.lastMessage;
             if(c !== null)
                 return c.date.getTime();
             return new Date(0).getTime();
@@ -100,7 +98,25 @@ class ChatSocket{
         const cloneArr = arr => {
             const clone = new Array(arr.length);
             for(let i=0;i<arr.length;i++){
-                clone[i] = arr[i].value;
+                const chat = arr[i].value;
+                let lastMessage;
+                if(chat.messages.length === 0){
+                    lastMessage = null;
+                }else{
+                    const lm = chat.messages[chat.messages.length - 1].value;
+                    lastMessage = {
+                        mid: lm.mid,
+                        uid: lm.uid,
+                        content: lm.content,
+                        date: lm.date
+                    };
+                }
+                clone[i] = {
+                    type: chat.type,
+                    id: chat.id,
+                    chatName: chat.chatName,
+                    lastMessage: lastMessage
+                };
             }
             return clone;
         };
@@ -148,6 +164,13 @@ class ChatSocket{
         const gcSorted = getSorted(this.chats.group);
 
         return mergeArr(ncSorted, gcSorted);
+    }
+
+    getChat(type,id){
+        if(type === 'normalChat')
+            return this.chats.normal.get(id);
+        else
+            return this.chats.group.get(id);
     }
 
     /*
