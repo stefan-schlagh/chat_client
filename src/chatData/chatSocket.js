@@ -1,9 +1,10 @@
 import io from 'socket.io-client';
 import {uid, username} from "../Auth/Auth";
 import User from "./User";
-import BinSearchArray from "./BinSearch";
+import BinSearchArray from "../util/BinSearch";
 import {NormalChat} from "./Chat";
 import Message from "./Message";
+import EventHandler from "../util/Event";
 
 class ChatSocket{
 
@@ -14,7 +15,7 @@ class ChatSocket{
         normal: new BinSearchArray(),
         group: new BinSearchArray()
     };
-    _events = {};
+    _event = new EventHandler();
     _finishedLoading = false;
 
     init(){
@@ -66,7 +67,7 @@ class ChatSocket{
                 }
             }
             this.finishedLoading = true;
-            this.trigger('chats loaded');
+            this.event.trigger('chats loaded',this.getChatArraySortedByDate());
         });
     }
 
@@ -173,42 +174,11 @@ class ChatSocket{
             return this.chats.group.get(id);
     }
 
-    /*
-        event-handler wird hinzugefügt
-     */
-    on(event,fn){
-        /*
-            wenn event noch nicht vorhanden, wird an event index ein array angelegt
-         */
-        if(this.events[event] === undefined){
-            this.events[event] = [];
-        }
-        /*
-            function wird bei array gepusht
-         */
-        this.events[event].push(fn);
-    }
-    /*
-        event-handler wird entfernt
-        TODO
-     */
-    rm(event,fn){
-
-    }
-    /*
-        alle registrierten functions eines events werden ausgelöst
-        TODO arguments
-     */
-    trigger(event){
-        /*
-            wenn event existiert
-         */
-        if(this.events[event] !== undefined){
-            /*
-                es werden alle functions aufgerufen
-             */
-            for(let i=0;i<this.events[event].length;i++)
-                this.events[event][i]();
+    async userExists(uid){
+        if(this.users.getIndex(uid) !== -1){
+            return true;
+        }else{
+            return false;
         }
     }
 
@@ -244,12 +214,12 @@ class ChatSocket{
         this._chats = value;
     }
 
-    get events() {
-        return this._events;
+    get event() {
+        return this._event;
     }
 
-    set events(value) {
-        this._events = value;
+    set event(value) {
+        this._event = value;
     }
 
     get finishedLoading() {

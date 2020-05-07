@@ -2,15 +2,17 @@ import React from "react";
 import {
     Switch,
     Route,
-    useRouteMatch
+    useRouteMatch,
+    useParams
 } from "react-router-dom";
 import ChatList from "./allChats/ChatList";
 import Dummy from "../utilComp/Dummy";
-import chatSocket from "../chatData/chatSocket";
+import {NormalChatView,GroupChatView,GroupChatInfoView} from "./chatView/NormalChatView";
 
 export default function GridBigScreens(props){
 
     let { path, url } = useRouteMatch();
+    let params = useParams();
 
     const showChatInfoTop = val => {
        props.setParentState(state => {
@@ -37,19 +39,19 @@ export default function GridBigScreens(props){
                         />
                     </Route>
                     <Route path={`${path}/user/:uid`}>
-                        <h3>Normalchat</h3>
+                        <NormalChatView />
                         <Dummy
                             didMount={() => {showChatInfoTop(true)}}
                         />
                     </Route>
                     <Route exact path={`${path}/:gcid`}>
-                        <h3>Groupchat</h3>
+                        <GroupChatView/>
                         <Dummy
                             didMount={() => {showChatInfoTop(true)}}
                         />
                     </Route>
                     <Route exact path={`${path}/:gcid/info`}>
-                        <h3>info</h3>
+                        <GroupChatInfoView/>
                         <Dummy
                             didMount={() => {showChatInfoTop(true)}}
                         />

@@ -6,6 +6,9 @@ export default class User{
     _username;
     _color;
     _online;
+    //TODO
+    _normalChat;
+    _groupChats;
 
     constructor(uid,username,online) {
         this.uid = uid;

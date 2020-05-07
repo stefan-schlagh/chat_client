@@ -1,4 +1,4 @@
-import BinSearchArray from "./BinSearch";
+import BinSearchArray from "../util/BinSearch";
 
 class Chat {
 

@@ -19,9 +19,9 @@ export default class ChatList extends Component{
                 chats: chatSocket.getChatArraySortedByDate()
             });
         }else{
-            chatSocket.on('chats loaded',chats => {
+            chatSocket.event.on('chats loaded',chats => {
                 this.setState({
-                    chats: chatSocket.getChatArraySortedByDate()
+                    chats: chats
                 });
             });
         }
