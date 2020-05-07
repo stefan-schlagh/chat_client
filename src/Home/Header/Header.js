@@ -3,6 +3,7 @@ import {username} from "../../Auth/Auth";
 import $ from 'jquery';
 import Responsive from "../../responsive/Responsive";
 import HeaderLeft from "./HeaderLeft";
+import chatSocket from "../../chatData/chatSocket";
 
 export default class Header extends Component{
 
@@ -49,15 +50,22 @@ export default class Header extends Component{
             }));
         };
         /*
+            eigene userInfo wird gezeigt
+         */
+        const userInfoSelfClick = event => {
+            showUserInfo(chatSocket.userSelf.uid);
+        };
+        /*
             userInfo wird gezeigt
          */
-        const showUserInfo = event => {
+        const showUserInfo = uid => {
             this.props.setParentState(state => ({
                 modals: {
                     ...state.modals,
                     anyShown: true,
                     userInfo: {
-                        show: true
+                        show: true,
+                        uid: uid
                     }
                 }
             }));
@@ -66,10 +74,12 @@ export default class Header extends Component{
             <div className="container-top">
 
                 <HeaderLeft
+                    currentChat={this.props.currentChat}
                     show={true}
                     showBtnBack={this.props.headerLeft.showBtnBack}
                     modalOpen={this.props.headerLeft.modalOpen}
                     showChatInfo={this.props.headerLeft.showChatInfoTop}
+                    showUserInfo={showUserInfo}
                 />
 
                 <div id="top-right" className="top-right" onClick={this.clickCheckBox}>
@@ -100,7 +110,7 @@ export default class Header extends Component{
                                     className="p-2 username"
                                     data-toggle="tooltip"
                                     title="Benutzer-Info"
-                                    onClick={showUserInfo}
+                                    onClick={userInfoSelfClick}
                                 >
                                         {this.state.username}
                                 </h4>

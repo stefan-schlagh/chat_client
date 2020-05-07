@@ -11,7 +11,10 @@ export default class Chat extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            currentChat: 'Socket.IO',
+            currentChat: {
+                type: '',
+                id: 0
+            },
             showChatInfoTop: false,
             modals: {
                 anyShown: false,
@@ -32,12 +35,32 @@ export default class Chat extends Component{
         }
 
     }
+
+    componentDidMount() {
+        chatSocket.event.on('currentChat changed',this.currentChatChanged);
+    }
+
+    currentChatChanged = currentChat => {
+        /*
+            wenn chat id 0 ist, soll chatInfoTop nicht gezeigt werden
+            sonst wird chatInfoTop gezeigt
+         */
+        this.setState({
+            showChatInfoTop: currentChat.id !== 0,
+            currentChat: {
+               type: currentChat.type,
+               id: currentChat.id
+            }
+        });
+    };
+
     logout = () => {
         logout().then(() => {
             // eslint-disable-next-line no-restricted-globals
             location.reload();
         });
     };
+
     render() {
         const setState = this.setState.bind(this);
         const showModals = () => {
@@ -83,14 +106,13 @@ export default class Chat extends Component{
         return (
             <div className="h-100">
                 <Header
-                    chatname={this.state.currentChat}
+                    currentChat={this.state.currentChat}
                     setParentState={setState}
                     logout={this.logout}
                     headerLeft={{
                         showChatInfoTop: this.state.showChatInfoTop,
                         showBtnBack: true,
                         modalOpen: this.state.modals.anyShown,
-                        chatName: this.state.currentChat,
                         chatId: -1
                     }}
                 />
@@ -114,9 +136,7 @@ export default class Chat extends Component{
             </div>
         );
     }
-    /*componentDidMount() {
-        if(!chatSocket.socket)
-            chatSocket.init();
-    }*/
-
+    componentWillUnmount() {
+        chatSocket.event.rm('currentChat changed',this.currentChatChanged);
+    }
 }

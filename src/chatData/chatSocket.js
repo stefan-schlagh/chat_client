@@ -17,6 +17,10 @@ class ChatSocket{
     };
     _event = new EventHandler();
     _finishedLoading = false;
+    _currentChat = {
+        type: '',
+        id: 0
+    };
 
     init(){
 
@@ -59,7 +63,14 @@ class ChatSocket{
                      */
                     if(this.users.getIndex(data[i].members[0].uid) === -1){
                         const user = data[i].members[0];
-                        this.users.add(user.uid,new User(user.uid,user.username,user.isOnline));
+                        //neuer user wird angelegt
+                        const newUser = new User(user.uid,user.username,user.isOnline);
+                        //id von normalchat wird hinzugefügt
+                        newUser.normalChat = chat.id;
+                        this.users.add(user.uid,newUser);
+                    }else{
+                        //id von normalchat wird hinzugefügt
+                        this.users.get(data[i].members[0].uid).normalChat = chat.id;
                     }
                 }
                 else if(data[i].type === 'groupChat'){
@@ -175,10 +186,24 @@ class ChatSocket{
     }
 
     async userExists(uid){
+        //TODO server request wenn user nicht exisitiert
         if(this.users.getIndex(uid) !== -1){
             return true;
         }else{
             return false;
+        }
+    }
+
+    setCurrentChat(currentChat){
+        /*
+            nur wenn sich etwas geändert hat,
+            wird currentChat aktualisiert
+         */
+        if(this.currentChat.type !== currentChat.type ||
+            this.currentChat.id !== currentChat.id) {
+
+            this.currentChat = currentChat;
+            this.event.trigger('currentChat changed', currentChat);
         }
     }
 
@@ -228,6 +253,14 @@ class ChatSocket{
 
     set finishedLoading(value) {
         this._finishedLoading = value;
+    }
+
+    get currentChat() {
+        return this._currentChat;
+    }
+
+    set currentChat(value) {
+        this._currentChat = value;
     }
 }
 

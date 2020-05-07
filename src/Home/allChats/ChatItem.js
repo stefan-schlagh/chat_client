@@ -53,11 +53,19 @@ export default class ChatItem extends Component{
                 return null;
         };
 
+        const getLink = () => {
+            if(this.props.type === 'normalChat'){
+                return '/chat/user/' + chatSocket.getChat('normalChat',this.props.id).otherUser;
+            }else if(this.props.type === 'groupChat'){
+                return '/chat/' + this.props.id;
+            }
+        };
+
         return(
             <li key={this.props._key_}
                 className="list-group-item p-1"
             >
-                <Link to={"/chat"}>
+                <Link to={getLink()}>
                     <div className="w-100">
                         <strong>
                             {this.props.name}

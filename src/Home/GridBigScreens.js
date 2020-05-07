@@ -29,7 +29,9 @@ export default function GridBigScreens(props){
 
                 <ChatList />
             </div>
-            <div className="col-md-7 col-lg-8 col-xl-9 col-overflow">
+            <div className="col-md-7 col-lg-8 col-xl-9 col-overflow"
+                 style={{padding:'0'}}
+            >
 
                 <Switch>
                     <Route exact path={path}>

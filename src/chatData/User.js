@@ -6,7 +6,7 @@ export default class User{
     _username;
     _color;
     _online;
-    //TODO
+    //ids der chats des Users
     _normalChat;
     _groupChats;
 
@@ -47,5 +47,21 @@ export default class User{
 
     set online(value) {
         this._online = value;
+    }
+
+    get normalChat() {
+        return this._normalChat;
+    }
+
+    set normalChat(value) {
+        this._normalChat = value;
+    }
+
+    get groupChats() {
+        return this._groupChats;
+    }
+
+    set groupChats(value) {
+        this._groupChats = value;
     }
 }
