@@ -13,6 +13,16 @@ export default class ChatList extends Component{
         };
     }
 
+    chatItemToTop = index => {
+        const chatsClone = this.state.chats.splice(0);
+        const item = chatsClone[index];
+        chatsClone.splice(index,1);
+        chatsClone.unshift(item);
+        this.setState({
+            chats: chatsClone
+        });
+    };
+
     componentDidMount() {
         if(chatSocket.finishedLoading){
             this.setState({
@@ -66,7 +76,7 @@ export default class ChatList extends Component{
                                         id={chat.id}
                                         type={chat.type}
                                         name={chat.chatName}
-                                        lastMessage={chat.lastMessage}
+                                        toTop={this.chatItemToTop}
                                     />
                                 );
                             }

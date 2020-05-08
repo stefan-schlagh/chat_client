@@ -123,6 +123,14 @@ export default class Message {
 
         return `${hs}:${ms}`;
     }
+    /*
+        es wird überprüft, ob date2 an einem anderen Tag war
+     */
+    isDifferentDay(date2){
+        return this.date.getDay() !== date2.getDay()
+            || this.date.getMonth() !== date2.getMonth()
+            || this.date.getFullYear() !== date2.getFullYear();
+    }
 
     get mid() {
         return this._mid;

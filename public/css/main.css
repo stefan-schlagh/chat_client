@@ -97,6 +97,7 @@
 .chat-container .messages{
     height: calc(100% - 50px);
     overflow-y: auto;
+    padding-top: 10px;
 }
 .msg-form {
     background: #ccc;
@@ -144,4 +145,49 @@
 .messages .msg-date{
     float: right;
     font-size: 10pt;
+}
+.messages .date-container{
+    float: left;
+    width: 100%;
+    text-align: center;
+}
+.messages .date-container div{
+    width: 400px;
+    margin: auto;
+    border: #80b3ff 1px solid;
+    border-radius: 2px;
+    background-color: #cce6ff;
+}
+.messages-bottom{
+    position: fixed;
+    bottom: 60px;
+    right: 50px;
+}
+.messages-bottom .chevron-down{
+    width: 40px;
+    height: 40px;
+    border: 2px solid #555;
+    border-radius: 20px;
+    cursor: pointer;
+}
+.messages-bottom i{
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    color: #555;
+}
+.messages-bottom i:hover{
+    color: #212529;
+}
+.messages-bottom .number{
+    position: absolute;
+    top: 0;
+    right: -10px;
+    width: 20px;
+    height: 20px;
+    font-size: 10pt;
+    color: white;
+    text-align: center;
+    background-color: #6076ff;
+    border-radius: 10px;
 }

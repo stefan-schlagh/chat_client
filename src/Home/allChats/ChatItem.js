@@ -10,11 +10,16 @@ export default class ChatItem extends Component{
             unreadMessages: 0
         }
     }
+
+    isSelected = () => {
+        return this.props.id === chatSocket.currentChat.id && this.props.type === chatSocket.currentChat.type;
+    };
+
     render() {
 
         const chat = chatSocket.getChat(this.props.type,this.props.id);
 
-        const lastMsg = chat.messages.get(this.props.lastMessage.mid);
+        const lastMsg = chat.getFirstMessage();
 
         const renderUnreadMsg = () => {
             if(this.state.unreadMessages === 0)
@@ -60,14 +65,10 @@ export default class ChatItem extends Component{
                 return '/chat/' + this.props.id;
             }
         };
-        
-        const isSelected = () => {
-            return this.props.id === chatSocket.currentChat.id && this.props.type === chatSocket.currentChat.type;
-        };
 
         return(
             <li key={this.props._key_}
-                className={"list-group-item p-1" + (isSelected() ? " selected " : "")}
+                className={"list-group-item p-1" + (this.isSelected() ? " selected " : "")}
             >
                 <Link to={getLink()}>
                     <div className="w-100">
@@ -83,5 +84,39 @@ export default class ChatItem extends Component{
                 </Link>
             </li>
         )
+    }
+
+    newMessage = uid => {
+        /*
+            wenn chat nicht selected, wird newMessages inkrmentiert
+         */
+        if(!this.isSelected()) {
+            this.setState(state => ({
+                unreadMessages: state.unreadMessages + 1
+            }));
+        }
+        /*
+            chat wird nach oben gereiht
+         */
+        this.props.toTop(this.props._key_);
+    };
+
+    componentDidMount() {
+        const chat = chatSocket.getChat(this.props.type,this.props.id);
+        chat.event.on("new message",this.newMessage);
+    }
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        /*
+            wenn component selected, wird newMessages counter zurückgesetzt
+         */
+        if(this.isSelected() && this.state.unreadMessages !== 0)
+            this.setState({
+                unreadMessages: 0
+            });
+
+    }
+    componentWillUnmount() {
+        const chat = chatSocket.getChat(this.props.type,this.props.id);
+        chat.event.rm("new message",this.newMessage());
     }
 }

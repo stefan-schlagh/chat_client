@@ -1,11 +1,12 @@
 import React,{Component} from "react";
-import ReactDOM from 'react-dom'
+import ReactDOM from 'react-dom';
 import MessageForm from "./MessageForm";
 import chatSocket from "../../chatData/chatSocket";
 import Message from "./Message";
 
 export default class ChatContainer extends Component{
-    
+
+    _isMounted = false;
     _messages;
     _messagesNode;
 
@@ -14,7 +15,9 @@ export default class ChatContainer extends Component{
         this.assignMessagesRef = this.assignMessagesRef.bind(this);
         this.state = {
             msgLoading: false,
-            scrollToBottom: 0
+            scrollToBottom: 0,
+            newMessages: 0,
+            typeMessages: []
         };
     }
     //scroll: https://jsfiddle.net/jwm6k66c/2480/
@@ -56,6 +59,36 @@ export default class ChatContainer extends Component{
         this.setScrollToBottom(this.state.scrollToBottom);
     };
 
+    newMessage = uid => {
+        /*
+            wenn nach unten gescrollt:
+                state.newMsg = 0
+            wenn nicht nach unten gescrollt
+                wenn eigene msg
+                     state.newMsg = 0
+                     nach unten scrollen
+                wenn nicht eigene msg
+                    state.newMsg ++
+                    derzeitigen scrollstatus beibehalten
+         */
+        if(this.getScrollToBottom() === 0){
+            this.setState({
+                newMessages: 0
+            });
+        }else{
+            if(uid === chatSocket.userSelf.uid){
+                this.setState({
+                    scrollToBottom: 0,
+                    newMessages: 0
+                });
+            }else{
+                this.setState(state => ({
+                    newMessages: state.newMessages +1
+                }));
+            }
+        }
+    };
+
     componentDidMount() {
         this.messagesNode = ReactDOM.findDOMNode(this.messages);
         if(this.messagesNode.scrollTop === 0)
@@ -63,6 +96,9 @@ export default class ChatContainer extends Component{
 
         const chat = chatSocket.getChat(this.props.chatType,this.props.chatId);
         chat.event.on('messages loaded',this.messagesLoaded);
+        chat.event.on('new message',this.newMessage);
+
+        this.isMounted = true;
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -77,14 +113,24 @@ export default class ChatContainer extends Component{
             //message loaded listener
             const prevChat = chatSocket.getChat(prevProps.chatType,prevProps.chatId);
             prevChat.event.rm('messages loaded',this.messagesLoaded);
+            prevChat.event.rm('new message',this.newMessage);
+
             const newChat = chatSocket.getChat(this.props.chatType,this.props.chatId);
             newChat.event.on('messages loaded',this.messagesLoaded);
+            newChat.event.on('new message',this.newMessage);
+
             //scrollToBottom wird auf 0 gesetzt
             this.setScrollToBottom(0);
             //wenn scrolltop = 0, werden messages geladen
             if (this.messagesNode.scrollTop === 0)
                 this.loadMessages();
         }
+        /*
+            wenn scrollToBottom 0 wird zu bottom gescrollt
+         */
+        if(this.state.scrollToBottom === 0)
+            this.setScrollToBottom(0);
+
     }
 
     render() {
@@ -103,6 +149,60 @@ export default class ChatContainer extends Component{
             return null;
         };
 
+        const renderNewMessages = () => {
+            if(this.state.newMessages > 0)
+                return(
+                    <div id="scroll-down-number" className="number">
+                        {this.state.newMessages}
+                    </div>
+                );
+            return null;
+        };
+
+        const renderBtnToBottom = () => {
+            if(this.isMounted) {
+                if (this.getScrollToBottom() > 10) {
+                    return (
+                        <div id="messages-bottom"
+                             className="messages-bottom"
+                             onClick={() => {
+                                 this.setState({
+                                     scrollToBottom: 0,
+                                     newMessages: 0
+                                 })
+                             }}
+                        >
+                            <div id="btnToBottom" className="chevron-down">
+                                <i className="fas fa-chevron-down fa-2x"/>
+                            </div>
+                            {renderNewMessages()}
+                        </div>
+                    )
+                }
+            }
+            return null;
+        };
+
+        let lastDate = new Date(0);
+        /*
+            wenn der Tag der letzten Nachrichten ein anderer wie der von dieser ist,
+            wird ein Container mit Datum gerendert
+         */
+        const renderDateContainer = msg => {
+            if(msg.isDifferentDay(lastDate)){
+                lastDate = msg.date;
+                return(
+                    <div className = "date-container">
+                        <div>
+                            {msg.getDateString()}
+                        </div>
+                    </div>
+                )
+            }
+            lastDate = msg.date;
+            return null;
+        };
+
         return(
             <div className="chat-container">
                 <div className="messages"
@@ -110,17 +210,36 @@ export default class ChatContainer extends Component{
                      ref={this.assignMessagesRef}
                 >
                     {showLoaderTop()}
-                    {chat.messages.map((msg,i) => (
-                        <div key={i}>
-                            <Message
-                                msg={msg.value}
-                            />
-                        </div>
-                    ))}
+                    {chat.messages.map((msg,i) => {
+                        return (
+                            <div key={i}>
+                                {renderDateContainer(msg.value)}
+                                <Message
+                                    msg={msg.value}
+                                />
+                            </div>
+                        );
+                    })}
+                    {renderBtnToBottom()}
                 </div>
-                <MessageForm />
+                <MessageForm
+                    chatType={this.props.chatType}
+                    chatId={this.props.chatId}
+                />
             </div>
         )
+    }
+
+    componentWillUnmount() {
+        this.isMounted = false;
+    }
+
+    get isMounted() {
+        return this._isMounted;
+    }
+
+    set isMounted(value) {
+        this._isMounted = value;
     }
 
     get messages() {

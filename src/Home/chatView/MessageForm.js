@@ -1,4 +1,5 @@
 import React,{Component} from "react";
+import chatSocket from "../../chatData/chatSocket";
 
 export default class MessageForm extends Component{
 
@@ -17,6 +18,27 @@ export default class MessageForm extends Component{
 
     onSubmit = event => {
         event.preventDefault();
+        /*
+            es kann keine leere Nachricht geschickt werden
+         */
+        if(this.state.message !== ''){
+            /*
+                message wird zu server emitted, über callback wird msgId geholt
+             */
+            chatSocket.socket.emit('chat message', this.state.message,mid => {
+                /*
+                    eigene msg wird angehängt
+                */
+                const chat = chatSocket.getChat(this.props.chatType,this.props.chatId);
+                chat.addMessage(chatSocket.userSelf.uid,this.state.message,mid);
+                /*
+                    input wird geleert
+                 */
+                this.setState({
+                    message: ''
+                });
+            });
+        }
     };
 
     render() {
@@ -25,6 +47,7 @@ export default class MessageForm extends Component{
                 <div className="msg-form">
                     <input autoComplete="off"
                            placeholder="Nachricht:"
+                           value={this.state.message}
                            onChange={this.onTyping}
                     />
                     <button type="submit">

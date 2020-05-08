@@ -54,10 +54,28 @@ class Chat {
          */
         this.event.trigger('messages loaded');
     }
+    /*
+        gibt die Nachricht, die am längsten zurück liegt, zurück
+     */
     getLastMessage(){
         if (this.messages.length !== 0)
             return this.messages[0].value;
         return null;
+    }
+    /*
+        gibt die neueste Nachricht im chat zurück
+     */
+    getFirstMessage(){
+        if (this.messages.length !== 0)
+            return this.messages[this.messages.length - 1].value;
+        return null;
+    }
+    /*
+        neue Nachricht wird hinzugefügt
+     */
+    addMessage(uid,content,mid){
+        this.messages.add(mid,new Message(mid,content,uid,this,new Date(Date.now())));
+        this.event.trigger("new message",uid);
     }
 
     get isSelfPart() {

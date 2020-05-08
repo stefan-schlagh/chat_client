@@ -48,6 +48,42 @@ class ChatSocket{
             if(chat !== undefined)
                 chat.addLoadedMessages(data);
         });
+
+        /*
+            msg-handler
+         */
+        this.socket.on('chat message',data => {
+            /*
+                chat wird gesucht und an diesem weitergeleitet
+            */
+            const chat = this.getChat(data.type,data.id);
+            if(chat !== null)
+                chat.addMessage(data.uid, data.content, data.mid);
+        });
+        /*
+            started typing
+         */
+        this.socket.on('started typing',data => {
+            if(this.isCurrentChat(data.type,data.id))
+                this.event.trigger("started typing",data.uid);
+        });
+        /*
+            stopped typing
+         */
+        this.socket.on('stopped typing',data => {
+            if(this.isCurrentChat(data.type,data.id))
+                this.event.trigger("stopped typing",data.uid);
+        });
+        /*
+            Bei disconnect wird Seite neu geladen
+         */
+        this.socket.on('disconnect',() => {
+            setTimeout(function() {
+                alert('Verbindung verloren! Seite wird neu geladen');
+                // eslint-disable-next-line no-restricted-globals
+                location.reload();
+            },1000);
+        });
     }
 
     initChats(data){
@@ -127,9 +163,6 @@ class ChatSocket{
                 }else{
                     const lm = chat.messages[chat.messages.length - 1].value;
                     lastMessage = {
-                        mid: lm.mid,
-                        uid: lm.uid,
-                        content: lm.content,
                         date: lm.date
                     };
                 }
@@ -194,6 +227,10 @@ class ChatSocket{
         else
             return this.chats.group.get(id);
     }
+
+    isCurrentChat(type,id){
+        return this.currentChat.type === type && this.currentChat.id === id;
+    };
 
     async userExists(uid){
         //TODO server request wenn user nicht exisitiert
