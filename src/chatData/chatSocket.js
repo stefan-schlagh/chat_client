@@ -40,46 +40,56 @@ class ChatSocket{
         this.socket.emit('userInfo', this.userInfo);
 
         this.socket.on('all chats', data => {
+            this.initChats(data);
+        });
+        // wenn messages geladen
+        this.socket.on('messages', data => {
+            const chat = this.getChat(data.chatType,data.chatId);
+            if(chat !== undefined)
+                chat.addLoadedMessages(data);
+        });
+    }
 
-            for(let i=0;i<data.length;i++){
+    initChats(data){
 
-                if(data[i].type === 'normalChat'){
-                    /*
-                        neier chat wird erzeugt
-                     */
-                    const chat = new NormalChat(data[i].id,data[i].chatName,data[i].members[0].uid);
-                    /*
-                        erste Msg wird angehängt
-                     */
-                    const message = data[i].firstMessage;
-                    /*
-                        wenn msg vorhanden, wird diese zu chat hinzugefügt
-                     */
-                    if(!message.empty)
-                        chat.messages.add(message.mid,new Message(message.mid,message.content,message.uid,chat,new Date(message.date)));
-                    this.chats.normal.add(data[i].id,chat);
-                    /*
-                        wenn user noch nicht vorhanden, wird er angelegt
-                     */
-                    if(this.users.getIndex(data[i].members[0].uid) === -1){
-                        const user = data[i].members[0];
-                        //neuer user wird angelegt
-                        const newUser = new User(user.uid,user.username,user.isOnline);
-                        //id von normalchat wird hinzugefügt
-                        newUser.normalChat = chat.id;
-                        this.users.add(user.uid,newUser);
-                    }else{
-                        //id von normalchat wird hinzugefügt
-                        this.users.get(data[i].members[0].uid).normalChat = chat.id;
-                    }
-                }
-                else if(data[i].type === 'groupChat'){
+        for(let i=0;i<data.length;i++){
 
+            if(data[i].type === 'normalChat'){
+                /*
+                    neier chat wird erzeugt
+                 */
+                const chat = new NormalChat(data[i].id,data[i].chatName,data[i].members[0].uid);
+                /*
+                    erste Msg wird angehängt
+                 */
+                const message = data[i].firstMessage;
+                /*
+                    wenn msg vorhanden, wird diese zu chat hinzugefügt
+                 */
+                if(!message.empty)
+                    chat.messages.add(message.mid,new Message(message.mid,message.content,message.uid,chat,new Date(message.date)));
+                this.chats.normal.add(data[i].id,chat);
+                /*
+                    wenn user noch nicht vorhanden, wird er angelegt
+                 */
+                if(this.users.getIndex(data[i].members[0].uid) === -1){
+                    const user = data[i].members[0];
+                    //neuer user wird angelegt
+                    const newUser = new User(user.uid,user.username,user.isOnline);
+                    //id von normalchat wird hinzugefügt
+                    newUser.normalChat = chat.id;
+                    this.users.add(user.uid,newUser);
+                }else{
+                    //id von normalchat wird hinzugefügt
+                    this.users.get(data[i].members[0].uid).normalChat = chat.id;
                 }
             }
-            this.finishedLoading = true;
-            this.event.trigger('chats loaded',this.getChatArraySortedByDate());
-        });
+            else if(data[i].type === 'groupChat'){
+
+            }
+        }
+        this.finishedLoading = true;
+        this.event.trigger('chats loaded',this.getChatArraySortedByDate());
     }
 
     getChatArraySortedByDate(){
@@ -203,6 +213,12 @@ class ChatSocket{
             this.currentChat.id !== currentChat.id) {
 
             this.currentChat = currentChat;
+
+            this.socket.emit('change chat',{
+                type: this.currentChat.type,
+                id: this.currentChat.id
+            });
+
             this.event.trigger('currentChat changed', currentChat);
         }
     }

@@ -67,8 +67,13 @@ export function NormalChatView (props){
          */
         if(loaded){
             if(exists){
+
                 return(
-                    <ChatContainer />
+                    <ChatContainer
+                        uid={userId}
+                        chatType={chatSocket.currentChat.type}
+                        chatId={chatSocket.currentChat.id}
+                    />
                 )
             }
             else{

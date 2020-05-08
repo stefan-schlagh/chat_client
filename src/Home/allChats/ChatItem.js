@@ -60,10 +60,14 @@ export default class ChatItem extends Component{
                 return '/chat/' + this.props.id;
             }
         };
+        
+        const isSelected = () => {
+            return this.props.id === chatSocket.currentChat.id && this.props.type === chatSocket.currentChat.type;
+        };
 
         return(
             <li key={this.props._key_}
-                className="list-group-item p-1"
+                className={"list-group-item p-1" + (isSelected() ? " selected " : "")}
             >
                 <Link to={getLink()}>
                     <div className="w-100">
