@@ -43,7 +43,7 @@
     font-size: 10pt;
     color: white;
     text-align: center;
-    background-color: #6076ff;
+    background-color: var(--notification-blue);
     border-radius: 10px;
     float: right;
 }
@@ -54,6 +54,12 @@
 }
 .chat-list .lastMsg-date{
     float: right;
+}
+.chat-list .typeMsg{
+    font-size: 10pt;
+    height: 20px;
+    font-weight: bold;
+    color: var(--notification-blue);
 }
 .chat-list a{
     color: #000;

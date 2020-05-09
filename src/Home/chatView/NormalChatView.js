@@ -63,6 +63,17 @@ export function NormalChatView (props){
 
     const renderChat = () => {
         /*
+            es wird überprüft, ob uid number ist
+            --> wenn nicht, ungültige Addresse
+         */
+        if(isNaN(uid)){
+            return(
+                <div>
+                    <h2>ungültige Addresse</h2>
+                </div>
+            );
+        }
+        /*
             chat wird nur gerendert, wenn geladen
          */
         if(loaded){

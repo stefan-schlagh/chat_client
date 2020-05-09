@@ -232,6 +232,10 @@ export default class ChatContainer extends Component{
 
     componentWillUnmount() {
         this.isMounted = false;
+
+        const chat = chatSocket.getChat(this.props.chatType,this.props.chatId);
+        chat.event.rm('messages loaded',this.messagesLoaded);
+        chat.event.rm('new message',this.newMessage);
     }
 
     get isMounted() {

@@ -130,10 +130,51 @@ class Chat {
 export class NormalChat extends Chat{
 
     _otherUser;
+    _isTyping = false;
 
     constructor(id,chatName,uid) {
         super('normalChat',id,chatName);
         this.otherUser = uid;
+
+        this.event.on("started typing",uid => {
+            if(uid === this.otherUser){
+                this.isTyping = true;
+                this.event.trigger("typeState changed");
+            }
+        });
+
+        this.event.on("stopped typing",uid => {
+            if(uid === this.otherUser){
+                this.isTyping = false;
+                this.event.trigger("typeState changed");
+            }
+        });
+    }
+
+    getUsersTyping(){
+        if(this.isTyping) {
+            const user = chatSocket.users.get(this.otherUser);
+            return [
+                {
+                    uid: user.uid,
+                    username: user.username
+                }
+            ];
+        }
+        return [];
+    }
+    /*
+        gibt den user zurück, der erst die kürzeste Zeit schreibt
+     */
+    getLatestUserTyping(){
+        if(this.isTyping) {
+            const user = chatSocket.users.get(this.otherUser);
+            return {
+                uid: user.uid,
+                username: user.username
+            };
+        }
+        return null;
     }
 
     get otherUser() {
@@ -143,14 +184,34 @@ export class NormalChat extends Chat{
     set otherUser(value) {
         this._otherUser = value;
     }
+
+    get isTyping() {
+        return this._isTyping;
+    }
+
+    set isTyping(value) {
+        this._isTyping = value;
+    }
 }
 export class GroupChat extends Chat{
 
     _users;
+    //Array mit uids von den usern, die gerade schreibem
+    _usersTyping = [];
 
     constructor(id,chatName,uids) {
         super('groupChat',id,chatName);
         this.users = uids;
+    }
+
+    getUsersTyping(){
+
+    }
+    /*
+        gibt den user zurück, der am neuestem schriebt
+     */
+    getLatestUserTyping(){
+
     }
 
     get users() {
@@ -159,5 +220,13 @@ export class GroupChat extends Chat{
 
     set users(value) {
         this._users = value;
+    }
+
+    get usersTyping() {
+        return this._usersTyping;
+    }
+
+    set usersTyping(value) {
+        this._usersTyping = value;
     }
 }

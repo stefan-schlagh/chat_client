@@ -7,12 +7,33 @@ export default class ChatItem extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            unreadMessages: 0
+            unreadMessages: 0,
+            typeMsg: ''
         }
     }
 
     isSelected = () => {
         return this.props.id === chatSocket.currentChat.id && this.props.type === chatSocket.currentChat.type;
+    };
+    /*
+        wenn ein user anfängt, oder aufhört zu schreiben, wird diese Methode aufgerufen,
+        um die typeMsg zu aktualisieren
+     */
+    typeStateChanged = () => {
+
+        const chat = chatSocket.getChat(this.props.type,this.props.id);
+        let typeMsg = '';
+        /*
+            wenn latestuserTyping = null, schreibt gerade keiner
+         */
+        const userTyping = chat.getLatestUserTyping();
+        if(userTyping !== null){
+            typeMsg = userTyping.username + " schreibt...";
+        }
+        //state wird aktualisiert
+        this.setState({
+            typeMsg: typeMsg
+        });
     };
 
     render() {
@@ -30,6 +51,26 @@ export default class ChatItem extends Component{
                         {this.state.unreadMessages}
                     </div>
                 );
+        };
+        /*
+            in der unteren Hälfte wird angezeigt wer schreibt
+            schreibt keiner, wird letzte Nachricht angezeigt
+         */
+        const renderLowerHalf = () => {
+            if(this.state.typeMsg === '')
+                return (
+                    <div className="w-100 lastMsg">
+                        {renderMsg()}
+                        {renderDate()}
+                    </div>
+                );
+            else{
+                return (
+                    <div className="w-100 typeMsg">
+                        {this.state.typeMsg}
+                    </div>
+                );
+            }
         };
 
         const renderMsg = () => {
@@ -77,10 +118,7 @@ export default class ChatItem extends Component{
                         </strong>
                         {renderUnreadMsg()}
                     </div>
-                    <div className="w-100 lastMsg">
-                        {renderMsg()}
-                        {renderDate()}
-                    </div>
+                    {renderLowerHalf()}
                 </Link>
             </li>
         )
@@ -103,7 +141,11 @@ export default class ChatItem extends Component{
 
     componentDidMount() {
         const chat = chatSocket.getChat(this.props.type,this.props.id);
+        /*
+            event listener werden angelegt
+         */
         chat.event.on("new message",this.newMessage);
+        chat.event.on("typeState changed",this.typeStateChanged);
     }
     componentDidUpdate(prevProps, prevState, snapshot) {
         /*
@@ -117,6 +159,10 @@ export default class ChatItem extends Component{
     }
     componentWillUnmount() {
         const chat = chatSocket.getChat(this.props.type,this.props.id);
+        /*
+            event listener werden entfernt
+         */
         chat.event.rm("new message",this.newMessage());
+        chat.event.rm("typeState changed",this.typeStateChanged);
     }
 }

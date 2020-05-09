@@ -64,15 +64,15 @@ class ChatSocket{
             started typing
          */
         this.socket.on('started typing',data => {
-            if(this.isCurrentChat(data.type,data.id))
-                this.event.trigger("started typing",data.uid);
+            const chat = this.getChat(data.type,data.id);
+            chat.event.trigger("started typing",data.uid);
         });
         /*
             stopped typing
          */
         this.socket.on('stopped typing',data => {
-            if(this.isCurrentChat(data.type,data.id))
-                this.event.trigger("stopped typing",data.uid);
+            const chat = this.getChat(data.type,data.id);
+            chat.event.trigger("stopped typing",data.uid);
         });
         /*
             Bei disconnect wird Seite neu geladen

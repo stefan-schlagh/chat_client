@@ -20,7 +20,6 @@ export default class Message {
         /*
             Wenn weniger als 1 Tag her: Uhrzeit
          */
-
         if(this.isDateToday()){
 
             return 'heute ' + this.getTimeString();
@@ -84,7 +83,7 @@ export default class Message {
 
     isDateYesterday(){
         const dateNow = new Date(Date.now());
-        return this.date.getDate() === dateNow.getDate - 1 &&
+        return this.date.getDate() === dateNow.getDate() - 1 &&
             this.date.getMonth() === dateNow.getMonth() &&
             this.date.getFullYear() === dateNow.getFullYear();
     }
