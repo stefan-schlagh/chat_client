@@ -2,21 +2,50 @@ import React,{Component} from "react";
 import Responsive from "../../responsive/Responsive";
 import chatSocket from "../../chatData/chatSocket";
 import {Link} from "react-router-dom";
+import {routes} from "../Home";
 
 export default class HeaderLeft extends Component{
 
     render() {
+        /*
+            renders number of new messages
+         */
+        const renderNewMsgNumber = () => {
+            if(this.props.newMessages > 0){
+                return (
+                    <div className="btnBack-number">
+                        {this.props.newMessages}
+                    </div>
+                )
+            }
+            return null;
+        };
 
         const renderBtnBack = () => {
-            if(this.props.showBtnBack) {
-                return (
-                    <Responsive displayIn={["Mobile"]}>
-                        <div className="float-left top-left">
-                            <i id="btnBackToChatList" className="fas fa-arrow-left fa-2x d-block d-md-none"/>
-                        </div>
-                    </Responsive>
+            /*
+                only small screens
+                    if a modal is open, it gets closed by this button
+             */
+            if(this.props.modalOpen){
+                return(
+                    <div className="float-left top-left">
+                        <i id="btnBackToChatList"
+                           className="fas fa-arrow-left fa-2x d-block d-md-none"
+                           onClick={() => {this.props.closeModal()}}
+                        />
+                        {renderNewMsgNumber()}
+                    </div>
                 );
             }
+            else if(this.props.currentRoute === routes.normalChat)
+                return (
+                    <div className="float-left top-left">
+                        <Link to={"/chat"}>
+                            <i id="btnBackToChatList" className="fas fa-arrow-left fa-2x d-block d-md-none"/>
+                        </Link>
+                        {renderNewMsgNumber()}
+                    </div>
+                );
         };
 
         const getChatName = () => {
@@ -63,7 +92,13 @@ export default class HeaderLeft extends Component{
 
         const renderChatInfo = () => {
             if(!this.props.modalOpen) {
-                if (this.props.showChatInfo) {
+                if (this.props.currentRoute === routes.allChats) {
+                    return (
+                        <h3 className="pt-2 pl-2">
+                            Socket.IO
+                        </h3>
+                    );
+                }else {
                     return (
                         <div id="chat-info" className="chat-info float-left top-center pt-2">
                             <h3 id="chat-info-name">
@@ -84,7 +119,9 @@ export default class HeaderLeft extends Component{
 
         return(
             <div>
-                {renderBtnBack()}
+                <Responsive displayIn={["Mobile"]}>
+                    {renderBtnBack()}
+                </Responsive>
                 {renderChatInfo()}
             </div>
         )

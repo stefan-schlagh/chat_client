@@ -162,7 +162,7 @@ export default class ChatItem extends Component{
         /*
             event listener werden entfernt
          */
-        chat.event.rm("new message",this.newMessage());
+        chat.event.rm("new message",this.newMessage);
         chat.event.rm("typeState changed",this.typeStateChanged);
     }
 }

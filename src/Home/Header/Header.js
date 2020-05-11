@@ -1,9 +1,9 @@
 import React,{Component} from "react";
 import {username} from "../../Auth/Auth";
 import $ from 'jquery';
-import Responsive from "../../responsive/Responsive";
 import HeaderLeft from "./HeaderLeft";
 import chatSocket from "../../chatData/chatSocket";
+import {modals} from "../Home";
 
 export default class Header extends Component{
 
@@ -40,13 +40,7 @@ export default class Header extends Component{
          */
         const showSettings = event => {
             this.props.setParentState(state => ({
-                modals: {
-                    ...state.modals,
-                    anyShown: true,
-                    settings: {
-                        show: true
-                    }
-                }
+                modal: modals.settings
             }));
         };
         /*
@@ -60,14 +54,7 @@ export default class Header extends Component{
          */
         const showUserInfo = uid => {
             this.props.setParentState(state => ({
-                modals: {
-                    ...state.modals,
-                    anyShown: true,
-                    userInfo: {
-                        show: true,
-                        uid: uid
-                    }
-                }
+                modal: modals.userInfo
             }));
         };
         return (
@@ -76,10 +63,11 @@ export default class Header extends Component{
                 <HeaderLeft
                     currentChat={this.props.currentChat}
                     show={true}
-                    showBtnBack={this.props.headerLeft.showBtnBack}
+                    currentRoute={this.props.headerLeft.currentRoute}
                     modalOpen={this.props.headerLeft.modalOpen}
-                    showChatInfo={this.props.headerLeft.showChatInfoTop}
+                    newMessages={this.props.headerLeft.newMessages}
                     showUserInfo={showUserInfo}
+                    closeModal={this.props.closeModal}
                 />
 
                 <div id="top-right" className="top-right" onClick={this.clickCheckBox}>

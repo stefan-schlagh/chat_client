@@ -103,6 +103,7 @@
 .chat-container .messages{
     height: calc(100% - 50px);
     overflow-y: auto;
+    overflow-x: hidden;
     padding-top: 10px;
 }
 .msg-form {
@@ -159,6 +160,7 @@
 }
 .messages .date-container div{
     width: 400px;
+    max-width: 80%;
     margin: auto;
     border: #80b3ff 1px solid;
     border-radius: 2px;
@@ -168,6 +170,11 @@
     position: fixed;
     bottom: 60px;
     right: 50px;
+}
+@media screen and (max-width: 765px){
+    .messages-bottom{
+        right: 20px;
+    }
 }
 .messages-bottom .chevron-down{
     width: 40px;

@@ -64,6 +64,26 @@
 }
 .top-left{
      padding: 9px;
+     position: relative;
+}
+.top-left a{
+     color: #212529;
+}
+.top-left a:hover{
+     color: #000000;
+     text-decoration: none;
+}
+.btnBack-number{
+     position: absolute;
+     top: 4px;
+     right: 0;
+     background-color: var(--notification-blue);
+     width: 20px;
+     height: 20px;
+     border-radius: 10px;
+     color: white;
+     text-align: center;
+     font-size: 10pt;
 }
 .chat-info{
      display: flex;

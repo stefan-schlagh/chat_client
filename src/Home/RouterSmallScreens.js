@@ -8,68 +8,94 @@ import ChatList from "./allChats/ChatList";
 import Dummy from "../utilComp/Dummy";
 import chatSocket from "../chatData/chatSocket";
 import {NormalChatView,GroupChatView,GroupChatInfoView} from "./chatView/NormalChatView";
+import {routes,modals} from "./Home";
 
 export default function RouterSmallScreens(props){
 
     let { path, url } = useRouteMatch();
 
-    if (props.modals.anyShown) {
+    /*
+        is a 'modal' open?
+        if --> render them instead of switch
+     */
+    if (props.modal !== modals.none) {
 
-        if (props.modals['settings'].show) {
+        if (props.modal === modals.settings) {
             return (
                 <h1>Settings</h1>
 
             )
         }
-        if (this.state.modals['userInfo'].show) {
+        if (props.modal === modals.userInfo) {
             return (
                 <h1>Du</h1>
             )
         }
     }
 
-    const showChatInfoTop = val => {
-        props.setParentState(state => {
-            if(state.showChatInfoTop !== val)
-                return {
-                    showChatInfoTop: val
-                }
-        });
+    const chatListShown = () => {
+        if(props.currentRoute !== routes.allChats) {
+            props.setParentState({
+                currentRoute: routes.allChats
+            });
+            chatSocket.setCurrentChat(null);
+        }
     };
 
+    const normalChatShown = () => {
+        if(props.currentRoute !== routes.normalChat) {
+            props.setParentState({
+                currentRoute: routes.normalChat
+            });
+        }
+    };
 
     return(
-        <Switch>
-            <Route exact path={path}>
-                <ChatList
-                    paddingTop="20px"
-                />
-                <Dummy
-                    didMount={() => {showChatInfoTop(false)}}
-                />
-            </Route>
-            <Route path={`${path}/user/:uid`}>
-                <NormalChatView/>
-                <Dummy
-                    didMount={() => {showChatInfoTop(true)}}
-                />
-            </Route>
-            <Route exact path={`${path}/:gcid`}>
-                <GroupChatView/>
-                <Dummy
-                    didMount={() => {showChatInfoTop(true)}}
-                />
-            </Route>
-            <Route exact path={`${path}/:gcid/info`}>
-                <GroupChatInfoView/>
-                <Dummy
-                    didMount={() => {showChatInfoTop(true)}}
-                />
-            </Route>
-            <Route path = "*">
-                <h3>Not found!</h3>
-            </Route>
-        </Switch>
+        <div className="row-height">
+            <Switch>
+                <Route exact path={path}>
+                    <ChatList
+                        paddingTop="20px"
+                    />
+                    <Dummy
+                        didUpdate={() => {
+                            chatListShown();
+                        }}
+                    />
+                </Route>
+                <Route path={`${path}/user/:uid`}>
+                    <NormalChatView/>
+                    <Dummy
+                        didUpdate={() => {
+                            normalChatShown();
+                        }}
+                    />
+                </Route>
+                <Route exact path={`${path}/:gcid`}>
+                    <GroupChatView/>
+                    <Dummy
+                        didMount={() => {
+                            props.setParentState({
+                                currentRoute: routes.groupChat
+                            });
+                        }}
+                    />
+                </Route>
+                <Route exact path={`${path}/:gcid/info`}>
+                    <GroupChatInfoView/>
+                    <Dummy
+                        didMount={() => {
+                            props.setParentState({
+                                currentRoute: routes.groupChatInfo
+                            });
+                        }}
+                    />
+                </Route>
+                <Route path = "*">
+                    <h3>Not found!</h3>
+                </Route>
+            </Switch>
+        </div>
     )
 
 }

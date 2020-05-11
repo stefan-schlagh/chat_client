@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useEffect} from "react";
 import {
     Switch,
     Route,
@@ -8,20 +8,54 @@ import {
 import ChatList from "./allChats/ChatList";
 import Dummy from "../utilComp/Dummy";
 import {NormalChatView,GroupChatView,GroupChatInfoView} from "./chatView/NormalChatView";
+import {routes} from "./Home";
 
 export default function GridBigScreens(props){
 
     let { path, url } = useRouteMatch();
     let params = useParams();
 
-    const showChatInfoTop = val => {
-       props.setParentState(state => {
-           if(state.showChatInfoTop !== val)
-               return {
-                   showChatInfoTop: val
-               }
-       });
+    const nothingShown = () => {
+        if(props.currentRoute !== routes.allChats) {
+            props.setParentState({
+                currentRoute: routes.allChats
+            });
+        }
     };
+
+    const normalChatShown = () => {
+        if(props.currentRoute !== routes.normalChat) {
+            props.setParentState({
+                currentRoute: routes.normalChat
+            });
+        }
+    };
+
+    const groupChatShown = () => {
+        if(props.currentRoute !== routes.groupChat) {
+            props.setParentState({
+                currentRoute: routes.groupChat
+            });
+        }
+    };
+
+    const groupChatInfoShown = () => {
+        if(props.currentRoute !== routes.groupChatInfo) {
+            props.setParentState({
+                currentRoute: routes.groupChatInfo
+            });
+        }
+    };
+
+    useEffect(() => {
+       /*
+            newMessages is set to 0, because big screen
+        */
+        if(props.newMessages !== 0)
+            props.setParentState({
+                newMessages: 0
+            });
+    });
 
     return(
         <div className="row w-100 justify-content-end row-height">
@@ -37,25 +71,33 @@ export default function GridBigScreens(props){
                     <Route exact path={path}>
                         <h1>noch kein chat ausgewählt</h1>
                         <Dummy
-                            didMount={() => {showChatInfoTop(false)}}
+                            didUpdate={() => {
+                                nothingShown()
+                            }}
                         />
                     </Route>
                     <Route path={`${path}/user/:uid`}>
                         <NormalChatView />
                         <Dummy
-                            didMount={() => {showChatInfoTop(true)}}
+                            didUpdate={() => {
+                                normalChatShown()
+                            }}
                         />
                     </Route>
                     <Route exact path={`${path}/:gcid`}>
                         <GroupChatView/>
                         <Dummy
-                            didMount={() => {showChatInfoTop(true)}}
+                            didUpdate={() => {
+                                groupChatShown()
+                            }}
                         />
                     </Route>
                     <Route exact path={`${path}/:gcid/info`}>
                         <GroupChatInfoView/>
                         <Dummy
-                            didMount={() => {showChatInfoTop(true)}}
+                            didUpdate={() => {
+                                groupChatInfoShown()
+                            }}
                         />
                     </Route>
                     <Route path = "*">

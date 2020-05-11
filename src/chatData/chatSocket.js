@@ -44,6 +44,10 @@ class ChatSocket{
         });
         // wenn messages geladen
         this.socket.on('messages', data => {
+            /*
+                gets chat of msg
+                loads messages of this chat
+             */
             const chat = this.getChat(data.chatType,data.chatId);
             if(chat !== undefined)
                 chat.addLoadedMessages(data);
@@ -54,11 +58,22 @@ class ChatSocket{
          */
         this.socket.on('chat message',data => {
             /*
-                chat wird gesucht und an diesem weitergeleitet
+                gets chat of msg
+                adds this message to chat
             */
             const chat = this.getChat(data.type,data.id);
-            if(chat !== null)
+            if(chat !== null) {
                 chat.addMessage(data.uid, data.content, data.mid);
+                /*
+                    hasNewMsg gets updated
+                    if current chat --> false
+                 */
+                chat.hasNewMsg = !this.isCurrentChat(chat.type, chat.id);
+                /*
+                    new message event is triggered
+                 */
+                this.event.trigger('new message', data.type, data.id);
+            }
         });
         /*
             started typing
@@ -241,23 +256,54 @@ class ChatSocket{
         }
     }
 
-    setCurrentChat(currentChat){
+    setCurrentChat(newChat){
         /*
-            nur wenn sich etwas geändert hat,
-            wird currentChat aktualisiert
+            if chat is null, no chat will be selected:
+                type: '', id: 0
          */
-        if(this.currentChat.type !== currentChat.type ||
-            this.currentChat.id !== currentChat.id) {
+        if(newChat === null){
+            this.currentChat = {
+                type: '',
+                id: 0
+            };
+        }else {
+            /*
+                nur wenn sich etwas geändert hat,
+                wird currentChat aktualisiert
+             */
+            if (this.currentChat.type !== newChat.type ||
+                this.currentChat.id !== newChat.id) {
 
-            this.currentChat = currentChat;
+                const chat = this.getChat(newChat.type,newChat.id);
+                chat.hasNewMsg = false;
+                this.currentChat = newChat;
 
-            this.socket.emit('change chat',{
-                type: this.currentChat.type,
-                id: this.currentChat.id
-            });
+                this.socket.emit('change chat', {
+                    type: this.currentChat.type,
+                    id: this.currentChat.id
+                });
 
-            this.event.trigger('currentChat changed', currentChat);
+                this.event.trigger('currentChat changed', newChat);
+            }
         }
+    }
+    /*
+        returns number of new messages
+     */
+    getNumberNewMessages(){
+
+        let newMessages = 0;
+
+        for(let i=0;i<this.chats.normal.length;i++){
+            if(this.chats.normal[i].value.hasNewMsg)
+                newMessages ++;
+        }
+
+        for(let i=0;i<this.chats.group.length;i++){
+            if(this.chats.group[i].value.hasNewMsg)
+                newMessages ++;
+        }
+        return newMessages;
     }
 
     get socket() {
