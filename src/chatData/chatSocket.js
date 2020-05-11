@@ -63,12 +63,17 @@ class ChatSocket{
             */
             const chat = this.getChat(data.type,data.id);
             if(chat !== null) {
+                const isCurrentChat = this.isCurrentChat(chat.type, chat.id);
                 chat.addMessage(data.uid, data.content, data.mid);
                 /*
                     hasNewMsg gets updated
                     if current chat --> false
                  */
-                chat.hasNewMsg = !this.isCurrentChat(chat.type, chat.id);
+                chat.hasNewMsg = !isCurrentChat;
+                /*
+                    if chat is not currentChat, unreadMessages gets incremented
+                 */
+                chat.unreadMessages ++;
                 /*
                     new message event is triggered
                  */
@@ -276,6 +281,10 @@ class ChatSocket{
 
                 const chat = this.getChat(newChat.type,newChat.id);
                 chat.hasNewMsg = false;
+                /*
+                    unreadMessages gets set to 0
+                 */
+                chat.unreadMessages = 0;
                 this.currentChat = newChat;
 
                 this.socket.emit('change chat', {

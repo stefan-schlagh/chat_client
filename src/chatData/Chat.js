@@ -12,6 +12,7 @@ class Chat {
     _messages = new BinSearchArray();
     _event = new EventHandler();
     _hasNewMsg = false;
+    _unreadMessages = 0;
 
     constructor(type, id,chatName) {
         this.type = type;
@@ -133,6 +134,14 @@ class Chat {
 
     set hasNewMsg(value) {
         this._hasNewMsg = value;
+    }
+
+    get unreadMessages() {
+        return this._unreadMessages;
+    }
+
+    set unreadMessages(value) {
+        this._unreadMessages = value;
     }
 }
 

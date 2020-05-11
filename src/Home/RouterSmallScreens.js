@@ -9,6 +9,7 @@ import Dummy from "../utilComp/Dummy";
 import chatSocket from "../chatData/chatSocket";
 import {NormalChatView,GroupChatView,GroupChatInfoView} from "./chatView/NormalChatView";
 import {routes,modals} from "./Home";
+import TypeMsgContainer from "./chatView/TypeMsgContainer";
 
 export default function RouterSmallScreens(props){
 
@@ -50,8 +51,20 @@ export default function RouterSmallScreens(props){
         }
     };
 
+    const renderTypeMsgContainer = () => {
+        if(props.currentChat.type !== '' && props.currentChat.id !== 0){
+            return(
+                <TypeMsgContainer
+                    chatType={props.currentChat.type}
+                    chatId={props.currentChat.id}
+                />
+            )
+        }
+        return null;
+    };
+
     return(
-        <div className="row-height">
+        <div className="row-height position-relative">
             <Switch>
                 <Route exact path={path}>
                     <ChatList
@@ -65,6 +78,7 @@ export default function RouterSmallScreens(props){
                 </Route>
                 <Route path={`${path}/user/:uid`}>
                     <NormalChatView/>
+                    {renderTypeMsgContainer()}
                     <Dummy
                         didUpdate={() => {
                             normalChatShown();
@@ -73,6 +87,7 @@ export default function RouterSmallScreens(props){
                 </Route>
                 <Route exact path={`${path}/:gcid`}>
                     <GroupChatView/>
+                    {renderTypeMsgContainer()}
                     <Dummy
                         didMount={() => {
                             props.setParentState({

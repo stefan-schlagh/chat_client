@@ -163,6 +163,7 @@ export default class Chat extends Component{
                     <RouterSmallScreens
                         modal={this.state.modal}
                         currentRoute={this.state.currentRoute}
+                        currentChat={this.state.currentChat}
                         setParentState={setState}
                     />
                 </Responsive>

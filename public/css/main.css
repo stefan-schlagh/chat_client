@@ -204,3 +204,10 @@
     background-color: #6076ff;
     border-radius: 10px;
 }
+.typeMsg-container{
+    position: absolute;
+    left: 0;
+    bottom: 50px;
+    font-weight: bold;
+    color: var(--notification-blue);
+}

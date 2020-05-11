@@ -8,10 +8,14 @@ export default class TypeMsgContainer extends Component{
         this.state = {
             usersTyping: []
         };
+        console.log(this.props.chatType);
+        console.log(this.props.chatId);
+        const chat = chatSocket.getChat(this.props.chatType,this.props.chatId);
+        console.log(chat);
     }
     typeStateChanged = () => {
 
-        const chat = chatSocket.getChat(this.props.type,this.props.id);
+        const chat = chatSocket.getChat(this.props.chatType,this.props.chatId);
         this.setState({
             usersTyping: chat.getUsersTyping()
         });
@@ -22,7 +26,7 @@ export default class TypeMsgContainer extends Component{
         return(
             <div className="typeMsg-container">
                 {this.state.usersTyping.map((user,index) => (
-                    <div>
+                    <div className="typeMsg">
                         {user.username + " schreibt..."}
                     </div>
                 ))}
@@ -32,7 +36,7 @@ export default class TypeMsgContainer extends Component{
 
     componentDidMount() {
 
-        const chat = chatSocket.getChat(this.props.type,this.props.id);
+        const chat = chatSocket.getChat(this.props.chatType,this.props.chatId);
         chat.event.on("typeState changed",this.typeStateChanged);
     }
 
@@ -53,7 +57,7 @@ export default class TypeMsgContainer extends Component{
 
     componentWillUnmount() {
 
-        const chat = chatSocket.getChat(this.props.type,this.props.id);
+        const chat = chatSocket.getChat(this.props.chatType,this.props.chatId);
         chat.event.rm("typeState changed",this.typeStateChanged);
     }
 }
