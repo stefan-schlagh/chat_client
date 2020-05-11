@@ -8,10 +8,6 @@ export default class TypeMsgContainer extends Component{
         this.state = {
             usersTyping: []
         };
-        console.log(this.props.chatType);
-        console.log(this.props.chatId);
-        const chat = chatSocket.getChat(this.props.chatType,this.props.chatId);
-        console.log(chat);
     }
     typeStateChanged = () => {
 
@@ -26,7 +22,7 @@ export default class TypeMsgContainer extends Component{
         return(
             <div className="typeMsg-container">
                 {this.state.usersTyping.map((user,index) => (
-                    <div className="typeMsg">
+                    <div key={index} className="typeMsg">
                         {user.username + " schreibt..."}
                     </div>
                 ))}

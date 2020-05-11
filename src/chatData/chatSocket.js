@@ -24,7 +24,7 @@ class ChatSocket{
 
     init(){
 
-        this.socket = io('http://localhost:3002');
+        this.socket = io('http://172.16.1.149:3002');
 
         this.userInfo = {
             uid: uid,

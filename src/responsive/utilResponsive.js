@@ -113,7 +113,7 @@ export const getDeviceTypeInfo = () => {
                 }
             }
         } else {
-            // TODO: UNKNOWN realm
+
             buildDeviceDetails.deviceType = 'Mobile';
             buildDeviceDetails.deviceTypeVariant = 'MobileLarge';
             buildDeviceDetails.isFallback = true

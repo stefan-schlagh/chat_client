@@ -48,6 +48,8 @@ export default class ChatItem extends Component{
             else
                 return(
                     <div className="newMsg-number">
+                        {/*TODO unreadMessages do not get incremented the first time
+                        */}
                         {this.state.unreadMessages}
                     </div>
                 );
@@ -128,7 +130,11 @@ export default class ChatItem extends Component{
         /*
             wenn chat nicht selected, wird newMessages inkrmentiert
          */
+        const chat = chatSocket.getChat(this.props.type,this.props.id);
         if(!this.isSelected()) {
+            console.log(chat.unreadMessages);
+            console.log(chat.chatName);
+            console.log(this.state.unreadMessages);
             this.setState(state => ({
                 unreadMessages: state.unreadMessages + 1
             }));
@@ -158,6 +164,25 @@ export default class ChatItem extends Component{
             this.setState({
                 unreadMessages: 0
             });
+        /*
+            did component update?
+         */
+        if(prevProps.type !== this.props.type || prevProps.id !== this.props.id) {
+            //Listeners get replaced
+            const prevChat = chatSocket.getChat(prevProps.type,prevProps.id);
+            prevChat.event.rm("new message",this.newMessage);
+            prevChat.event.rm("typeState changed",this.typeStateChanged);
+
+            const newChat = chatSocket.getChat(this.props.type,this.props.id);
+            newChat.event.on("new message",this.newMessage);
+            newChat.event.on("typeState changed",this.typeStateChanged);
+
+            //typeMsg gets deleted
+            this.setState({
+                typeMsg: '',
+                unreadMessages: newChat.unreadMessages
+            });
+        }
 
     }
     componentWillUnmount() {

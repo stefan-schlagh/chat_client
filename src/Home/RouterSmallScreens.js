@@ -71,6 +71,9 @@ export default function RouterSmallScreens(props){
                         paddingTop="20px"
                     />
                     <Dummy
+                        didMount={() => {
+                            chatListShown();
+                        }}
                         didUpdate={() => {
                             chatListShown();
                         }}
