@@ -13,10 +13,8 @@ export default class Modal extends Component{
                 <div className="h-100" style={{display: "flex"}}>
 
                         <div
-                            className="col-sm-12 my-auto modal-inner"
-                            style={{
-                                maxWidth: '800px'
-                            }}
+                            className="modal-inner"
+
                             onClick={event => {event.stopPropagation()}}
                         >
                             <div

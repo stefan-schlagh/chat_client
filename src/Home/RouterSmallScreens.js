@@ -10,6 +10,7 @@ import chatSocket from "../chatData/chatSocket";
 import {NormalChatView,GroupChatView,GroupChatInfoView} from "./chatView/NormalChatView";
 import {routes,modals} from "./Home";
 import TypeMsgContainer from "./chatView/TypeMsgContainer";
+import NewChat from "./newChat/NewChat";
 
 export default function RouterSmallScreens(props){
 
@@ -30,6 +31,11 @@ export default function RouterSmallScreens(props){
         if (props.modal === modals.userInfo) {
             return (
                 <h1>Du</h1>
+            )
+        }
+        if (props.modal === modals.newChat) {
+            return (
+                <NewChat />
             )
         }
     }
@@ -69,6 +75,7 @@ export default function RouterSmallScreens(props){
                 <Route exact path={path}>
                     <ChatList
                         paddingTop="20px"
+                        setHomeState={props.setParentState}
                     />
                     <Dummy
                         didMount={() => {

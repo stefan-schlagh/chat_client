@@ -108,17 +108,38 @@
 .modal-inner{
      background-color: white;
      opacity: 1;
-     height: 50%;
-     margin: auto;
+     max-height: 70%;
+     width: 90%;
+     margin: 5% auto auto;
      box-sizing: content-box;
+     padding: 0 !important;
+     position: relative;
 }
 .modal-btn-close{
      position: absolute;
-     top:10px;
+     top:-20px;
      right: 10px;
-     font-size: 16pt;
-     color: #555555;
+     font-size: 50pt;
+     color: #eeeeee;
+     cursor: pointer;
 }
 .modal-btn-close:hover{
-     color: #333333;
+     color: #cccccc;
+     transition: 0.3s;
+}
+.modal-header-b{
+     height: 100px;
+     background-color: #80b3ff;
+     padding: 20px;
+     color: #eeeeee;
+}
+.modal-main{
+     padding: 20px;
+}
+@media screen and (max-width: 765px){
+     .modal-header-b{
+          height: 70px;
+          background-color: #80b3ff;
+          padding: 5px;
+     }
 }

@@ -6,6 +6,7 @@ import Responsive from "../responsive/Responsive";
 import GridBigScreens from "./GridBigScreens";
 import RouterSmallScreens from "./RouterSmallScreens";
 import chatSocket from "../chatData/chatSocket";
+import NewChat from "./newChat/NewChat";
 
 /*
     possible routes in /chat
@@ -140,6 +141,19 @@ export default class Chat extends Component{
                         }}
                     >
                         <h1>Du</h1>
+                    </Modal>
+                )
+            }
+            if(this.state.modal === modals.newChat){
+                return(
+                    <Modal
+                        hide={() => {
+                            this.setState(state => ({
+                                modal: modals.none
+                            }));
+                        }}
+                    >
+                        <NewChat />
                     </Modal>
                 )
             }

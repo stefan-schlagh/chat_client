@@ -1,5 +1,7 @@
 :root{
     --notification-blue: #6076ff;
+    --grey-noHover: #555;
+    --black-hover: #222;
 }
 .row-height{
     height: calc(100% - 50px);
@@ -210,4 +212,40 @@
     bottom: 50px;
     font-weight: bold;
     color: var(--notification-blue);
+}
+.newChat-user-top{
+    display: flex;
+    flex-direction: row;
+}
+.newChat-searchUser{
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+    margin-right: 20px;
+}
+.newChat-searchUser label{
+    margin: 0 10px 0 0;
+    flex-shrink: 0;
+}
+.newChat-searchUser h4{
+    margin: 0;
+}
+.newChat-user-more{
+    cursor: pointer;
+    color: var(--grey-noHover);
+    position: relative;
+}
+.newChat-user-more:hover{
+    color: var(--black-hover);
+}
+.newChat-user-more .options{
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 10;
+    width: 300px;
+    background-color: white;
+}
+.options li:hover{
+    background-color: #ebebeb;
 }

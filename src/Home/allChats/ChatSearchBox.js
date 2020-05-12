@@ -1,9 +1,16 @@
 import React,{Component} from "react";
+import {modals} from "../Home";
 
 export default class ChatSearchBox extends Component{
 
     searchChanged = event => {
         this.props.onSearch(event.target.value);
+    };
+
+    newChatClicked = event => {
+        this.props.setHomeState({
+            modal: modals.newChat
+        });
     };
 
     render() {
@@ -17,7 +24,10 @@ export default class ChatSearchBox extends Component{
                         placeholder="Chat suchen"
                         onChange={this.searchChanged}
                     />
-                    <button id="btn-newChat" className="btn-newChat" data-toggle="tooltip" title="neuer chat">
+                    <button id="btn-newChat"
+                            className="btn-newChat"
+                            onClick={this.newChatClicked}
+                    >
                         <i className="fas fa-plus fa-lg" />
                     </button>
                 </div>

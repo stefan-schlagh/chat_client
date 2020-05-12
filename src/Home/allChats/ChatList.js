@@ -63,6 +63,7 @@ export default class ChatList extends Component{
                                 searchValue: searchValue
                             })
                         }}
+                        setHomeState={this.props.setHomeState}
                     />
 
                     <ul className="chat-list list-group">
