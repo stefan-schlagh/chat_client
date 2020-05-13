@@ -104,6 +104,9 @@ class ChatSocket{
                 location.reload();
             },1000);
         });
+        this.socket.on('users-noChat',data => {
+           chatSocket.event.trigger('users-noChat',data);
+        });
     }
 
     initChats(data){

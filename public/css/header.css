@@ -104,11 +104,11 @@
      left: 0;
      background: rgba(0,0,0,0.4);
      z-index: 5;
+     overflow-y: auto;
 }
 .modal-inner{
      background-color: white;
      opacity: 1;
-     max-height: 70%;
      width: 90%;
      margin: 5% auto auto;
      box-sizing: content-box;
