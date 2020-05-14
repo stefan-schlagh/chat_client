@@ -70,6 +70,7 @@ export default class ChooseUser extends Component{
     };
     /*
         the search result gets requested
+        TODO: validation
      */
     requestSearchResult = searchValue => {
         chatSocket.socket.emit("getUsers-noChat",{
@@ -141,6 +142,7 @@ export default class ChooseUser extends Component{
                                 key={index}
                                 uid={item.uid}
                                 username={item.username}
+                                hide={this.props.hide}
                             />
                         ))}
                     </ul>

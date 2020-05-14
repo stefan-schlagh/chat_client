@@ -203,6 +203,16 @@ export default class ChatContainer extends Component{
             return null;
         };
 
+        const renderAlertNoMessages = () => {
+            if(chat.messages.length === 0)
+                return(
+                    <div className="alert alert-primary" role="alert">
+                        Noch keine Nachrichten vorhanden
+                    </div>
+                );
+            return null;
+        };
+
         return(
             <div className="chat-container">
                 <div className="messages"
@@ -220,6 +230,7 @@ export default class ChatContainer extends Component{
                             </div>
                         );
                     })}
+                    {renderAlertNoMessages()}
                     {renderBtnToBottom()}
                 </div>
                 <MessageForm

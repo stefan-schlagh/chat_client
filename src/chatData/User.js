@@ -7,7 +7,7 @@ export default class User{
     _color;
     _online;
     //ids der chats des Users
-    _normalChat;
+    _normalChat = 0;
     _groupChats;
 
     constructor(uid,username,online) {
