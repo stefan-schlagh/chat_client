@@ -82,13 +82,22 @@ export default class Chat extends Component{
         /*
             current chat gets changed
          */
-        this.setState({
-            currentChat: {
-               type: currentChat.type,
-               id: currentChat.id
-            },
-            newMessages: chatSocket.getNumberNewMessages()
-        });
+        if(currentChat === null) {
+            this.setState({
+                currentChat: {
+                    type: '',
+                    id: 0
+                }
+            });
+        }else{
+            this.setState({
+                currentChat: {
+                    type: currentChat.type,
+                    id: currentChat.id
+                },
+                newMessages: chatSocket.getNumberNewMessages()
+            });
+        }
     };
 
     logout = () => {
@@ -116,6 +125,8 @@ export default class Chat extends Component{
     };
 
     render() {
+
+
         const setState = this.setState.bind(this);
         const showModals = () => {
             if(this.state.modal === modals.settings){
@@ -153,7 +164,13 @@ export default class Chat extends Component{
                             }));
                         }}
                     >
-                        <NewChat />
+                        <NewChat
+                            hide={() => {
+                                this.setState(state => ({
+                                    modal: modals.none
+                                }));
+                            }}
+                        />
                     </Modal>
                 )
             }
@@ -167,8 +184,7 @@ export default class Chat extends Component{
                     headerLeft={{
                         currentRoute: this.state.currentRoute,
                         newMessages: this.state.newMessages,
-                        modalOpen: this.state.modal !== modals.none,
-                        chatId: -1
+                        modalOpen: this.state.modal !== modals.none
                     }}
                     closeModal={this.closeModal}
                 />

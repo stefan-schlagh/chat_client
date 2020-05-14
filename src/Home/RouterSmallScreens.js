@@ -35,7 +35,13 @@ export default function RouterSmallScreens(props){
         }
         if (props.modal === modals.newChat) {
             return (
-                <NewChat />
+                <NewChat
+                    hide={() => {
+                        props.setParentState(state => ({
+                            modal: modals.none
+                        }));
+                    }}
+                />
             )
         }
     }

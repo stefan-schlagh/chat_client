@@ -32,6 +32,7 @@ export default class NewChat extends Component{
                     return(
                         <ChooseUser
                             setCurrentTab={this.setCurrentTab}
+                            hide={this.props.hide}
                         />
                     );
 
@@ -58,6 +59,7 @@ export default class NewChat extends Component{
                     return(
                         <ChooseUser
                             setCurrentTab={this.setCurrentTab}
+                            hide={this.props.hide}
                         />
                     );
                 }

@@ -6,6 +6,10 @@ export default class MessageForm extends Component{
     _userTyping = false;
     _typeEventEmitted = false;
     _typeTimeout;
+    /*
+        if the MessageFrom belongs to a tempChat, it has some other actions to do
+     */
+    _isTempChat;
 
     constructor(props) {
         super(props);
@@ -15,25 +19,31 @@ export default class MessageForm extends Component{
     }
 
     onTyping = event => {
+
         this.setState({
            message: event.target.value
         });
+        /*
+            type message get only handled if the chat is not temporary
+         */
+        if(!this.isTempChat) {
 
-        if(this.userTyping) {
-            clearTimeout(this.typeTimeout);
-        }
-        this.userTyping = true;
-        if(!this.typeEventEmitted){
-            this.typeEventEmitted = true;
-            chatSocket.socket.emit('started typing');
-        }
-        this.typeTimeout = setTimeout(() => {
-            this.userTyping = false;
-            if(this.typeEventEmitted){
-                this.typeEventEmitted = false;
-                chatSocket.socket.emit('stopped typing');
+            if (this.userTyping) {
+                clearTimeout(this.typeTimeout);
             }
-        },1000);
+            this.userTyping = true;
+            if (!this.typeEventEmitted) {
+                this.typeEventEmitted = true;
+                chatSocket.socket.emit('started typing');
+            }
+            this.typeTimeout = setTimeout(() => {
+                this.userTyping = false;
+                if (this.typeEventEmitted) {
+                    this.typeEventEmitted = false;
+                    chatSocket.socket.emit('stopped typing');
+                }
+            }, 1000);
+        }
     };
 
     onSubmit = event => {
@@ -49,16 +59,20 @@ export default class MessageForm extends Component{
             this.setState({
                 message: ''
             });
-            /*
-                message wird zu server emitted, über callback wird msgId geholt
-             */
-            chatSocket.socket.emit('chat message', message,mid => {
+            if(this.isTempChat) {
+                //TODO: add this chat
+            }else{
                 /*
-                    eigene msg wird angehängt
-                */
-                const chat = chatSocket.getChat(this.props.chatType,this.props.chatId);
-                chat.addMessage(chatSocket.userSelf.uid,message,mid);
-            });
+                    message wird zu server emitted, über callback wird msgId geholt
+                 */
+                chatSocket.socket.emit('chat message', message, mid => {
+                    /*
+                        eigene msg wird angehängt
+                    */
+                    const chat = chatSocket.getChat(this.props.chatType, this.props.chatId);
+                    chat.addMessage(chatSocket.userSelf.uid, message, mid);
+                });
+            }
         }
     };
 
@@ -77,6 +91,20 @@ export default class MessageForm extends Component{
                 </div>
             </form>
         )
+    }
+
+    componentDidMount() {
+        /*
+            isTempChat gets set
+         */
+        this.isTempChat = this.props.chatType === 'tempChat';
+    }
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        /*
+            isTempChat gets updated
+         */
+        this.isTempChat = this.props.chatType === 'tempChat';
     }
 
     get userTyping() {
@@ -101,5 +129,13 @@ export default class MessageForm extends Component{
 
     set typeTimeout(value) {
         this._typeTimeout = value;
+    }
+
+    get isTempChat() {
+        return this._isTempChat;
+    }
+
+    set isTempChat(value) {
+        this._isTempChat = value;
     }
 }

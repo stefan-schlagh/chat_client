@@ -106,6 +106,8 @@ export default class ChatItem extends Component{
                 return '/chat/user/' + chatSocket.getChat('normalChat',this.props.id).otherUser;
             }else if(this.props.type === 'groupChat'){
                 return '/chat/' + this.props.id;
+            }else if(this.props.type === 'tempChat'){
+                return '/chat/user/' + chatSocket.temporaryChat.chatNow.otherUser;
             }
         };
 

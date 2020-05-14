@@ -1,5 +1,7 @@
 import React,{Component} from "react";
 import {tabs} from "../NewChat";
+import chatSocket from "../../../chatData/chatSocket";
+import UserItem from "./UserItem";
 
 export default class ChooseUser extends Component{
 
@@ -8,7 +10,15 @@ export default class ChooseUser extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            showOptions: false
+            showOptions: false,
+            /*
+                the value of the search input
+             */
+            searchValue: '',
+            /*
+                the last search result received from the server
+             */
+            searchResult: []
         };
     }
     /*
@@ -44,6 +54,37 @@ export default class ChooseUser extends Component{
     joinGroupClick = event => {
         clearTimeout(this.clickedOutsideTimer);
         this.props.setCurrentTab(tabs.chooseGroup);
+    };
+    /*
+        gets called when the search of the user changed. the new result gets requested
+     */
+    searchChanged = event => {
+        const searchValue = event.target.value;
+        this.setState({
+            searchValue: searchValue
+        });
+        /*
+            new search result gets requested
+         */
+        this.requestSearchResult(searchValue);
+    };
+    /*
+        the search result gets requested
+        TODO: validation
+     */
+    requestSearchResult = searchValue => {
+        chatSocket.socket.emit("getUsers-noChat",{
+            search: searchValue,
+            limit: 10
+        });
+    };
+    /*
+        gets called when the search result is received
+     */
+    searchResultReceived = data => {
+        this.setState({
+            searchResult: data
+        });
     };
 
     render() {
@@ -83,6 +124,7 @@ export default class ChooseUser extends Component{
                                name="newChat-searchUser"
                                className="form-control"
                                placeholder="Benutzer suchen"
+                               onChange={this.searchChanged}
                         />
                     </div>
                     <div className="newChat-user-more">
@@ -92,15 +134,37 @@ export default class ChooseUser extends Component{
                         {renderOptions()}
                     </div>
                 </div>
+                <div className="user-results">
+                    <h5>Ergebnisse:</h5>
+                    <ul className="list-user">
+                        {this.state.searchResult.map((item,index) => (
+                            <UserItem
+                                key={index}
+                                uid={item.uid}
+                                username={item.username}
+                                hide={this.props.hide}
+                            />
+                        ))}
+                    </ul>
+                </div>
             </div>
         );
     }
     componentDidMount() {
         document.body.addEventListener('click',this.clickedOutsideOptions);
+        /*
+            event listener for search result is added
+         */
+        chatSocket.event.on('users-noChat',this.searchResultReceived);
+        this.requestSearchResult('');
     }
     componentWillUnmount() {
         clearTimeout(this.clickedOutsideTimer);
         document.body.removeEventListener('click',this.clickedOutsideOptions);
+        /*
+            event listener for search result is removed
+         */
+        chatSocket.event.rm('users-noChat',this.searchResultReceived);
     }
 
     get clickedOutsideTimer() {

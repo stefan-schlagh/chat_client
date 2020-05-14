@@ -2,6 +2,7 @@
     --notification-blue: #6076ff;
     --grey-noHover: #555;
     --black-hover: #222;
+    --lightGrey: #ebebeb;
 }
 .row-height{
     height: calc(100% - 50px);
@@ -247,5 +248,49 @@
     background-color: white;
 }
 .options li:hover{
-    background-color: #ebebeb;
+    background-color: var(--lightGrey);
+}
+.user-results{
+    min-height: 200px;
+    margin: 20px;
+}
+.user-results h5{
+    padding: 5px;
+    margin-left: 10px;
+}
+.user-results a{
+    color: #212529;
+}
+.user-results a:hover {
+    text-decoration: none;
+    color: #212529;
+}
+.user-results ul{
+    list-style-type: none;
+    padding-left: 0;
+    width: 80%;
+    max-width: 800px;
+}
+.user-results li{
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-top: none;
+    padding: 5px;
+    cursor: pointer;
+}
+.user-results li:first-child{
+    border-top: 1px solid rgba(0, 0, 0, 0.125);
+}
+.user-results li:hover{
+    background-color: var(--lightGrey);
+}
+@media screen and (max-width: 765px){
+    .user-results{
+        margin: 5px;
+    }
+    .user-results h5{
+        margin-left: 0;
+    }
+    .user-results ul{
+        width: 100%;
+    }
 }

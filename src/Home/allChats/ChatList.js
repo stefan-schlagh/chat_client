@@ -8,8 +8,13 @@ export default class ChatList extends Component{
     constructor(props) {
         super(props);
         this.state = {
+            //a array with all chats
             chats: [],
-            searchValue: ''
+            //the current searchValue at the chatlist
+            searchValue: '',
+            //should the tempChat be shown?
+            showTempChat: false,
+            tempChatName: ''
         };
     }
 
@@ -23,17 +28,68 @@ export default class ChatList extends Component{
         });
     };
 
+    tempChatShown = () => {
+
+        const chat = chatSocket.temporaryChat.chatNow;
+
+        this.setState({
+            showTempChat: true ,
+            tempChatName: chat.chatName
+        });
+    };
+
+    tempChatUpdated = () => {
+
+        const chat = chatSocket.temporaryChat.chatNow;
+
+        this.setState({
+            showTempChat: true ,
+            tempChatName: chat.chatName
+        });
+    };
+
+    tempChatHidden = () => {
+
+        this.setState({
+            showTempChat: false ,
+            tempChatName: ''
+        });
+    };
+
+    chatsLoaded = chats => {
+        this.setState({
+            chats: chats
+        });
+    };
+
     componentDidMount() {
+        /*
+            is a tempChat already shown?
+         */
+        if(chatSocket.temporaryChat.isShown)
+            this.setState({
+                showTempChat: true
+            });
+        /*
+            Listeners are attached
+         */
+        chatSocket.event.on("tempChat shown",this.tempChatShown);
+        chatSocket.event.on("tempChat updated",this.tempChatUpdated);
+        chatSocket.event.on("tempChat hidden",this.tempChatHidden);
+        /*
+            chats get initialized
+            is loading of chats already finished?
+                --> chatArray gets requested immediately
+         */
         if(chatSocket.finishedLoading){
             this.setState({
                 chats: chatSocket.getChatArraySortedByDate()
             });
+        /*
+            otherwise --> event handler that gets triggered when loading finished
+         */
         }else{
-            chatSocket.event.on('chats loaded',chats => {
-                this.setState({
-                    chats: chats
-                });
-            });
+            chatSocket.event.on('chats loaded',this.chatsLoaded);
         }
     }
 
@@ -52,6 +108,22 @@ export default class ChatList extends Component{
             return null;
         };
 
+        const renderTempChat = () => {
+            if(this.state.showTempChat){
+                return(
+                <ChatItem
+                    key={-1}
+                    _key_={-1}
+                    id={0}
+                    type={'tempChat'}
+                    name={this.state.tempChatName}
+                    toTop={() => {}}
+                />
+                );
+            }
+            return null;
+        };
+
         return(
             <div style={{
                 paddingTop: paddingTop
@@ -67,6 +139,7 @@ export default class ChatList extends Component{
                     />
 
                     <ul className="chat-list list-group">
+                        {renderTempChat()}
                         {this.state.chats.map((chat,i) => {
                             if(chat.chatName.includes(this.state.searchValue)) {
                                 found++;
@@ -88,5 +161,14 @@ export default class ChatList extends Component{
                 </div>
             </div>
         )
+    }
+    componentWillUnmount() {
+        /*
+            Listeners are removed
+         */
+        chatSocket.event.rm("tempChat shown",this.tempChatShown);
+        chatSocket.event.rm("tempChat updated",this.tempChatUpdated);
+        chatSocket.event.rm("tempChat hidden",this.tempChatHidden);
+        chatSocket.event.rm('chats loaded',this.chatsLoaded);
     }
 }
