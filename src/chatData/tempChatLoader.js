@@ -148,11 +148,6 @@ export default class TempChatLoader{
              */
             this.hide();
             chatSocket.setCurrentChat(newChat);
-            console.log(chatSocket.currentChat);
-
-            //result gets displayed visibly
-            console.log(res);
-
         });
     }
 
