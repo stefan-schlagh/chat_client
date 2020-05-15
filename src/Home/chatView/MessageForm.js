@@ -60,7 +60,10 @@ export default class MessageForm extends Component{
                 message: ''
             });
             if(this.isTempChat) {
-                //TODO: add this chat
+                /*
+                    the chat is created
+                 */
+                chatSocket.temporaryChat.createNewNormalChat(message);
             }else{
                 /*
                     message wird zu server emitted, über callback wird msgId geholt

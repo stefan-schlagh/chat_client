@@ -27,6 +27,28 @@ export default class ChatList extends Component{
             chats: chatsClone
         });
     };
+    /*
+        gets emitted if a new chat gets loaded
+     */
+    newChat = chat => {
+        /*
+            chat object gets created
+         */
+        const chatObj = {
+            type: chat.type,
+            id: chat.id,
+            chatName: chat.chatName,
+            lastMessage: {
+                date: chat.date
+            }
+        };
+        /*
+            this is concatenated with the Array
+         */
+        this.setState(state => ({
+            chats: [chatObj].concat(state.chats)
+        }));
+    };
 
     tempChatShown = () => {
 
@@ -76,6 +98,7 @@ export default class ChatList extends Component{
         chatSocket.event.on("tempChat shown",this.tempChatShown);
         chatSocket.event.on("tempChat updated",this.tempChatUpdated);
         chatSocket.event.on("tempChat hidden",this.tempChatHidden);
+        chatSocket.event.on('new chat',this.newChat);
         /*
             chats get initialized
             is loading of chats already finished?
@@ -169,6 +192,7 @@ export default class ChatList extends Component{
         chatSocket.event.rm("tempChat shown",this.tempChatShown);
         chatSocket.event.rm("tempChat updated",this.tempChatUpdated);
         chatSocket.event.rm("tempChat hidden",this.tempChatHidden);
+        chatSocket.event.rm('new chat',this.newChat);
         chatSocket.event.rm('chats loaded',this.chatsLoaded);
     }
 }
