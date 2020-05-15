@@ -132,11 +132,7 @@ export default class ChatItem extends Component{
         /*
             wenn chat nicht selected, wird newMessages inkrmentiert
          */
-        const chat = chatSocket.getChat(this.props.type,this.props.id);
         if(!this.isSelected()) {
-            console.log(chat.unreadMessages);
-            console.log(chat.chatName);
-            console.log(this.state.unreadMessages);
             this.setState(state => ({
                 unreadMessages: state.unreadMessages + 1
             }));

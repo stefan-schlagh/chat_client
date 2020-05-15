@@ -100,6 +100,18 @@ class ChatSocket{
             chat.event.trigger("stopped typing",data.uid);
         });
         /*
+            the result of the search in new chat
+         */
+        this.socket.on('users-noChat',data => {
+            chatSocket.event.trigger('users-noChat',data);
+        });
+        /*
+            the user has been added to a new chat
+         */
+        this.socket.on("new chat",data => {
+            this.addNewChat(data);
+        });
+        /*
             Bei disconnect wird Seite neu geladen
          */
         this.socket.on('disconnect',() => {
@@ -109,9 +121,6 @@ class ChatSocket{
                 location.reload();
             },1000);
         });
-        this.socket.on('users-noChat',data => {
-           chatSocket.event.trigger('users-noChat',data);
-        });
     }
 
     initChats(data){
@@ -119,34 +128,8 @@ class ChatSocket{
         for(let i=0;i<data.length;i++){
 
             if(data[i].type === 'normalChat'){
-                /*
-                    neier chat wird erzeugt
-                 */
-                const chat = new NormalChat(data[i].id,data[i].chatName,data[i].members[0].uid);
-                /*
-                    erste Msg wird angehängt
-                 */
-                const message = data[i].firstMessage;
-                /*
-                    wenn msg vorhanden, wird diese zu chat hinzugefügt
-                 */
-                if(!message.empty)
-                    chat.messages.add(message.mid,new Message(message.mid,message.content,message.uid,chat,new Date(message.date)));
-                this.chats.normal.add(data[i].id,chat);
-                /*
-                    wenn user noch nicht vorhanden, wird er angelegt
-                 */
-                if(this.users.getIndex(data[i].members[0].uid) === -1){
-                    const user = data[i].members[0];
-                    //neuer user wird angelegt
-                    const newUser = new User(user.uid,user.username,user.isOnline);
-                    //id von normalchat wird hinzugefügt
-                    newUser.normalChat = chat.id;
-                    this.users.add(user.uid,newUser);
-                }else{
-                    //id von normalchat wird hinzugefügt
-                    this.users.get(data[i].members[0].uid).normalChat = chat.id;
-                }
+
+                this.addNewNormalChat(data[i]);
             }
             else if(data[i].type === 'groupChat'){
 
@@ -412,6 +395,73 @@ class ChatSocket{
                 newMessages ++;
         }
         return newMessages;
+    }
+    /*
+        a new chat gets added
+     */
+    addNewChat(data){
+
+        let newChat;
+
+        if(data.type === 'normalChat'){
+            /*
+                new normalChat gets created
+             */
+            newChat = this.addNewNormalChat(data);
+
+        }else if(data.type === 'groupChat'){
+
+        }
+        newChat.unreadMessages = 1;
+        /*
+            event gets triggered
+         */
+        chatSocket.event.trigger('new chat',newChat);
+    }
+    /*
+        a new normalChat gets added
+     */
+    addNewNormalChat(data){
+        /*
+                check if the other user does already exist
+                    if not --> gets created
+             */
+        let otherUser;
+        if(this.users.getIndex(data.members[0].uid) === -1){
+            otherUser = new User(data.members[0].uid,data.members[0].username,data.members[0].online);
+            this.users.add(otherUser.uid,otherUser);
+        }else{
+            otherUser = this.users.get(data.members[0].uid);
+        }
+        /*
+            new chat gets created
+         */
+        const newChat = new NormalChat(data.id,data.chatName,otherUser.uid);
+        /*
+            normalChat is set at other user
+         */
+        otherUser.normalChat = newChat.id;
+        /*
+            first message is initialized
+         */
+        const message = data.firstMessage;
+        /*
+            if message exists it gets added to the chat
+         */
+        if(!message.empty)
+            newChat.messages.add(message.mid,new Message(message.mid,message.content,message.uid,newChat,new Date(message.date)));
+        /*
+            new chat gets added to binSearchArray
+         */
+        this.chats.normal.add(data.id,newChat);
+
+        return newChat;
+    }
+    /*
+        a new groupChat gets added
+     */
+    addNewGroupChat(){
+
     }
 
     get socket() {
