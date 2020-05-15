@@ -16,6 +16,10 @@ export default class ChooseUser extends Component{
              */
             searchValue: '',
             /*
+                is the search valid?
+             */
+            searchValid: true,
+            /*
                 the last search result received from the server
              */
             searchResult: []
@@ -60,17 +64,21 @@ export default class ChooseUser extends Component{
      */
     searchChanged = event => {
         const searchValue = event.target.value;
+
+        const searchValid = new RegExp(/^\w*$/).test(searchValue);
+
         this.setState({
-            searchValue: searchValue
+            searchValue: searchValue,
+            searchValid: searchValid
         });
         /*
-            new search result gets requested
+            new search result gets requested if search is valid
          */
-        this.requestSearchResult(searchValue);
+        if(searchValid)
+            this.requestSearchResult(searchValue);
     };
     /*
         the search result gets requested
-        TODO: validation
      */
     requestSearchResult = searchValue => {
         chatSocket.socket.emit("getUsers-noChat",{
@@ -111,6 +119,48 @@ export default class ChooseUser extends Component{
                 );
             return null;
         };
+        /*
+            results only get rendered if search was valid
+         */
+        const renderResult = () => {
+            if(this.state.searchValid) {
+                if(this.state.searchResult.length > 0) {
+                    return (
+                        <div className="user-results">
+                            <h5>Ergebnisse:</h5>
+                            <ul className="list-user">
+                                {this.state.searchResult.map((item, index) => (
+                                    <UserItem
+                                        key={index}
+                                        uid={item.uid}
+                                        username={item.username}
+                                        hide={this.props.hide}
+                                    />
+                                ))}
+                            </ul>
+                        </div>
+                    );
+                }else{
+                    return(
+                        <div className="user-results">
+                            <ul className="list-user">
+                                <div className="alert alert-warning" role="alert">
+                                    Nichts gefunden!
+                                </div>
+                            </ul>
+                        </div>
+                    )
+                }
+            }else{
+                return(
+                    <div className="user-results">
+                        <div className="alert alert-danger" role="alert">
+                            Ihre Suche enthält ungültige Zeichen!
+                        </div>
+                    </div>
+                )
+            }
+        };
 
         return(
             <div className="modal-main">
@@ -134,19 +184,7 @@ export default class ChooseUser extends Component{
                         {renderOptions()}
                     </div>
                 </div>
-                <div className="user-results">
-                    <h5>Ergebnisse:</h5>
-                    <ul className="list-user">
-                        {this.state.searchResult.map((item,index) => (
-                            <UserItem
-                                key={index}
-                                uid={item.uid}
-                                username={item.username}
-                                hide={this.props.hide}
-                            />
-                        ))}
-                    </ul>
-                </div>
+                {renderResult()}
             </div>
         );
     }

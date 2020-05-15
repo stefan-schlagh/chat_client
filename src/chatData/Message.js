@@ -13,6 +13,7 @@ export default class Message {
         this.content = content;
         this.uid = uid;
         this.date = date;
+        //type: object of Chat
         this.chat = chat;
     }
 
