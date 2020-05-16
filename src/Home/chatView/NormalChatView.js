@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from "react";
+import React,{Component,useState,useEffect} from "react";
 import {useParams} from "react-router-dom";
 import chatSocket from "../../chatData/chatSocket";
 import ChatViewLoader from "./ChatViewLoader";
@@ -14,7 +14,8 @@ const errorCode = {
 
 export function NormalChatView (props){
 
-    const {uid} = useParams();
+    const uid = props.uid;
+    //const {uid} = useParams();
     const[userId,setUserId] = useState(0);
     const[loaded,setLoaded] = useState(false);
     /*

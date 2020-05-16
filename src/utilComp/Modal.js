@@ -1,26 +1,24 @@
 import React,{Component} from "react";
+import {withRouter} from 'react-router-dom';
 
-export default class Modal extends Component{
+class Modal extends Component{
+
     render() {
         const clickedOutside = () => {
-            this.props.hide();
+            this.props.history.goBack();
         };
         return(
             <div
                 className="modal-outer"
-                onClick={clickedOutside}
-            >
+                onClick={clickedOutside}>
                 <div className="h-100" style={{display: "flex"}}>
 
                         <div
                             className="modal-inner"
-
-                            onClick={event => {event.stopPropagation()}}
-                        >
+                            onClick={event => {event.stopPropagation()}}>
                             <div
                                 className="modal-btn-close"
-                                onClick={this.props.hide}
-                            >
+                                onClick={() => {this.props.history.goBack()}}>
                                 &times;
                             </div>
                             {this.props.children}
@@ -31,3 +29,4 @@ export default class Modal extends Component{
         )
     }
 }
+export default withRouter(Modal);

@@ -14,7 +14,7 @@ import NewChat from "./newChat/NewChat";
 
 export default function RouterSmallScreens(props){
 
-    let { path, url } = useRouteMatch();
+    let { path } = useRouteMatch();
 
     /*
         is a 'modal' open?

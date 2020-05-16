@@ -9,6 +9,7 @@ import ChatList from "./allChats/ChatList";
 import Dummy from "../utilComp/Dummy";
 import {NormalChatView,GroupChatView,GroupChatInfoView} from "./chatView/NormalChatView";
 import {routes} from "./Home";
+import ModalRouterBigScreens from "./ModalRouterBigScreens";
 
 export default function GridBigScreens(props){
 
@@ -71,36 +72,48 @@ export default function GridBigScreens(props){
 
                 <Switch>
                     <Route exact path={path}>
-                        <h1>noch kein chat ausgewählt</h1>
-                        <Dummy
-                            didUpdate={() => {
-                                nothingShown()
-                            }}
-                        />
+                        <ModalRouterBigScreens>
+                            <h1>noch kein chat ausgewählt</h1>
+                            <Dummy
+                                didUpdate={() => {
+                                    nothingShown()
+                                }}
+                            />
+                        </ModalRouterBigScreens>
                     </Route>
-                    <Route path={`${path}/user/:uid`}>
-                        <NormalChatView />
-                        <Dummy
-                            didUpdate={() => {
-                                normalChatShown()
-                            }}
-                        />
+                    <Route path={`${path}/user/:uid`} render={
+                        routeProps => (
+                            <ModalRouterBigScreens>
+                                <NormalChatView
+                                    uid={routeProps.match.params.uid}
+                                />
+                                <Dummy
+                                didUpdate={() => {
+                                    normalChatShown()
+                                }}
+                                />
+                            </ModalRouterBigScreens>
+                        )
+                    } />
+                    <Route path={`${path}/:gcid`}>
+                        <ModalRouterBigScreens>
+                            <GroupChatView/>
+                            <Dummy
+                                didUpdate={() => {
+                                    groupChatShown()
+                                }}
+                            />
+                        </ModalRouterBigScreens>
                     </Route>
-                    <Route exact path={`${path}/:gcid`}>
-                        <GroupChatView/>
-                        <Dummy
-                            didUpdate={() => {
-                                groupChatShown()
-                            }}
-                        />
-                    </Route>
-                    <Route exact path={`${path}/:gcid/info`}>
-                        <GroupChatInfoView/>
-                        <Dummy
-                            didUpdate={() => {
-                                groupChatInfoShown()
-                            }}
-                        />
+                    <Route path={`${path}/:gcid/info`}>
+                        <ModalRouterBigScreens>
+                            <GroupChatInfoView/>
+                            <Dummy
+                                didUpdate={() => {
+                                    groupChatInfoShown()
+                                }}
+                            />
+                        </ModalRouterBigScreens>
                     </Route>
                     <Route path = "*">
                         <h3>Not found!</h3>

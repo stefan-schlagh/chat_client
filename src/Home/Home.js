@@ -1,13 +1,10 @@
 import React,{Component} from "react";
 import Header from "./Header/Header";
 import {logout} from "../Auth/Auth";
-import Modal from "../utilComp/Modal";
 import Responsive from "../responsive/Responsive";
 import GridBigScreens from "./GridBigScreens";
 import RouterSmallScreens from "./RouterSmallScreens";
 import chatSocket from "../chatData/chatSocket";
-import NewChat from "./newChat/NewChat";
-
 /*
     possible routes in /chat
  */
@@ -128,53 +125,7 @@ export default class Chat extends Component{
 
 
         const setState = this.setState.bind(this);
-        const showModals = () => {
-            if(this.state.modal === modals.settings){
-                return(
-                    <Modal
-                        hide={() => {
-                            this.setState(state => ({
-                                modal: modals.none
-                            }));
-                        }}
-                    >
-                        <h1>Settings</h1>
-                    </Modal>
-                )
-            }
-            if(this.state.modal === modals.userInfo){
-                return(
-                    <Modal
-                        hide={() => {
-                            this.setState(state => ({
-                                modal: modals.none
-                            }));
-                        }}
-                    >
-                        <h1>Du</h1>
-                    </Modal>
-                )
-            }
-            if(this.state.modal === modals.newChat){
-                return(
-                    <Modal
-                        hide={() => {
-                            this.setState(state => ({
-                                modal: modals.none
-                            }));
-                        }}
-                    >
-                        <NewChat
-                            hide={() => {
-                                this.setState(state => ({
-                                    modal: modals.none
-                                }));
-                            }}
-                        />
-                    </Modal>
-                )
-            }
-        };
+
         return (
             <div className="h-100">
                 <Header
@@ -199,7 +150,6 @@ export default class Chat extends Component{
                 </Responsive>
 
                 <Responsive displayIn={["Laptop","Tablet"]}>
-                    {showModals()}
 
                     <GridBigScreens
                         currentRoute={this.state.currentRoute}

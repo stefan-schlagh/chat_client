@@ -1,19 +1,16 @@
 import React,{Component} from "react";
-import {modals} from "../Home";
+import {Link,withRouter} from "react-router-dom";
 
-export default class ChatSearchBox extends Component{
+class ChatSearchBox extends Component{
 
     searchChanged = event => {
         this.props.onSearch(event.target.value);
     };
 
-    newChatClicked = event => {
-        this.props.setHomeState({
-            modal: modals.newChat
-        });
-    };
-
     render() {
+
+        const {pathname} = this.props.location;
+
         return(
             <div className="chat-container-top border rounded mb-2">
                 <div className="chat-select-form">
@@ -24,14 +21,16 @@ export default class ChatSearchBox extends Component{
                         placeholder="Chat suchen"
                         onChange={this.searchChanged}
                     />
-                    <button id="btn-newChat"
-                            className="btn-newChat"
-                            onClick={this.newChatClicked}
-                    >
-                        <i className="fas fa-plus fa-lg" />
-                    </button>
+                    <Link to={pathname + "/newChat"}>
+                        <button id="btn-newChat"
+                                className="btn-newChat"
+                        >
+                            <i className="fas fa-plus fa-lg" />
+                        </button>
+                    </Link>
                 </div>
             </div>
         )
     }
 }
+export default withRouter(ChatSearchBox);

@@ -1,12 +1,14 @@
 import React,{Component} from "react";
 import Responsive from "../../responsive/Responsive";
 import chatSocket from "../../chatData/chatSocket";
-import {Link} from "react-router-dom";
+import {Link,withRouter} from "react-router-dom";
 import {routes} from "../Home";
 
-export default class HeaderLeft extends Component{
+class HeaderLeft extends Component{
 
     render() {
+
+        const {pathname} = this.props.location;
         /*
             renders number of new messages
          */
@@ -66,16 +68,14 @@ export default class HeaderLeft extends Component{
                 return null;
             else
                 if(chat.type === 'normalChat'){
-                    const userInfoClicked = event => {
-                        this.props.showUserInfo(chat.otherUser);
-                    };
                     //userinfo wird gezeigt
                     return(
-                        <i className="fas fa-info-circle fa-2x"
-                           data-toggle="tooltip"
-                           title="chat info"
-                           onClick={userInfoClicked}
-                        />
+                        <Link to={pathname + "/userInfo/" + chat.otherUser}>
+                            <i className="fas fa-info-circle fa-2x"
+                               data-toggle="tooltip"
+                               title="chat info"
+                            />
+                        </Link>
                     );
                 }else{
                     //Link auf chatInfo
@@ -127,3 +127,4 @@ export default class HeaderLeft extends Component{
         )
     }
 }
+export default withRouter(HeaderLeft);
