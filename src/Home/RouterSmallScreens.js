@@ -8,43 +8,14 @@ import ChatList from "./allChats/ChatList";
 import Dummy from "../utilComp/Dummy";
 import chatSocket from "../chatData/chatSocket";
 import {NormalChatView,GroupChatView,GroupChatInfoView} from "./chatView/NormalChatView";
-import {routes,modals} from "./Home";
+import {routes} from "./Home";
 import TypeMsgContainer from "./chatView/TypeMsgContainer";
-import NewChat from "./newChat/NewChat";
+import ModalRouterSmallScreens from "./ModalRouterSmallScreens";
 
 export default function RouterSmallScreens(props){
 
     let { path } = useRouteMatch();
 
-    /*
-        is a 'modal' open?
-        if --> render them instead of switch
-     */
-    if (props.modal !== modals.none) {
-
-        if (props.modal === modals.settings) {
-            return (
-                <h1>Settings</h1>
-
-            )
-        }
-        if (props.modal === modals.userInfo) {
-            return (
-                <h1>Du</h1>
-            )
-        }
-        if (props.modal === modals.newChat) {
-            return (
-                <NewChat
-                    hide={() => {
-                        props.setParentState(state => ({
-                            modal: modals.none
-                        }));
-                    }}
-                />
-            )
-        }
-    }
 
     const chatListShown = () => {
         if(props.currentRoute !== routes.allChats) {
@@ -78,30 +49,24 @@ export default function RouterSmallScreens(props){
     return(
         <div className="row-height position-relative">
             <Switch>
-                <Route exact path={path}>
-                    <ChatList
-                        paddingTop="20px"
-                        setHomeState={props.setParentState}
-                    />
-                    <Dummy
-                        didMount={() => {
-                            chatListShown();
-                        }}
-                        didUpdate={() => {
-                            chatListShown();
-                        }}
-                    />
+                <Route path={`${path}/user/:uid`} render={
+                    routeProps => (
+                        <ModalRouterSmallScreens>
+                            <NormalChatView
+                                uid={routeProps.match.params.uid}
+                            />
+                            {renderTypeMsgContainer()}
+                            <Dummy
+                            didUpdate={() => {
+                                normalChatShown();
+                            }}
+                            />
+                        </ModalRouterSmallScreens>
+                    )
+                }>
+
                 </Route>
-                <Route path={`${path}/user/:uid`}>
-                    <NormalChatView/>
-                    {renderTypeMsgContainer()}
-                    <Dummy
-                        didUpdate={() => {
-                            normalChatShown();
-                        }}
-                    />
-                </Route>
-                <Route exact path={`${path}/:gcid`}>
+                <Route path={`${path}/group/:gcid`}>
                     <GroupChatView/>
                     {renderTypeMsgContainer()}
                     <Dummy
@@ -112,7 +77,7 @@ export default function RouterSmallScreens(props){
                         }}
                     />
                 </Route>
-                <Route exact path={`${path}/:gcid/info`}>
+                <Route path={`${path}/group/:gcid/info`}>
                     <GroupChatInfoView/>
                     <Dummy
                         didMount={() => {
@@ -121,6 +86,22 @@ export default function RouterSmallScreens(props){
                             });
                         }}
                     />
+                </Route>
+                <Route path={path}>
+                    <ModalRouterSmallScreens>
+                        <ChatList
+                            paddingTop="20px"
+                            setHomeState={props.setParentState}
+                        />
+                        <Dummy
+                            didMount={() => {
+                                chatListShown();
+                            }}
+                            didUpdate={() => {
+                                chatListShown();
+                            }}
+                        />
+                    </ModalRouterSmallScreens>
                 </Route>
                 <Route path = "*">
                     <h3>Not found!</h3>

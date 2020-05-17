@@ -123,7 +123,6 @@ export default class Chat extends Component{
 
     render() {
 
-
         const setState = this.setState.bind(this);
 
         return (
@@ -133,9 +132,7 @@ export default class Chat extends Component{
                     setParentState={setState}
                     logout={this.logout}
                     headerLeft={{
-                        currentRoute: this.state.currentRoute,
-                        newMessages: this.state.newMessages,
-                        modalOpen: this.state.modal !== modals.none
+                        newMessages: this.state.newMessages
                     }}
                     closeModal={this.closeModal}
                 />

@@ -1,8 +1,18 @@
-import React,{Component} from "react";
+import React,{Component,setGlobal} from "reactn";
 import Responsive from "../../responsive/Responsive";
 import chatSocket from "../../chatData/chatSocket";
 import {Link,withRouter} from "react-router-dom";
 import {routes} from "../Home";
+
+export const infoHeaderCenter = {
+    none: 0,
+    normalChat: 1
+};
+
+setGlobal({
+    infoHeaderCenter: infoHeaderCenter.none,
+    data: null
+}).then();
 
 class HeaderLeft extends Component{
 
@@ -26,90 +36,38 @@ class HeaderLeft extends Component{
         const renderBtnBack = () => {
             /*
                 only small screens
-                    if a modal is open, it gets closed by this button
              */
-            if(this.props.modalOpen){
-                return(
-                    <div className="float-left top-left">
-                        <i id="btnBackToChatList"
-                           className="fas fa-arrow-left fa-2x d-block d-md-none"
-                           onClick={() => {this.props.closeModal()}}
-                        />
-                        {renderNewMsgNumber()}
-                    </div>
-                );
-            }
-            else if(this.props.currentRoute === routes.normalChat)
-                return (
-                    <div className="float-left top-left">
-                        <Link to={"/chat"}>
-                            <i id="btnBackToChatList" className="fas fa-arrow-left fa-2x d-block d-md-none"/>
-                        </Link>
-                        {renderNewMsgNumber()}
-                    </div>
-                );
-        };
-
-        const getChatName = () => {
-            // es wird nach chat gesucht
-            const chat = chatSocket.getChat(this.props.currentChat.type,this.props.currentChat.id);
-            //wenn undefined, wird default test returned
-            if(chat === undefined)
-                return 'Socket.IO';
-            else
-                return chat.chatName;
-        };
-
-        const renderButtonChatInfo = () => {
-            // es wird nach chat gesucht
-            const chat = chatSocket.getChat(this.props.currentChat.type,this.props.currentChat.id);
-            //wenn undefined, wird null returned
-            if(chat === undefined)
-                return null;
-            else
-                if(chat.type === 'normalChat'){
-                    //userinfo wird gezeigt
-                    return(
-                        <Link to={pathname + "/userInfo/" + chat.otherUser}>
-                            <i className="fas fa-info-circle fa-2x"
-                               data-toggle="tooltip"
-                               title="chat info"
-                            />
-                        </Link>
-                    );
-                }else{
-                    //Link auf chatInfo
-                    return(
-                        <Link to={"/chat/" + chat.id + "/info"}>
-                            <i className="fas fa-info-circle fa-2x"
-                               data-toggle="tooltip"
-                               title="chat info"
-                            />
-                        </Link>
-                    );
-                }
+            return (
+                <div className="float-left top-left">
+                    <i id="btnBackToChatList"
+                       className="fas fa-arrow-left fa-2x d-block d-md-none"
+                       onClick={() => {this.props.history.goBack()}}
+                    />
+                    {renderNewMsgNumber()}
+                </div>
+            );
         };
 
         const renderChatInfo = () => {
-            if(!this.props.modalOpen) {
-                if (this.props.currentRoute === routes.allChats) {
-                    return (
-                        <h3 className="pt-2 pl-2">
-                            Socket.IO
-                        </h3>
-                    );
-                }else {
-                    return (
-                        <div id="chat-info" className="chat-info float-left top-center pt-2">
-                            <h3 id="chat-info-name">
-                                {getChatName()}
-                            </h3>
-                            {renderButtonChatInfo()}
-                        </div>
-                    );
-                }
-            }
+            /*
+                if there is a normal chat open, this info gets displayed
+             */
+            if(this.global.infoHeaderCenter === infoHeaderCenter.normalChat){
 
+                return (
+                    <div id="chat-info" className="chat-info float-left top-center pt-2">
+                        <h3 id="chat-info-name">
+                            {this.global.data.name}
+                        </h3>
+                        <Link to={pathname + "/userInfo/" + this.global.data.uid}>
+                            <i className="fas fa-info-circle fa-2x"
+                               data-toggle="tooltip"
+                               title="chat info"
+                            />
+                        </Link>
+                    </div>
+                );
+            }
             return(
                 <Responsive displayIn={["Laptop","Tablet"]}>
                     <h3 className="pt-2 pl-2">Socket.IO chat</h3>

@@ -3,7 +3,6 @@ import {username} from "../../Auth/Auth";
 import $ from 'jquery';
 import HeaderLeft from "./HeaderLeft";
 import chatSocket from "../../chatData/chatSocket";
-import {modals} from "../Home";
 import {Link,withRouter} from "react-router-dom";
 
 class Header extends Component{
@@ -38,25 +37,12 @@ class Header extends Component{
     render() {
 
         const {pathname} = this.props.location;
-        /*
-            settings werden gezeigt
-         */
-        const showSettings = event => {
-            this.props.setParentState(state => ({
-                modal: modals.settings
-            }));
-        };
 
         return (
             <div className="container-top">
 
                 <HeaderLeft
-                    currentChat={this.props.currentChat}
-                    show={true}
-                    currentRoute={this.props.headerLeft.currentRoute}
-                    modalOpen={this.props.headerLeft.modalOpen}
                     newMessages={this.props.headerLeft.newMessages}
-                    closeModal={this.props.closeModal}
                 />
 
                 <div id="top-right" className="top-right" onClick={this.clickCheckBox}>

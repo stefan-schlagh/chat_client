@@ -15,6 +15,7 @@
     "react-router": "latest",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
+    "reactn": "^2.2.7",
     "socket.io-client": "^2.3.0",
     "validate.js": "^0.13.1"
   },

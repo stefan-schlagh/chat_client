@@ -149,7 +149,8 @@ export default class ChatList extends Component{
 
         return(
             <div style={{
-                paddingTop: paddingTop
+                paddingTop: paddingTop,
+                height: '100%'
             }}>
                 <div className="chat-container m-2">
                     <ChatSearchBox
@@ -161,7 +162,7 @@ export default class ChatList extends Component{
                         setHomeState={this.props.setHomeState}
                     />
 
-                    <ul className="chat-list list-group">
+                    <ul className="chat-list list-group pb-5" style={{height: 'calc (100% - 80px'}}>
                         {renderTempChat()}
                         {this.state.chats.map((chat,i) => {
                             if(chat.chatName.includes(this.state.searchValue)) {
