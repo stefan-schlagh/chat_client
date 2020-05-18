@@ -9,6 +9,7 @@ import ChatList from "./allChats/ChatList";
 import Dummy from "../utilComp/Dummy";
 import {NormalChatView,GroupChatView,GroupChatInfoView} from "./chatView/NormalChatView";
 import {routes} from "./Home";
+import ModalRouterBigScreens from "./ModalRouterBigScreens";
 
 export default function GridBigScreens(props){
 
@@ -59,7 +60,7 @@ export default function GridBigScreens(props){
 
     return(
         <div className="row w-100 justify-content-end row-height">
-            <div className="col-md-5 col-lg-4 col-xl-3 d-none d-md-block pr-3 col-overflow">
+            <div className="col-md-5 col-lg-4 col-xl-3 d-none d-md-block pr-3 h-100">
 
                 <ChatList
                     setHomeState={props.setParentState}
@@ -70,40 +71,49 @@ export default function GridBigScreens(props){
             >
 
                 <Switch>
-                    <Route exact path={path}>
-                        <h1>noch kein chat ausgewählt</h1>
-                        <Dummy
-                            didUpdate={() => {
-                                nothingShown()
-                            }}
-                        />
+                    <Route path={`${path}/user/:uid`} render={
+                        routeProps => (
+                            <ModalRouterBigScreens>
+                                <NormalChatView
+                                    uid={routeProps.match.params.uid}
+                                />
+                                <Dummy
+                                didUpdate={() => {
+                                    normalChatShown()
+                                }}
+                                />
+                            </ModalRouterBigScreens>
+                        )
+                    } />
+                    <Route path={`${path}/group/:gcid`}>
+                        <ModalRouterBigScreens>
+                            <GroupChatView/>
+                            <Dummy
+                                didUpdate={() => {
+                                    groupChatShown()
+                                }}
+                            />
+                        </ModalRouterBigScreens>
                     </Route>
-                    <Route path={`${path}/user/:uid`}>
-                        <NormalChatView />
-                        <Dummy
-                            didUpdate={() => {
-                                normalChatShown()
-                            }}
-                        />
+                    <Route path={`${path}/group/:gcid/info`}>
+                        <ModalRouterBigScreens>
+                            <GroupChatInfoView/>
+                            <Dummy
+                                didUpdate={() => {
+                                    groupChatInfoShown()
+                                }}
+                            />
+                        </ModalRouterBigScreens>
                     </Route>
-                    <Route exact path={`${path}/:gcid`}>
-                        <GroupChatView/>
-                        <Dummy
-                            didUpdate={() => {
-                                groupChatShown()
-                            }}
-                        />
-                    </Route>
-                    <Route exact path={`${path}/:gcid/info`}>
-                        <GroupChatInfoView/>
-                        <Dummy
-                            didUpdate={() => {
-                                groupChatInfoShown()
-                            }}
-                        />
-                    </Route>
-                    <Route path = "*">
-                        <h3>Not found!</h3>
+                    <Route path={path}>
+                        <ModalRouterBigScreens>
+                            <h1>noch kein chat ausgewählt</h1>
+                            <Dummy
+                                didUpdate={() => {
+                                    nothingShown()
+                                }}
+                            />
+                        </ModalRouterBigScreens>
                     </Route>
                 </Switch>
             </div>

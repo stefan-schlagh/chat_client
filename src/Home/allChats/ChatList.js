@@ -71,6 +71,7 @@ export default class ChatList extends Component{
     };
 
     tempChatHidden = () => {
+        console.log('hidden');
 
         this.setState({
             showTempChat: false ,
@@ -134,14 +135,14 @@ export default class ChatList extends Component{
         const renderTempChat = () => {
             if(this.state.showTempChat){
                 return(
-                <ChatItem
-                    key={-1}
-                    _key_={-1}
-                    id={0}
-                    type={'tempChat'}
-                    name={this.state.tempChatName}
-                    toTop={() => {}}
-                />
+                    <ChatItem
+                        key={-1}
+                        _key_={-1}
+                        id={0}
+                        type={'tempChat'}
+                        name={this.state.tempChatName}
+                        toTop={() => {}}
+                    />
                 );
             }
             return null;
@@ -149,7 +150,8 @@ export default class ChatList extends Component{
 
         return(
             <div style={{
-                paddingTop: paddingTop
+                paddingTop: paddingTop,
+                height: '100%'
             }}>
                 <div className="chat-container m-2">
                     <ChatSearchBox
@@ -161,7 +163,7 @@ export default class ChatList extends Component{
                         setHomeState={this.props.setHomeState}
                     />
 
-                    <ul className="chat-list list-group">
+                    <ul className="chat-list list-group pb-5" style={{height: 'calc (100% - 80px'}}>
                         {renderTempChat()}
                         {this.state.chats.map((chat,i) => {
                             if(chat.chatName.includes(this.state.searchValue)) {

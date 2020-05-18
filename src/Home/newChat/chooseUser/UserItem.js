@@ -1,19 +1,19 @@
 import React, {Component} from "react";
-import {Link} from "react-router-dom";
+import {Link,withRouter} from "react-router-dom";
 import chatSocket from "../../../chatData/chatSocket";
 
-export default class UserItem extends Component{
+class UserItem extends Component{
 
     elementClicked = event => {
 
         chatSocket.temporaryChat.createNew(this.props.uid,this.props.username);
-        this.props.hide();
     };
 
     render() {
         return(
             <Link to={"/chat/user/" + this.props.uid}
                   onClick={this.elementClicked}
+                  replace={true}
             >
                 <li>
                     {this.props.username}
@@ -22,3 +22,4 @@ export default class UserItem extends Component{
         )
     }
 }
+export default withRouter(UserItem);

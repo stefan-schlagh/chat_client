@@ -8,6 +8,7 @@
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "bootstrap": "^4.4.1",
+    "emoji-mart": "^3.0.0",
     "jquery": "^3.5.0",
     "popper.js": "^1.16.1",
     "react": "^16.13.1",
@@ -15,6 +16,7 @@
     "react-router": "latest",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
+    "reactn": "^2.2.7",
     "socket.io-client": "^2.3.0",
     "validate.js": "^0.13.1"
   },

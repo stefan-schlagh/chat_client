@@ -53,6 +53,13 @@
      border-top: 70px solid #555;
      border-left: 20px solid transparent;
 }
+.top-right a{
+     color: inherit;
+}
+.top-right a:hover{
+     text-decoration: none;
+     color: inherit;
+}
 .username{
      display: inline-block;
 }
@@ -66,10 +73,10 @@
      padding: 9px;
      position: relative;
 }
-.top-left a{
+.top-left a,.top-center a{
      color: #212529;
 }
-.top-left a:hover{
+.top-left a:hover,.top-center a:hover{
      color: #000000;
      text-decoration: none;
 }

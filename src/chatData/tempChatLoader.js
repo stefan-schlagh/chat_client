@@ -106,48 +106,53 @@ export default class TempChatLoader{
     /*
         a new normalChat is created out of the current tempChat
      */
-    createNewNormalChat(message){
-        /*
-            the request gets sent to the server
-         */
-        const otherUid = this.chatNow.otherUser;
-        const otherUsername = this.chatNow.chatName;
+    async createNewNormalChat(message){
 
-        chatSocket.socket.emit('new normalChat',{
-            uid: otherUid,
-            username: otherUsername,
-            message: message
-        },res => {
+        return new Promise((resolve,reject) => {
             /*
-                the user and the chat get created client-side
+                the request gets sent to the server
              */
-            if(chatSocket.users.getIndex(otherUid) === -1){
-                chatSocket.users.add(otherUid,new User(otherUid,otherUsername,res.online));
-            }
-            const otherUser = chatSocket.users.get(otherUid);
-            otherUser.online = res.online;
+            const otherUid = this.chatNow.otherUser;
+            const otherUsername = this.chatNow.chatName;
 
-            const newChat = new NormalChat(res.ncid,otherUsername,otherUid);
-            /*
-                chat gets added to user
-             */
-            otherUser.normalChat = newChat.id;
-            /*
-                chat is added in binsearchArray
-             */
-            chatSocket.chats.normal.add(res.ncid,newChat);
-            /*
-                message is added to chat
-             */
-            newChat.messages.add(res.mid,new Message(res.mid,message,chatSocket.userSelf.uid,newChat,new Date(Date.now())));
+            chatSocket.socket.emit('new normalChat',{
+                uid: otherUid,
+                username: otherUsername,
+                message: message
+            },res => {
+                /*
+                    the user and the chat get created client-side
+                 */
+                if(chatSocket.users.getIndex(otherUid) === -1){
+                    chatSocket.users.add(otherUid,new User(otherUid,otherUsername,res.online));
+                }
+                const otherUser = chatSocket.users.get(otherUid);
+                otherUser.online = res.online;
 
-            //args: chat
-            chatSocket.event.trigger('new chat',newChat);
-            /*
-                currentChat gets changed
-             */
-            this.hide();
-            chatSocket.setCurrentChat(newChat);
+                const newChat = new NormalChat(res.ncid,otherUsername,otherUid);
+                /*
+                    chat gets added to user
+                 */
+                otherUser.normalChat = newChat.id;
+                /*
+                    chat is added in binsearchArray
+                 */
+                chatSocket.chats.normal.add(res.ncid,newChat);
+                /*
+                    message is added to chat
+                 */
+                newChat.messages.add(res.mid,new Message(res.mid,message,chatSocket.userSelf.uid,newChat,new Date(Date.now())));
+
+                //args: chat
+                chatSocket.event.trigger('new chat',newChat);
+                /*
+                    currentChat gets changed
+                 */
+                chatSocket.setCurrentChat(newChat);
+                this.hide();
+
+                resolve(true);
+            });
         });
     }
 

@@ -109,36 +109,3 @@ function redirectToLogin(location){
         )
     }
 }
-/*function redirect(location,callback){
-    isLoggedIn(loggedIn => {
-        let redirected = false;
-        let rc;
-        /*
-            wenn eingeloggt --> redirect auf Startseite
-
-        if(loggedIn && (location === '/register' || location === '/login')){
-            redirected = true;
-            rc =  (
-                <Redirect
-                    to={{
-                        pathname: "/"
-                    }}
-                />
-            );
-        }
-        /*
-            wenn nicht eingeloggt --> redirect auf login
-
-        else if(!loggedIn && location === '/chat'){
-            redirected = true;
-            rc = (
-                <Redirect
-                    to={{
-                        pathname: "/login"
-                    }}
-                />
-            );
-        }
-        callback(redirected,rc);
-    });
-}*/

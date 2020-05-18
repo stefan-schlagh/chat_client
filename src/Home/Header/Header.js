@@ -3,9 +3,9 @@ import {username} from "../../Auth/Auth";
 import $ from 'jquery';
 import HeaderLeft from "./HeaderLeft";
 import chatSocket from "../../chatData/chatSocket";
-import {modals} from "../Home";
+import {Link,withRouter} from "react-router-dom";
 
-export default class Header extends Component{
+class Header extends Component{
 
     constructor(props) {
         super(props);
@@ -35,39 +35,14 @@ export default class Header extends Component{
         }));
     };
     render() {
-        /*
-            settings werden gezeigt
-         */
-        const showSettings = event => {
-            this.props.setParentState(state => ({
-                modal: modals.settings
-            }));
-        };
-        /*
-            eigene userInfo wird gezeigt
-         */
-        const userInfoSelfClick = event => {
-            showUserInfo(chatSocket.userSelf.uid);
-        };
-        /*
-            userInfo wird gezeigt
-         */
-        const showUserInfo = uid => {
-            this.props.setParentState(state => ({
-                modal: modals.userInfo
-            }));
-        };
+
+        const {pathname} = this.props.location;
+
         return (
             <div className="container-top">
 
                 <HeaderLeft
-                    currentChat={this.props.currentChat}
-                    show={true}
-                    currentRoute={this.props.headerLeft.currentRoute}
-                    modalOpen={this.props.headerLeft.modalOpen}
                     newMessages={this.props.headerLeft.newMessages}
-                    showUserInfo={showUserInfo}
-                    closeModal={this.props.closeModal}
                 />
 
                 <div id="top-right" className="top-right" onClick={this.clickCheckBox}>
@@ -94,20 +69,22 @@ export default class Header extends Component{
                             </div>
                             <div className="d-only-when-big top-2right">
 
-                                <h4 id="username"
-                                    className="p-2 username"
-                                    data-toggle="tooltip"
-                                    title="Benutzer-Info"
-                                    onClick={userInfoSelfClick}
-                                >
-                                        {this.state.username}
-                                </h4>
+                                <Link to={pathname + "/userInfo/" + chatSocket.userSelf.uid}>
+                                    <h4 id="username"
+                                        className="p-2 username"
+                                        data-toggle="tooltip"
+                                        title="Benutzer-Info"
+                                    >
+                                            {this.state.username}
+                                    </h4>
+                                </Link>
                                 <div className="float-right">
-                                    <i className="fas fa-user-cog fa-2x"
-                                       data-toggle="tooltip"
-                                       title="Einstellungen"
-                                       onClick={showSettings}
-                                    />
+                                    <Link to={pathname + "/settings"}>
+                                        <i className="fas fa-user-cog fa-2x"
+                                           data-toggle="tooltip"
+                                           title="Einstellungen"
+                                        />
+                                    </Link>
                                     &nbsp;
                                     <i id="user-logout"
                                        className="fas fa-sign-out-alt fa-2x logout"
@@ -133,3 +110,4 @@ export default class Header extends Component{
     }
 
 }
+export default withRouter(Header);
