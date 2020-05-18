@@ -1,8 +1,6 @@
 import React,{Component,setGlobal} from "reactn";
 import Responsive from "../../responsive/Responsive";
-import chatSocket from "../../chatData/chatSocket";
 import {Link,withRouter} from "react-router-dom";
-import {routes} from "../Home";
 
 export const infoHeaderCenter = {
     none: 0,
@@ -70,7 +68,7 @@ class HeaderLeft extends Component{
             }
             return(
                 <Responsive displayIn={["Laptop","Tablet"]}>
-                    <h3 className="pt-2 pl-2">Socket.IO chat</h3>
+                    <h3 className="pt-2 pl-2">chat</h3>
                 </Responsive>
             );
         };

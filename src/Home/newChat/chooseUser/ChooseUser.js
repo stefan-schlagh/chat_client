@@ -65,7 +65,7 @@ export default class ChooseUser extends Component{
     searchChanged = event => {
         const searchValue = event.target.value;
 
-        const searchValid = new RegExp(/^\w*$/).test(searchValue);
+        const searchValid = true;
 
         this.setState({
             searchValue: searchValue,

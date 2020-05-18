@@ -6,7 +6,6 @@ class UserItem extends Component{
 
     elementClicked = event => {
 
-        this.props.history.goBack();
         chatSocket.temporaryChat.createNew(this.props.uid,this.props.username);
     };
 
@@ -14,6 +13,7 @@ class UserItem extends Component{
         return(
             <Link to={"/chat/user/" + this.props.uid}
                   onClick={this.elementClicked}
+                  replace={true}
             >
                 <li>
                     {this.props.username}

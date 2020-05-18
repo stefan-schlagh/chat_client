@@ -71,6 +71,7 @@ export default class ChatList extends Component{
     };
 
     tempChatHidden = () => {
+        console.log('hidden');
 
         this.setState({
             showTempChat: false ,
@@ -134,14 +135,14 @@ export default class ChatList extends Component{
         const renderTempChat = () => {
             if(this.state.showTempChat){
                 return(
-                <ChatItem
-                    key={-1}
-                    _key_={-1}
-                    id={0}
-                    type={'tempChat'}
-                    name={this.state.tempChatName}
-                    toTop={() => {}}
-                />
+                    <ChatItem
+                        key={-1}
+                        _key_={-1}
+                        id={0}
+                        type={'tempChat'}
+                        name={this.state.tempChatName}
+                        toTop={() => {}}
+                    />
                 );
             }
             return null;

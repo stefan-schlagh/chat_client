@@ -1,7 +1,10 @@
 import React,{Component} from "react";
 import chatSocket from "../../chatData/chatSocket";
+import 'emoji-mart/css/emoji-mart.css';
+import { Picker } from 'emoji-mart';
+import {withRouter} from "react-router-dom";
 
-export default class MessageForm extends Component{
+class MessageForm extends Component{
 
     _userTyping = false;
     _typeEventEmitted = false;
@@ -14,7 +17,8 @@ export default class MessageForm extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            message: ''
+            message: '',
+            showEmoji: false
         }
     }
 
@@ -60,10 +64,18 @@ export default class MessageForm extends Component{
                 message: ''
             });
             if(this.isTempChat) {
+
+                const {pathname} = this.props.location;
                 /*
                     the chat is created
                  */
-                chatSocket.temporaryChat.createNewNormalChat(message);
+                chatSocket.temporaryChat.createNewNormalChat(message)
+                    .then(redirect => {
+                        if(redirect) {
+                            this.props.history.replace("/chat");
+                            this.props.history.replace(pathname);
+                        }
+                    });
             }else{
                 /*
                     message wird zu server emitted, über callback wird msgId geholt
@@ -79,20 +91,51 @@ export default class MessageForm extends Component{
         }
     };
 
+    onEmojiInput = emoji => {
+
+        this.setState({
+            message: this.state.message + emoji.native
+        });
+    };
+
+    toggleEmoji = event => {
+        this.setState(state => ({
+            showEmoji: !state.showEmoji
+        }))
+    };
+
     render() {
         return(
-            <form onSubmit={this.onSubmit}>
-                <div className="msg-form">
-                    <input autoComplete="off"
-                           placeholder="Nachricht:"
-                           value={this.state.message}
-                           onChange={this.onTyping}
-                    />
-                    <button type="submit">
-                        <i className="far fa-paper-plane fa-2x" data-toggle="tooltip" title="send message" />
+            <div>
+                <form onSubmit={this.onSubmit} className="msg-form">
+                    <div className="message-input">
+                        <input autoComplete="off"
+                               placeholder="Nachricht:"
+                               value={this.state.message}
+                               onChange={this.onTyping}
+                        />
+                        <i className="far fa-smile fa-2x emoji-toggle"
+                           onClick={this.toggleEmoji}
+                        />
+                    </div>
+                    <button className="btn-submit" type="submit">
+                        <i className="far fa-paper-plane fa-2x"
+                           data-toggle="tooltip"
+                           title="send message" />
                     </button>
-                </div>
-            </form>
+                </form>
+                {this.state.showEmoji ?
+                    <div style={{
+                        position: 'absolute',
+                        bottom: '60px',
+                        right: '50px',
+                        width: '350px',
+                        height: '425px'
+                    }}>
+                        <Picker onSelect={this.onEmojiInput}/>
+                    </div>
+                : null}
+            </div>
         )
     }
 
@@ -142,3 +185,5 @@ export default class MessageForm extends Component{
         this._isTempChat = value;
     }
 }
+
+export default withRouter(MessageForm);
