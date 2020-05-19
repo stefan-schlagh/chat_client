@@ -104,11 +104,6 @@ export default class Chat extends Component{
         });
     };
 
-    closeModal = () => {
-        this.setState({
-            modal: modals.none
-        })
-    };
     /*
         gets called if there is a new msg
      */
@@ -128,13 +123,10 @@ export default class Chat extends Component{
         return (
             <div className="h-100">
                 <Header
-                    currentChat={this.state.currentChat}
-                    setParentState={setState}
                     logout={this.logout}
                     headerLeft={{
                         newMessages: this.state.newMessages
                     }}
-                    closeModal={this.closeModal}
                 />
 
                 <Responsive displayIn={["Mobile"]}>

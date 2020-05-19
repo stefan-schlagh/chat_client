@@ -10,7 +10,8 @@ const errorCode = {
     nan: 1,
     tempChat: 2,
     userNotExisting: 3,
-    blocked: 4
+    blocked: 4,
+    isSelf: 5
 };
 
 export class NormalChatView extends Component{
@@ -47,10 +48,17 @@ export class NormalChatView extends Component{
                     </div>
                 );
             }
+            else if(this.state.error === errorCode.isSelf){
+                return(
+                    <div>
+                        <h2>Du kannst dir selbst nicht schreiben</h2>
+                    </div>
+                );
+            }
             /*
                 chat wird nur gerendert, wenn geladen
              */
-            if(this.state.loaded){
+            else if(this.state.loaded){
 
                 if(this.state.error === errorCode.none){
 
@@ -118,95 +126,106 @@ export class NormalChatView extends Component{
 
         const uid = parseInt(this.props.uid);
 
-        const userExists = () => {
-            chatSocket.userExists(uid)
-                .then(res => {
-                    /*
-                        if there was an error, the error code gets set
-                     */
-                    if(!res.userExists){
-                        this.setState({
-                            error: errorCode.userNotExisting
-                        });
-                    }else if(res.isUserBlocked){
-                        this.setState({
-                            error: errorCode.blocked
-                        });
-                    }else{
-                        /*
-                            no error
-                                checks if existing or tempChat
-                         */
-                        if(res.chatExists) {
-                            this.setState({
-                                error: errorCode.none
-                            });
-                            this.setGlobal({
-                                infoHeaderCenter: infoHeaderCenter.normalChat,
-                                data: {
-                                    name: chatSocket.users.get(uid).username,
-                                    uid: uid
-                                }
-                            }).then();
-                            setCurrentChat(false);
-                        }else {
-                            this.setState({
-                                error: errorCode.tempChat
-                            });
-                            this.setGlobal({
-                                infoHeaderCenter: infoHeaderCenter.normalChat,
-                                data: {
-                                    name: chatSocket.temporaryChat.chatNow.chatName,
-                                    uid: uid
-                                }
-                            }).then();
-                            setCurrentChat(true);
-                        }
-                    }
-                    this.setState({
-                        loaded: true
-                    });
-                });
-        };
-
-        const setCurrentChat = tempChat => {
-            /*
-                is the chat a tempchat?
+        /*
+                is the user self?
              */
-            if(tempChat){
-                chatSocket.setCurrentChat({
-                    type: 'tempChat',
-                    id: 0
-                });
-            }
-            /*
-                currentChat in chatSocket gets updated
-                if the chat does not exist, id is -1
-            */
-            else if(chatSocket.users.getIndex(uid) === -1){
-                /*
-                    current chat gets set to null -> no chat selected
-                 */
-                chatSocket.setCurrentChat(null);
-            }else {
-                chatSocket.setCurrentChat({
-                    type: 'normalChat',
-                    id: chatSocket.users.get(uid).normalChat
-                });
-            }
-        };
+        if(chatSocket.userSelf.uid === uid){
+            this.setState({
+                error: errorCode.isSelf,
+                loaded: true
+            });
+        }else {
 
-        if(chatSocket.finishedLoading){
-            userExists();
-        }else{
-            chatSocket.event.on('chats loaded',() => {
+            const userExists = () => {
+                chatSocket.userExists(uid)
+                    .then(res => {
+                        /*
+                            if there was an error, the error code gets set
+                         */
+                        if (!res.userExists) {
+                            this.setState({
+                                error: errorCode.userNotExisting
+                            });
+                        } else if (res.isUserBlocked) {
+                            this.setState({
+                                error: errorCode.blocked
+                            });
+                        } else {
+                            /*
+                                no error
+                                    checks if existing or tempChat
+                             */
+                            if (res.chatExists) {
+                                this.setState({
+                                    error: errorCode.none
+                                });
+                                this.setGlobal({
+                                    infoHeaderCenter: infoHeaderCenter.normalChat,
+                                    data: {
+                                        name: chatSocket.users.get(uid).username,
+                                        uid: uid
+                                    }
+                                }).then();
+                                setCurrentChat(false);
+                            } else {
+                                this.setState({
+                                    error: errorCode.tempChat
+                                });
+                                this.setGlobal({
+                                    infoHeaderCenter: infoHeaderCenter.normalChat,
+                                    data: {
+                                        name: chatSocket.temporaryChat.chatNow.chatName,
+                                        uid: uid
+                                    }
+                                }).then();
+                                setCurrentChat(true);
+                            }
+                        }
+                        this.setState({
+                            loaded: true
+                        });
+                    });
+            };
+
+            const setCurrentChat = tempChat => {
+                /*
+                    is the chat a tempchat?
+                 */
+                if (tempChat) {
+                    chatSocket.setCurrentChat({
+                        type: 'tempChat',
+                        id: 0
+                    });
+                }
+                /*
+                    currentChat in chatSocket gets updated
+                    if the chat does not exist, id is -1
+                */
+                else if (chatSocket.users.getIndex(uid) === -1) {
+                    /*
+                        current chat gets set to null -> no chat selected
+                     */
+                    chatSocket.setCurrentChat(null);
+                } else {
+                    chatSocket.setCurrentChat({
+                        type: 'normalChat',
+                        id: chatSocket.users.get(uid).normalChat
+                    });
+                }
+            };
+
+            if (chatSocket.finishedLoading) {
                 userExists();
+            } else {
+                chatSocket.event.on('chats loaded', () => {
+                    userExists();
+                });
+            }
+
+            this.setState({
+                uid: parseInt(this.props.uid)
             });
         }
-
-        this.setState({
-            uid: parseInt(this.props.uid)
-        });
     };
     /*
         property- display normalChat is removed from global
