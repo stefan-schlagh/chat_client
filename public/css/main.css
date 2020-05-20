@@ -266,7 +266,10 @@
 }
 .user-results{
     min-height: 200px;
-    margin: 20px;
+    max-width: 900px;
+    margin: 20px auto;
+    position: relative;
+    height: calc(100% - 70px)
 }
 .user-results h5{
     padding: 5px;
@@ -281,15 +284,18 @@
 }
 .user-results ul{
     list-style-type: none;
-    padding-left: 0;
+    padding: 0 1rem 1rem;
     width: 80%;
     max-width: 800px;
+    overflow-y: auto;
+    height: calc(100% - 46px);
 }
 .user-results li{
     border: 1px solid rgba(0, 0, 0, 0.125);
     border-top: none;
     padding: 5px;
     cursor: pointer;
+    position: relative;
 }
 .user-results li:first-child{
     border-top: 1px solid rgba(0, 0, 0, 0.125);
@@ -297,9 +303,43 @@
 .user-results li:hover{
     background-color: var(--lightGrey);
 }
+.user-results .user-select,.user-select-btn-toggle{
+    position: absolute;
+    height: 30px;
+    width: 30px;
+    top: 5px;
+    right: 15px;
+    border: 1px solid var(--lightGrey);
+    border-radius: 15px;
+}
+.user-results li:hover .user-select,.user-results .user-select.selected,
+.user-select-btn-toggle:hover,.user-select-btn-toggle.selected{
+    background-color: var(--notification-blue);
+    border: none;
+    transition: 0.3s;
+}
+.user-results .user-select i{
+    position: absolute;
+    top: 5px;
+    left: 4px;
+    display: none;
+}
+.user-results li:hover i,.user-results .user-select.selected i{
+    display: block;
+    color: white;
+}
+.select-users{
+    position: relative;
+    max-width: 700px;
+}
+.select-users h4{
+    display: inline-block;
+    padding-left: 10px;
+}
 @media screen and (max-width: 765px){
     .user-results{
         margin: 5px;
+
     }
     .user-results h5{
         margin-left: 0;

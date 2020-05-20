@@ -152,6 +152,10 @@
      padding: 20px;
 }
 @media screen and (max-width: 765px){
+     .modal-main{
+          height: calc(100% - 70px);
+          padding-bottom: 0;
+     }
      .modal-header-b{
           height: 70px;
           background-color: #80b3ff;

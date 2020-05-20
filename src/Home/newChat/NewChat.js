@@ -1,5 +1,7 @@
 import React,{Component} from "react";
 import ChooseUser from "./chooseUser/ChooseUser";
+import NewGroup from "./newGroup/NewGroup";
+import Dummy from "../../utilComp/Dummy";
 
 export const tabs = {
     chooseUser: 0,
@@ -40,9 +42,7 @@ export default class NewChat extends Component{
 
                 case tabs.newGroup:{
                     return(
-                        <div>
-                            <h4>newGroup</h4>
-                        </div>
+                        <NewGroup />
                     );
                 }
 
@@ -66,13 +66,32 @@ export default class NewChat extends Component{
             }
         };
 
+        const getHeader = () => {
+
+            switch(this.state.currentTab){
+
+                case tabs.chooseUser:
+                    return 'Neuer Chat';
+
+                case tabs.newGroup:
+                    return 'Neue Gruppe';
+
+                case tabs.chooseGroup:
+                    return 'Gruppe auswählen';
+
+                default:
+                    return 'Neuer Chat';
+
+            }
+        };
+
         return(
-            <div>
+            <Dummy>
                 <div className="modal-header-b">
-                    <h1>Neuer Chat</h1>
+                    <h1>{getHeader()}</h1>
                 </div>
                 {router()}
-            </div>
+            </Dummy>
         )
     }
 }
