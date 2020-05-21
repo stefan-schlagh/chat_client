@@ -2,6 +2,7 @@ import React,{Component} from "react";
 import ReactDOM from 'react-dom';
 import {tabs} from "../NewChat";
 import UserItem from "./UserItem";
+import Dummy from "../../../utilComp/Dummy";
 
 const errorCode={
     none: 0,
@@ -121,7 +122,11 @@ export default class ChooseUser extends Component{
                 //return json
                 let data = await response.json();
 
-                if(data.length === 0){
+                if(data.length === 0 && this.numAlreadyLoaded === 0){
+                    this.setState({
+                        searchResult: []
+                    });
+                }else if(data.length === 0){
                     this.reachedBottom = true;
                 } else {
 
@@ -204,19 +209,17 @@ export default class ChooseUser extends Component{
         const renderResult = () => {
             if(this.state.error === errorCode.error){
                 return(
-                    <div className="user-results">
-                        <div className="alert alert-danger" role="alert">
-                            Ein Fehler ist aufgetreten!
-                        </div>
+                    <div className="alert alert-danger" role="alert">
+                        Ein Fehler ist aufgetreten!
                     </div>
                 )
             }
             else if(this.state.searchValid) {
                 if(this.state.searchResult.length > 0) {
                     return (
-                        <div className="user-results">
+                        <Dummy>
                             <h5>Ergebnisse:</h5>
-                            <ul className="list-user list-group">
+                            <ul className="list-user list-group result-list">
                                 {this.state.searchResult.map((item, index) => (
                                     <UserItem
                                         key={index}
@@ -226,25 +229,21 @@ export default class ChooseUser extends Component{
                                     />
                                 ))}
                             </ul>
-                        </div>
+                        </Dummy>
                     );
                 }else{
                     return(
-                        <div className="user-results">
-                            <ul className="list-user">
-                                <div className="alert alert-warning" role="alert">
-                                    Nichts gefunden!
-                                </div>
-                            </ul>
-                        </div>
+                        <ul className="list-user result-list">
+                            <div className="alert alert-warning" role="alert">
+                                Nichts gefunden!
+                            </div>
+                        </ul>
                     )
                 }
             }else{
                 return(
-                    <div className="user-results">
-                        <div className="alert alert-danger" role="alert">
-                            Ihre Suche enthält ungültige Zeichen!
-                        </div>
+                    <div className="alert alert-danger" role="alert">
+                        Ihre Suche enthält ungültige Zeichen!
                     </div>
                 )
             }
@@ -252,27 +251,25 @@ export default class ChooseUser extends Component{
 
         return(
             <div className="modal-main">
-                <div className="newChat-user-top">
-                    <div className="newChat-searchUser">
-                        <label htmlFor="newChat-searchUser"
-                               className="d-none d-md-block">
-                            <h4>Benutzer suchen</h4>
-                        </label>
-                        <input type="text"
-                               name="newChat-searchUser"
-                               className="form-control"
-                               placeholder="Benutzer suchen"
-                               onChange={this.searchChanged}
-                        />
+                <div className="user-results">
+                    <div className="newChat-user-top">
+                        <div className="newChat-searchUser">
+                            <input type="text"
+                                   name="newChat-searchUser"
+                                   className="form-control"
+                                   placeholder="Benutzer suchen"
+                                   onChange={this.searchChanged}
+                            />
+                        </div>
+                        <div className="newChat-user-more">
+                            <i className="fas fa-ellipsis-h fa-2x"
+                               onClick={this.showOptions}
+                            />
+                            {renderOptions()}
+                        </div>
                     </div>
-                    <div className="newChat-user-more">
-                        <i className="fas fa-ellipsis-h fa-2x"
-                           onClick={this.showOptions}
-                        />
-                        {renderOptions()}
-                    </div>
+                    {renderResult()}
                 </div>
-                {renderResult()}
             </div>
         );
     }

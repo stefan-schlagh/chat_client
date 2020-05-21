@@ -11,10 +11,6 @@ export default class SelectUsers extends Component{
                 the users already selected
              */
             selectedUsers: [],
-            /*
-                the value of the search input
-             */
-            searchValue: '',
             showOnlySelected: false
         }
     }
@@ -49,6 +45,13 @@ export default class SelectUsers extends Component{
             return item.uid === uid;
         });
     };
+    /*
+        an Array with the uids of the users gets returned to the parent component
+     */
+    btnNextClicked = event => {
+
+        this.props.onNext(this.state.selectedUsers);
+    };
 
     render() {
 
@@ -60,30 +63,40 @@ export default class SelectUsers extends Component{
                     </h4>);
             }else{
                 return(
-                    <h4>
-                        {this.state.selectedUsers.length}&nbsp;Benutzer ausgewählt
+                    <h4 className="w-100">
+                        <span className={"selected-num" + (this.state.showOnlySelected ? " selected" : "")}
+                              onClick={event => {
+                                  this.setState(state => ({
+                                      showOnlySelected: !state.showOnlySelected
+                                  }));
+                              }}
+                        >
+                            {this.state.selectedUsers.length}&nbsp;Benutzer
+                        </span>
+                        &nbsp;ausgewählt
+                        <i className="fas fa-arrow-right fa-lg float-right btn-next"
+                           onClick={this.btnNextClicked}
+                        />
                     </h4>
                 )
             }
         };
+        /*
+            selected users cannot be shown if there is no one selected.
+                --> showOnlySelected = false
+         */
+        if(this.state.selectedUsers.length === 0 && this.state.showOnlySelected)
+            this.setState({
+                showOnlySelected: false
+            });
 
         return(
             <div className="user-results">
                 <div className="select-users">
-                    {renderSelectedUsers()} anzeigen:
-                    <div className="user-select-btn-toggle">
-                        <i className="fas fa-check fa-lg"
-                           onClick={event => {
-                               this.setState(state => ({
-                                   showOnlySelected: !state.showOnlySelected
-                               }));
-                           }}
-                        />
-                    </div>
+                    {renderSelectedUsers()}
                 </div>
                 {!this.state.showOnlySelected ?
-                    <UserList searchValue={this.state.searchValue}
-                              selectUser={this.selectUser}
+                    <UserList selectUser={this.selectUser}
                               deselectUser={this.deselectUser}
                               isUserSelected={this.isUserSelected}
                     />

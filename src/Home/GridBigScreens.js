@@ -27,7 +27,7 @@ export default function GridBigScreens(props){
 
     return(
         <div className="row w-100 justify-content-end row-height">
-            <div className="col-md-5 col-lg-4 col-xl-3 d-none d-md-block pr-3 h-100">
+            <div className="col-md-5 col-lg-4 col-xl-3 d-none d-md-block pr-3 pl-0 h-100">
 
                 <ChatList
                     setHomeState={props.setParentState}

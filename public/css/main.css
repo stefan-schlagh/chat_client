@@ -7,6 +7,7 @@
 .row-height{
     height: calc(100% - 50px);
     overflow: hidden;
+    margin-left: 0 !important;
 }
 .col-overflow{
     height:100%;
@@ -231,6 +232,7 @@
 .newChat-user-top{
     display: flex;
     flex-direction: row;
+    max-width: 700px;
 }
 .newChat-searchUser{
     flex-grow: 1;
@@ -282,13 +284,18 @@
     text-decoration: none;
     color: #212529;
 }
-.user-results ul{
+.user-results .result-list{
     list-style-type: none;
     padding: 0 1rem 1rem;
     width: 80%;
     max-width: 800px;
     overflow-y: auto;
     height: calc(100% - 46px);
+}
+.user-results .result-list a{
+    display: inline-block;
+    width: 100%;
+    height: 100%;
 }
 .user-results li{
     border: 1px solid rgba(0, 0, 0, 0.125);
@@ -336,6 +343,21 @@
     display: inline-block;
     padding-left: 10px;
 }
+.select-users .selected-num{
+    text-decoration: underline solid #888888;
+    text-decoration-thickness: 5px;
+    cursor: pointer;
+}
+.select-users .selected-num:hover,
+.select-users .selected-num.selected{
+    text-decoration-color: var(--notification-blue);
+}
+.select-users .btn-next{
+    cursor: pointer;
+    display: inline-block;
+    margin-right: 20px;
+    margin-top: 10px;
+}
 @media screen and (max-width: 765px){
     .user-results{
         margin: 5px;
@@ -344,8 +366,16 @@
     .user-results h5{
         margin-left: 0;
     }
-    .user-results ul{
+    .user-results .result-list{
         width: 100%;
+        height: calc(100% - 60px);
+    }
+}
+@media screen and (min-width: 765px){
+    .user-results .result-list{
+        margin-top: 20px;
+        height: 400px;
+        overflow-y: auto;
     }
 }
 .chat-list{

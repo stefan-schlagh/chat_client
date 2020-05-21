@@ -1,6 +1,7 @@
 import React,{Component} from "react";
 import ReactDOM from 'react-dom';
 import UserItem from "./UserItem";
+import Dummy from "../../../utilComp/Dummy";
 
 const errorCode={
     none: 0,
@@ -21,6 +22,10 @@ export default class extends Component {
         super(props);
         this.state = {
             /*
+                the value of the search input
+             */
+            searchValue: '',
+            /*
                 the last search result received from the server
              */
             searchResult: [],
@@ -38,6 +43,13 @@ export default class extends Component {
         this.numAlreadyLoaded = 0;
         this.loadUsers().then(r => {});
     };
+
+    searchChanged = event => {
+        this.setState({
+            searchValue: event.target.value
+        });
+        this.refreshSearch();
+    };
     /*
         more users are loaded
      */
@@ -50,7 +62,7 @@ export default class extends Component {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    search: this.props.searchValue,
+                    search: this.state.searchValue,
                     limit: 10,
                     start: this.numAlreadyLoaded
                 })
@@ -61,7 +73,11 @@ export default class extends Component {
                 //return json
                 let data = await response.json();
 
-                if(data.length === 0){
+                if(data.length === 0 && this.numAlreadyLoaded === 0){
+                    this.setState({
+                        searchResult: []
+                    });
+                }else if(data.length === 0){
                     this.reachedBottom = true;
                 } else {
 
@@ -126,21 +142,41 @@ export default class extends Component {
 
     render() {
         return(
-            <ul className="list-group"
-                ref={this.assignListRef}
-            >
-                {this.state.searchResult.map((item,index) => (
-                    <UserItem
-                        key={index}
-                        index={index}
-                        uid={item.uid}
-                        username={item.username}
-                        selectUser={this.selectUser}
-                        deselectUser={this.deselectUser}
-                        isSelected={this.props.isUserSelected(item.uid)}
+            <Dummy>
+                <form className="form-group" style={{width: '90%',maxWidth: '650px'}}>
+                    <input type="text"
+                           className="form-control p-2 m-2"
+                           placeholder="Benutzer suchen"
+                           value={this.state.searchValue}
+                           onChange={this.searchChanged}
                     />
-                ))}
-            </ul>
+                </form>
+                <ul className="list-group result-list"
+                    ref={this.assignListRef}
+                >
+                    {this.state.searchResult.length > 0 ?
+
+                        this.state.searchResult.map((item, index) => (
+                            <UserItem
+                                key={index}
+                                index={index}
+                                uid={item.uid}
+                                username={item.username}
+                                selectUser={this.selectUser}
+                                deselectUser={this.deselectUser}
+                                isSelected={this.props.isUserSelected(item.uid)}
+                            />
+                        ))
+
+                        :
+
+                        <div className="alert alert-warning" role="alert">
+                            Nichts gefunden!
+                        </div>
+
+                    }
+                </ul>
+            </Dummy>
         )
     }
 
