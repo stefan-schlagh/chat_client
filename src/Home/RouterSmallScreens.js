@@ -5,34 +5,14 @@ import {
     useRouteMatch
 } from "react-router-dom";
 import ChatList from "./allChats/ChatList";
-import Dummy from "../utilComp/Dummy";
-import chatSocket from "../chatData/chatSocket";
-import {NormalChatView,GroupChatView,GroupChatInfoView} from "./chatView/NormalChatView";
-import {routes} from "./Home";
+import NormalChatView from "./chatView/NormalChatView";
+import GroupChatView,{groupChatTabs} from "./chatView/GroupChatView";
 import TypeMsgContainer from "./chatView/TypeMsgContainer";
 import ModalRouterSmallScreens from "./ModalRouterSmallScreens";
 
 export default function RouterSmallScreens(props){
 
     let { path } = useRouteMatch();
-
-
-    const chatListShown = () => {
-        if(props.currentRoute !== routes.allChats) {
-            props.setParentState({
-                currentRoute: routes.allChats
-            });
-            chatSocket.setCurrentChat(null);
-        }
-    };
-
-    const normalChatShown = () => {
-        if(props.currentRoute !== routes.normalChat) {
-            props.setParentState({
-                currentRoute: routes.normalChat
-            });
-        }
-    };
 
     const renderTypeMsgContainer = () => {
         if(props.currentChat.type !== '' && props.currentChat.id !== 0){
@@ -56,50 +36,36 @@ export default function RouterSmallScreens(props){
                                 uid={routeProps.match.params.uid}
                             />
                             {renderTypeMsgContainer()}
-                            <Dummy
-                            didUpdate={() => {
-                                normalChatShown();
-                            }}
-                            />
                         </ModalRouterSmallScreens>
                     )
                 }>
-
                 </Route>
-                <Route path={`${path}/group/:gcid`}>
-                    <GroupChatView/>
-                    {renderTypeMsgContainer()}
-                    <Dummy
-                        didMount={() => {
-                            props.setParentState({
-                                currentRoute: routes.groupChat
-                            });
-                        }}
-                    />
-                </Route>
-                <Route path={`${path}/group/:gcid/info`}>
-                    <GroupChatInfoView/>
-                    <Dummy
-                        didMount={() => {
-                            props.setParentState({
-                                currentRoute: routes.groupChatInfo
-                            });
-                        }}
-                    />
-                </Route>
+                <Route path={`${path}/group/:gcid`} render={
+                    routeProps => (
+                        <ModalRouterSmallScreens>
+                            <GroupChatView
+                                gcid={routeProps.match.params.gcid}
+                                tab={groupChatTabs.chat}
+                            />
+                            {renderTypeMsgContainer()}
+                        </ModalRouterSmallScreens>
+                    )
+                } />
+                <Route path={`${path}/groupInfo/:gcid`} render={
+                    routeProps => (
+                        <ModalRouterSmallScreens>
+                            <GroupChatView
+                                gcid={routeProps.match.params.gcid}
+                                tab={groupChatTabs.info}
+                            />
+                        </ModalRouterSmallScreens>
+                    )
+                } />
                 <Route path={path}>
                     <ModalRouterSmallScreens>
                         <ChatList
                             paddingTop="20px"
                             setHomeState={props.setParentState}
-                        />
-                        <Dummy
-                            didMount={() => {
-                                chatListShown();
-                            }}
-                            didUpdate={() => {
-                                chatListShown();
-                            }}
                         />
                     </ModalRouterSmallScreens>
                 </Route>

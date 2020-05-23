@@ -1,4 +1,5 @@
 import Colors from "../util/Color";
+import BinSearchArray from "../util/BinSearch";
 
 export default class User{
 
@@ -8,13 +9,24 @@ export default class User{
     _online;
     //ids der chats des Users
     _normalChat = 0;
-    _groupChats;
+    //ids of the groupchats
+    _groupChats = new BinSearchArray();
 
     constructor(uid,username,online) {
         this.uid = uid;
         this.username = username;
         this.color = Colors.random();
         this.online = online;
+    }
+    /*
+        groupChat is added
+     */
+    addGroupChat(gcid){
+        this.groupChats.add(gcid,gcid);
+    }
+
+    removeGroupChat(gcid){
+        this.groupChats.remove(gcid);
     }
 
     get uid() {

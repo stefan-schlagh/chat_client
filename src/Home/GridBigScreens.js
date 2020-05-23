@@ -6,7 +6,8 @@ import {
     useParams
 } from "react-router-dom";
 import ChatList from "./allChats/ChatList";
-import {NormalChatView,GroupChatView,GroupChatInfoView} from "./chatView/NormalChatView";
+import NormalChatView from "./chatView/NormalChatView";
+import GroupChatView,{groupChatTabs} from "./chatView/GroupChatView";
 import ModalRouterBigScreens from "./ModalRouterBigScreens";
 
 export default function GridBigScreens(props){
@@ -47,16 +48,26 @@ export default function GridBigScreens(props){
                             </ModalRouterBigScreens>
                         )
                     } />
-                    <Route path={`${path}/group/:gcid`}>
-                        <ModalRouterBigScreens>
-                            <GroupChatView/>
-                        </ModalRouterBigScreens>
-                    </Route>
-                    <Route path={`${path}/group/:gcid/info`}>
-                        <ModalRouterBigScreens>
-                            <GroupChatInfoView/>
-                        </ModalRouterBigScreens>
-                    </Route>
+                    <Route path={`${path}/group/:gcid`} render={
+                        routeProps => (
+                            <ModalRouterBigScreens>
+                                <GroupChatView
+                                    gcid={routeProps.match.params.gcid}
+                                    tab={groupChatTabs.chat}
+                                />
+                            </ModalRouterBigScreens>
+                        )
+                    } />
+                    <Route path={`${path}/groupInfo/:gcid`} render={
+                        routeProps => (
+                            <ModalRouterBigScreens>
+                                <GroupChatView
+                                    gcid={routeProps.match.params.gcid}
+                                    tab={groupChatTabs.info}
+                                />
+                            </ModalRouterBigScreens>
+                        )
+                    } />
                     <Route path={path}>
                         <ModalRouterBigScreens>
                             <h1>noch kein chat ausgewählt</h1>

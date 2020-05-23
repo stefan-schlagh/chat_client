@@ -14,7 +14,7 @@ const errorCode = {
     isSelf: 5
 };
 
-export class NormalChatView extends Component{
+export default class NormalChatView extends Component{
 
     constructor(props) {
         super(props);
@@ -64,7 +64,6 @@ export class NormalChatView extends Component{
 
                     return(
                         <ChatContainer
-                            uid={this.state.uid}
                             chatType={chatSocket.currentChat.type}
                             chatId={chatSocket.currentChat.id}
                         />
@@ -236,13 +235,5 @@ export class NormalChatView extends Component{
             data: null
         }).then();
     }
-
-}
-
-export function GroupChatView (props){
-
-}
-
-export function GroupChatInfoView (props){
 
 }

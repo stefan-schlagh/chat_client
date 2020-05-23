@@ -8,6 +8,7 @@ export default class ChatItem extends Component{
         super(props);
         this.state = {
             unreadMessages: 0,
+            lastMsg: undefined,
             typeMsg: ''
         }
     }
@@ -105,7 +106,7 @@ export default class ChatItem extends Component{
             if(this.props.type === 'normalChat'){
                 return '/chat/user/' + chatSocket.getChat('normalChat',this.props.id).otherUser;
             }else if(this.props.type === 'groupChat'){
-                return '/chat/' + this.props.id;
+                return '/chat/group/' + this.props.id;
             }else if(this.props.type === 'tempChat'){
                 return '/chat/user/' + chatSocket.temporaryChat.chatNow.otherUser;
             }
