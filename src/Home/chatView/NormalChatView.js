@@ -160,7 +160,7 @@ export default class NormalChatView extends Component{
                                 });
                                 this.setGlobal({
                                     infoHeaderCenter: infoHeaderCenter.normalChat,
-                                    data: {
+                                    ihcData: {
                                         name: chatSocket.users.get(uid).username,
                                         uid: uid
                                     }
@@ -172,7 +172,7 @@ export default class NormalChatView extends Component{
                                 });
                                 this.setGlobal({
                                     infoHeaderCenter: infoHeaderCenter.normalChat,
-                                    data: {
+                                    ihcData: {
                                         name: chatSocket.temporaryChat.chatNow.chatName,
                                         uid: uid
                                     }
@@ -232,7 +232,7 @@ export default class NormalChatView extends Component{
     componentWillUnmount() {
         this.setGlobal({
             infoHeaderCenter: infoHeaderCenter.none,
-            data: null
+            ihcData: null
         }).then();
     }
 

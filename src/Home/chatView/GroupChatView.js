@@ -1,7 +1,8 @@
-import React,{Component} from "react";
+import React,{Component} from "reactn";
 import ChatViewLoader from "./ChatViewLoader";
 import ChatContainer from "./ChatContainer";
 import chatSocket from "../../chatData/chatSocket";
+import {infoHeaderCenter} from "../Header/HeaderLeft";
 
 export const groupChatErrorCode = {
     none: 0,
@@ -82,6 +83,13 @@ export default class GroupChatView extends Component{
                                 error: groupChatErrorCode.none,
                                 gcid: gcid
                             });
+                            this.setGlobal({
+                                infoHeaderCenter: infoHeaderCenter.groupChat,
+                                ihcData: {
+                                    name: chatSocket.chats.group.get(gcid).chatName,
+                                    gcid: gcid
+                                }
+                            }).then();
                         } else {
                             setCurrentChat();
                             this.setState({
@@ -118,7 +126,10 @@ export default class GroupChatView extends Component{
     }
 
     componentWillUnmount() {
-
+        this.setGlobal({
+            infoHeaderCenter: infoHeaderCenter.none,
+            ihcData: null
+        }).then();
     }
 
     render() {

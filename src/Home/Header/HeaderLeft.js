@@ -4,7 +4,8 @@ import {Link,withRouter} from "react-router-dom";
 
 export const infoHeaderCenter = {
     none: 0,
-    normalChat: 1
+    normalChat: 1,
+    groupChat: 2
 };
 
 setGlobal({
@@ -50,27 +51,45 @@ class HeaderLeft extends Component{
             /*
                 if there is a normal chat open, this info gets displayed
              */
-            if(this.global.infoHeaderCenter === infoHeaderCenter.normalChat){
+            switch(this.global.infoHeaderCenter){
 
-                return (
-                    <div id="chat-info" className="chat-info float-left top-center pt-2">
-                        <h3 id="chat-info-name">
-                            {this.global.data.name}
-                        </h3>
-                        <Link to={pathname + "/userInfo/" + this.global.data.uid}>
-                            <i className="fas fa-info-circle fa-2x"
-                               data-toggle="tooltip"
-                               title="chat info"
-                            />
-                        </Link>
-                    </div>
-                );
+                case infoHeaderCenter.normalChat:
+                    return (
+                        <div id="chat-info" className="chat-info float-left top-center pt-2">
+                            <h3 id="chat-info-name">
+                                {this.global.ihcData.name}
+                            </h3>
+                            <Link to={pathname + "/userInfo/" + this.global.ihcData.uid}>
+                                <i className="fas fa-info-circle fa-2x"
+                                   data-toggle="tooltip"
+                                   title="chat info"
+                                />
+                            </Link>
+                        </div>
+                    );
+
+                case infoHeaderCenter.groupChat:
+                    return(
+                        <div id="chat-info" className="chat-info float-left top-center pt-2">
+                            <h3 id="chat-info-name">
+                                {this.global.ihcData.name}
+                            </h3>
+                            <Link to={"/chat/groupInfo/" + this.global.ihcData.gcid}>
+                                <i className="fas fa-info-circle fa-2x"
+                                   data-toggle="tooltip"
+                                   title="chat info"
+                                />
+                            </Link>
+                        </div>
+                    );
+
+                default:
+                    return(
+                        <Responsive displayIn={["Laptop","Tablet"]}>
+                            <h3 className="pt-2 pl-2">chat</h3>
+                        </Responsive>
+                    );
             }
-            return(
-                <Responsive displayIn={["Laptop","Tablet"]}>
-                    <h3 className="pt-2 pl-2">chat</h3>
-                </Responsive>
-            );
         };
 
         return(

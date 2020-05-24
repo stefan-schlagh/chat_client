@@ -412,6 +412,7 @@ class ChatSocket{
 
         }else if(data.type === 'groupChat'){
 
+            newChat = this.addNewGroupChat((data));
         }
         newChat.unreadMessages = 1;
         /*
