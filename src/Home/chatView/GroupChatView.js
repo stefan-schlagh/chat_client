@@ -3,6 +3,7 @@ import ChatViewLoader from "./ChatViewLoader";
 import ChatContainer from "./ChatContainer";
 import chatSocket from "../../chatData/chatSocket";
 import {infoHeaderCenter} from "../Header/HeaderLeft";
+import GroupChatInfo from "./groupChatInfo/GroupChatInfo";
 
 export const groupChatErrorCode = {
     none: 0,
@@ -175,7 +176,7 @@ export default class GroupChatView extends Component{
 
                             case(groupChatTabs.info):
                                 return(
-                                    <h2>Info</h2>
+                                    <GroupChatInfo />
                                 );
 
                             default:
