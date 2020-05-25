@@ -27,6 +27,11 @@ class MessageForm extends Component{
         this.setState({
            message: event.target.value
         });
+
+        this.handleTypeMessage();
+    };
+
+    handleTypeMessage = () => {
         /*
             type message get only handled if the chat is not temporary
          */
@@ -96,6 +101,7 @@ class MessageForm extends Component{
         this.setState({
             message: this.state.message + emoji.native
         });
+        this.handleTypeMessage();
     };
 
     toggleEmoji = event => {

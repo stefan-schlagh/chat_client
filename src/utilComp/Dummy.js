@@ -13,6 +13,8 @@ export default class Dummy extends Component {
     }
 
     render() {
+        if(this.props.children)
+            return this.props.children;
         return null;
     }
 }

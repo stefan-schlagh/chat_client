@@ -2,7 +2,7 @@ import io from 'socket.io-client';
 import {uid, username} from "../Auth/Auth";
 import User from "./User";
 import BinSearchArray from "../util/BinSearch";
-import {NormalChat} from "./Chat";
+import {GroupChat, NormalChat} from "./Chat";
 import Message from "./Message";
 import EventHandler from "../util/Event";
 import TempChatLoader from "./tempChatLoader";
@@ -90,14 +90,14 @@ class ChatSocket{
          */
         this.socket.on('started typing',data => {
             const chat = this.getChat(data.type,data.id);
-            chat.event.trigger("started typing",data.uid);
+            chat.startedTyping(data.uid);
         });
         /*
             stopped typing
          */
         this.socket.on('stopped typing',data => {
             const chat = this.getChat(data.type,data.id);
-            chat.event.trigger("stopped typing",data.uid);
+            chat.stoppedTyping(data.uid);
         });
         /*
             the result of the search in new chat
@@ -133,6 +133,7 @@ class ChatSocket{
             }
             else if(data[i].type === 'groupChat'){
 
+                this.addNewGroupChat(data[i]);
             }
         }
         this.finishedLoading = true;
@@ -411,6 +412,7 @@ class ChatSocket{
 
         }else if(data.type === 'groupChat'){
 
+            newChat = this.addNewGroupChat((data));
         }
         newChat.unreadMessages = 1;
         /*
@@ -423,9 +425,9 @@ class ChatSocket{
      */
     addNewNormalChat(data){
         /*
-                check if the other user does already exist
-                    if not --> gets created
-             */
+            check if the other user does already exist
+                if not --> gets created
+         */
         let otherUser;
         if(this.users.getIndex(data.members[0].uid) === -1){
             otherUser = new User(data.members[0].uid,data.members[0].username,data.members[0].online);
@@ -460,8 +462,53 @@ class ChatSocket{
     /*
         a new groupChat gets added
      */
-    addNewGroupChat(){
+    addNewGroupChat(data){
+        /*
+            check which do not exist already --> get added
+         */
+        const members = [];
 
+        for(let i=0;i<data.members.length;i++) {
+
+            const member = data.members[i];
+            /*
+                does the user already exist?
+             */
+            let user;
+            if (this.users.getIndex(member.uid) === -1) {
+                user = new User(member.uid, member.username, member.online);
+                this.users.add(user.uid, user);
+            } else {
+                user = this.users.get(member.uid);
+            }
+            /*
+                member gets added
+             */
+            members.push(user.uid);
+            /*
+                chat is added at user
+             */
+            user.addGroupChat(data.id);
+        }
+        /*
+            new chat gets created
+         */
+        const newChat = new GroupChat(data.id,data.chatName,members);
+        /*
+            first message is initialized
+         */
+        const message = data.firstMessage;
+        /*
+            if message exists it gets added to the chat
+         */
+        if(!message.empty)
+            newChat.messages.add(message.mid,new Message(message.mid,message.content,message.uid,newChat,new Date(message.date)));
+        /*
+            new chat gets added to binSearchArray
+         */
+        this.chats.group.add(data.id,newChat);
+
+        return newChat;
     }
 
     get socket() {

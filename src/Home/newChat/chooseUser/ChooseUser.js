@@ -1,15 +1,29 @@
 import React,{Component} from "react";
+import ReactDOM from 'react-dom';
 import {tabs} from "../NewChat";
-import chatSocket from "../../../chatData/chatSocket";
 import UserItem from "./UserItem";
+import Dummy from "../../../utilComp/Dummy";
+
+const errorCode={
+    none: 0,
+    error: 1
+};
 
 export default class ChooseUser extends Component{
 
     _clickedOutsideTimer;
+    /*
+        the number of results already loaded
+     */
+    _numAlreadyLoaded = 0;
+    _reachedBottom;
+    _listRef;
+    _listNode;
 
     constructor(props) {
         super(props);
         this.state = {
+            error: errorCode.none,
             showOptions: false,
             /*
                 the value of the search input
@@ -22,7 +36,11 @@ export default class ChooseUser extends Component{
             /*
                 the last search result received from the server
              */
-            searchResult: []
+            searchResult: [],
+            /*
+                should loader at the bottom be shown?
+             */
+            showLoaderBottom: false
         };
     }
     /*
@@ -74,25 +92,89 @@ export default class ChooseUser extends Component{
         /*
             new search result gets requested if search is valid
          */
-        if(searchValid)
-            this.requestSearchResult(searchValue);
+        if(searchValid) {
+            this.numAlreadyLoaded = 0;
+            this.reachedBottom = false;
+            this.requestSearchResult(searchValue).then(r => {
+            });
+        }
     };
     /*
         the search result gets requested
      */
-    requestSearchResult = searchValue => {
-        chatSocket.socket.emit("getUsers-noChat",{
-            search: searchValue,
-            limit: 10
-        });
+    requestSearchResult = async (searchValue) => {
+        try {
+            const config = {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    search: searchValue,
+                    limit: 10,
+                    start: this.numAlreadyLoaded
+                })
+            };
+            const response = await fetch('/getUsers-noChat', config);
+
+            if (response.ok) {
+                //return json
+                let data = await response.json();
+
+                if(data.length === 0 && this.numAlreadyLoaded === 0){
+                    this.setState({
+                        searchResult: []
+                    });
+                }else if(data.length === 0){
+                    this.reachedBottom = true;
+                } else {
+
+                    let scrollToBottomBuffer = this.getScrollToBottom();
+
+                    if(this.numAlreadyLoaded === 0)
+                        this.setState({
+                            searchResult: data
+                        });
+                    else
+                        this.setState(state => ({
+                            searchResult: state.searchResult.concat(data)
+                        }));
+                    this.numAlreadyLoaded += data.length;
+                    /*
+                        if scrollToBottom is 0, the next result is requested
+                     */
+                    if(scrollToBottomBuffer === 0){
+                        this.requestSearchResult(searchValue);
+                    }
+                }
+                this.setState({
+                    error: errorCode.none
+                });
+            } else {
+                this.setState({
+                    error: errorCode.error
+                });
+            }
+        } catch (error) {
+            this.setState({
+                error: errorCode.error
+            });
+        }
     };
-    /*
-        gets called when the search result is received
-     */
-    searchResultReceived = data => {
-        this.setState({
-            searchResult: data
-        });
+
+    assignListRef = target => {
+        this.listRef = target;
+    };
+
+    setScrollToBottom = val => {
+        this.listNode.scrollTop = this.listNode.scrollHeight - this.listNode.offsetHeight - val;
+    };
+
+    getScrollToBottom  = () => {
+        if(this.listNode !== null)
+            return this.listNode.scrollHeight - this.listNode.offsetHeight - this.listNode.scrollTop;
+        return 0;
     };
 
     render() {
@@ -103,7 +185,9 @@ export default class ChooseUser extends Component{
             if(this.state.showOptions)
                 return(
                     <div className="options">
-                        <ul className="list-group">
+                        <ul className="list-group"
+                            ref={this.assignListRef}
+                        >
                             <li className="list-group-item"
                                 onClick={this.newGroupClick}
                             >
@@ -123,12 +207,19 @@ export default class ChooseUser extends Component{
             results only get rendered if search was valid
          */
         const renderResult = () => {
-            if(this.state.searchValid) {
+            if(this.state.error === errorCode.error){
+                return(
+                    <div className="alert alert-danger" role="alert">
+                        Ein Fehler ist aufgetreten!
+                    </div>
+                )
+            }
+            else if(this.state.searchValid) {
                 if(this.state.searchResult.length > 0) {
                     return (
-                        <div className="user-results">
+                        <Dummy>
                             <h5>Ergebnisse:</h5>
-                            <ul className="list-user">
+                            <ul className="list-user list-group result-list">
                                 {this.state.searchResult.map((item, index) => (
                                     <UserItem
                                         key={index}
@@ -138,25 +229,21 @@ export default class ChooseUser extends Component{
                                     />
                                 ))}
                             </ul>
-                        </div>
+                        </Dummy>
                     );
                 }else{
                     return(
-                        <div className="user-results">
-                            <ul className="list-user">
-                                <div className="alert alert-warning" role="alert">
-                                    Nichts gefunden!
-                                </div>
-                            </ul>
-                        </div>
+                        <ul className="list-user result-list">
+                            <div className="alert alert-warning" role="alert">
+                                Nichts gefunden!
+                            </div>
+                        </ul>
                     )
                 }
             }else{
                 return(
-                    <div className="user-results">
-                        <div className="alert alert-danger" role="alert">
-                            Ihre Suche enthält ungültige Zeichen!
-                        </div>
+                    <div className="alert alert-danger" role="alert">
+                        Ihre Suche enthält ungültige Zeichen!
                     </div>
                 )
             }
@@ -164,45 +251,45 @@ export default class ChooseUser extends Component{
 
         return(
             <div className="modal-main">
-                <div className="newChat-user-top">
-                    <div className="newChat-searchUser">
-                        <label htmlFor="newChat-searchUser"
-                               className="d-none d-md-block">
-                            <h4>Benutzer suchen</h4>
-                        </label>
-                        <input type="text"
-                               name="newChat-searchUser"
-                               className="form-control"
-                               placeholder="Benutzer suchen"
-                               onChange={this.searchChanged}
-                        />
+                <div className="user-results">
+                    <div className="newChat-user-top">
+                        <div className="newChat-searchUser">
+                            <input type="text"
+                                   name="newChat-searchUser"
+                                   className="form-control"
+                                   placeholder="Benutzer suchen"
+                                   onChange={this.searchChanged}
+                            />
+                        </div>
+                        <div className="newChat-user-more">
+                            <i className="fas fa-ellipsis-h fa-2x"
+                               onClick={this.showOptions}
+                            />
+                            {renderOptions()}
+                        </div>
                     </div>
-                    <div className="newChat-user-more">
-                        <i className="fas fa-ellipsis-h fa-2x"
-                           onClick={this.showOptions}
-                        />
-                        {renderOptions()}
-                    </div>
+                    {renderResult()}
                 </div>
-                {renderResult()}
             </div>
         );
     }
     componentDidMount() {
+        this.listNode = ReactDOM.findDOMNode(this.listRef);
         document.body.addEventListener('click',this.clickedOutsideOptions);
         /*
-            event listener for search result is added
+            users are requested
          */
-        chatSocket.event.on('users-noChat',this.searchResultReceived);
-        this.requestSearchResult('');
+        this.numAlreadyLoaded = 0;
+        this.reachedBottom = false;
+        this.requestSearchResult('').then(r => {});
     }
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        this.listNode = ReactDOM.findDOMNode(this.listRef);
+    }
+
     componentWillUnmount() {
         clearTimeout(this.clickedOutsideTimer);
         document.body.removeEventListener('click',this.clickedOutsideOptions);
-        /*
-            event listener for search result is removed
-         */
-        chatSocket.event.rm('users-noChat',this.searchResultReceived);
     }
 
     get clickedOutsideTimer() {
@@ -211,5 +298,37 @@ export default class ChooseUser extends Component{
 
     set clickedOutsideTimer(value) {
         this._clickedOutsideTimer = value;
+    }
+
+    get numAlreadyLoaded() {
+        return this._numAlreadyLoaded;
+    }
+
+    set numAlreadyLoaded(value) {
+        this._numAlreadyLoaded = value;
+    }
+
+    get reachedBottom() {
+        return this._reachedBottom;
+    }
+
+    set reachedBottom(value) {
+        this._reachedBottom = value;
+    }
+
+    get listRef() {
+        return this._listRef;
+    }
+
+    set listRef(value) {
+        this._listRef = value;
+    }
+
+    get listNode() {
+        return this._listNode;
+    }
+
+    set listNode(value) {
+        this._listNode = value;
     }
 }

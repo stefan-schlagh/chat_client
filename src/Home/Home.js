@@ -5,24 +5,6 @@ import Responsive from "../responsive/Responsive";
 import GridBigScreens from "./GridBigScreens";
 import RouterSmallScreens from "./RouterSmallScreens";
 import chatSocket from "../chatData/chatSocket";
-/*
-    possible routes in /chat
- */
-export const routes = {
-    allChats: 0,
-    normalChat: 1,
-    groupChat: 2,
-    groupChatInfo: 3
-};
-/*
-    modals
- */
-export const modals = {
-    none: 0,
-    settings: 1,
-    userInfo: 2,
-    newChat: 3
-};
 
 export default class Chat extends Component{
 
@@ -36,10 +18,6 @@ export default class Chat extends Component{
                 type: '',
                 id: 0
             },
-            /*
-                current route where the user is inside /chat
-             */
-            currentRoute: routes.allChats,
             /*
                 which modal is currently open
                     0: none
@@ -104,11 +82,6 @@ export default class Chat extends Component{
         });
     };
 
-    closeModal = () => {
-        this.setState({
-            modal: modals.none
-        })
-    };
     /*
         gets called if there is a new msg
      */
@@ -128,19 +101,14 @@ export default class Chat extends Component{
         return (
             <div className="h-100">
                 <Header
-                    currentChat={this.state.currentChat}
-                    setParentState={setState}
                     logout={this.logout}
                     headerLeft={{
                         newMessages: this.state.newMessages
                     }}
-                    closeModal={this.closeModal}
                 />
 
                 <Responsive displayIn={["Mobile"]}>
                     <RouterSmallScreens
-                        modal={this.state.modal}
-                        currentRoute={this.state.currentRoute}
                         currentChat={this.state.currentChat}
                         setParentState={setState}
                     />
@@ -149,7 +117,6 @@ export default class Chat extends Component{
                 <Responsive displayIn={["Laptop","Tablet"]}>
 
                     <GridBigScreens
-                        currentRoute={this.state.currentRoute}
                         newMessages={this.state.newMessages}
                         setParentState={setState}
                     />

@@ -95,6 +95,7 @@ export default class ChatContainer extends Component{
             this.loadMessages();
 
         const chat = chatSocket.getChat(this.props.chatType,this.props.chatId);
+        console.log(chat);
         chat.event.on('messages loaded',this.messagesLoaded);
         chat.event.on('new message',this.newMessage);
 
@@ -134,6 +135,8 @@ export default class ChatContainer extends Component{
     }
 
     render() {
+
+        console.log('message render');
 
         const chat = chatSocket.getChat(this.props.chatType,this.props.chatId);
 

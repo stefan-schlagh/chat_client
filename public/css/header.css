@@ -122,6 +122,14 @@
      padding: 0 !important;
      position: relative;
 }
+.modal-inner a{
+     color: inherit;
+     cursor: pointer;
+}
+.modal-inner a:hover{
+     text-decoration: none;
+     color: inherit;
+}
 .modal-btn-close{
      position: absolute;
      top:-20px;
@@ -144,9 +152,21 @@
      padding: 20px;
 }
 @media screen and (max-width: 765px){
+     .modal-main{
+          height: calc(100% - 70px);
+          padding-bottom: 0;
+     }
      .modal-header-b{
           height: 70px;
           background-color: #80b3ff;
           padding: 5px;
+     }
+     .modal-header-b a{
+          color: inherit;
+          cursor: pointer;
+     }
+     .modal-header-b a:hover{
+          text-decoration: none;
+          color: inherit;
      }
 }
