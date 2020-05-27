@@ -42,7 +42,7 @@ class ChatSocket{
         /*
             userInfo wird an client gesendet
          */
-        this.socket.emit('userInfo', this.userInfo);
+        this.socket.emit('auth', uid, username);
 
         this.socket.on('all chats', data => {
             this.initChats(data);

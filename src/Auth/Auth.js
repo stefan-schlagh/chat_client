@@ -14,22 +14,23 @@ export function setLoggedIn(val){
 export async function isLoggedIn(){
     try {
         const config = {
-            method: 'POST',
+            method: 'GET',
             headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
+                'Accept': 'application/json'
             }
         };
-        const response = await fetch('/userInfo', config);
-        //const json = await response.json()
+        const response = await fetch('/user/self', config);
+
+        if(response.status === 403)
+            loggedIn = false;
         if (response.ok) {
             //return json
             let data = await response.json();
-            loggedIn = data.loggedIn;
-            if(loggedIn) {
-                uid = data.uid;
-                username = data.username;
-            }
+
+            loggedIn = true;
+            uid = data.uid;
+            username = data.username;
+
             return loggedIn;
         } else {
             return false;
@@ -54,7 +55,7 @@ export async function login(username, password){
                 password: password
             })
         };
-        const response = await fetch('/login', config);
+        const response = await fetch('/auth/login', config);
         //const json = await response.json()
         if (response.ok) {
             //return json
@@ -84,7 +85,7 @@ export async function register(username,password){
                 password: password
             })
         };
-        const response = await fetch('/register', config);
+        const response = await fetch('/auth/register', config);
         //const json = await response.json()
         if (response.ok) {
             //return json
@@ -104,13 +105,12 @@ export async function register(username,password){
 export async function logout(){
     try {
         const config = {
-            method: 'POST',
+            method: 'GET',
             headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
+                'Accept': 'application/json'
             }
         };
-        const response = await fetch('/logout', config);
+        const response = await fetch('/auth/logout', config);
         //const json = await response.json()
         if (response.ok) {
             //return json

@@ -42,7 +42,7 @@ export default class NewGroup extends Component{
     createGroupChat = async (data,users) => {
         try {
             const config = {
-                method: 'POST',
+                method: 'PUT',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
@@ -52,7 +52,7 @@ export default class NewGroup extends Component{
                     users: users
                 })
             };
-            const response = await fetch('/createGroupChat', config);
+            const response = await fetch('/group/', config);
 
             console.log(response.ok);
 

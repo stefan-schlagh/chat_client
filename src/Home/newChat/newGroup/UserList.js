@@ -67,7 +67,7 @@ export default class extends Component {
                     start: this.numAlreadyLoaded
                 })
             };
-            const response = await fetch('/getAllUsers', config);
+            const response = await fetch('/user/', config);
 
             if (response.ok) {
                 //return json

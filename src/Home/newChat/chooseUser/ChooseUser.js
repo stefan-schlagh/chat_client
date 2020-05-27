@@ -116,7 +116,7 @@ export default class ChooseUser extends Component{
                     start: this.numAlreadyLoaded
                 })
             };
-            const response = await fetch('/getUsers-noChat', config);
+            const response = await fetch('/user/noChat', config);
 
             if (response.ok) {
                 //return json
