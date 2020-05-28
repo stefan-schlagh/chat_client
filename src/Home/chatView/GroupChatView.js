@@ -176,7 +176,9 @@ export default class GroupChatView extends Component{
 
                             case(groupChatTabs.info):
                                 return(
-                                    <GroupChatInfo />
+                                    <GroupChatInfo
+                                        gcid={this.state.gcid}
+                                    />
                                 );
 
                             default:

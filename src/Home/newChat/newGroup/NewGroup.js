@@ -53,7 +53,9 @@ export default class NewGroup extends Component{
                 })
             };
             const response = await fetch('/group/', config);
-
+            /*
+                TODO: close modal
+             */
             console.log(response.ok);
 
         }catch(error){
