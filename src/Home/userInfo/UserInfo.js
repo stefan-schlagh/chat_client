@@ -80,16 +80,12 @@ export default class UserInfo extends Component{
     async fetchUser (uid) {
 
         const config = {
-            method: 'POST',
+            method: 'GET',
             headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                uid: uid
-            })
+                'Accept': 'application/json'
+            }
         };
-        const response = await fetch('/getUserInfo', config);
+        const response = await fetch('/user/' + uid, config);
         //const json = await response.json()
         if (response.ok) {
             //return json
