@@ -40,8 +40,8 @@ export default class Chat extends Component{
         /*
             if chatsocket is undefined, it gets initialized
          */
-        if(!chatSocket.socket) {
-            chatSocket.init();
+        if(!chatSocket.initCalled) {
+            chatSocket.init().then(r => {});
         }
 
     }
