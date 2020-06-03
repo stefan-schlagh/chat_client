@@ -62,8 +62,7 @@ class ChatSocket{
 
         if (response.ok) {
 
-            console.log(await(response.text()));
-            IP_SERVER = '172.16.1.149';
+            IP_SERVER = await(response.text());
         }
 
         this.socket = io('http://' + IP_SERVER + ':3002');
