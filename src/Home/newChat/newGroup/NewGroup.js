@@ -1,4 +1,5 @@
 import React,{Component} from "react";
+import {withRouter} from "react-router-dom";
 import SelectUsers from "./SelectUsers";
 import GroupInfoForm from "./GroupInfoForm";
 
@@ -7,7 +8,7 @@ const tabs = {
     enterChatInfo: 1
 };
 
-export default class NewGroup extends Component{
+class NewGroup extends Component{
 
     constructor(props) {
         super(props);
@@ -54,9 +55,10 @@ export default class NewGroup extends Component{
             };
             const response = await fetch('/group/', config);
             /*
-                TODO: close modal
+                if ok, modal is closed
              */
-            console.log(response.ok);
+            if(response.ok)
+                this.props.history.goBack();
 
         }catch(error){
 
@@ -85,3 +87,4 @@ export default class NewGroup extends Component{
         }
     }
 }
+export default withRouter(NewGroup);

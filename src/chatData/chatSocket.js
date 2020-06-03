@@ -26,19 +26,47 @@ class ChatSocket{
         normalchat not saved in the database
      */
     _temporaryChat = new TempChatLoader();
+    _initCalled = false;
 
-    init(){
-
-        this.socket = io('http://172.16.1.149:3002');
+    constructor() {
+        /*
+            user-Object is created
+         */
+        this.userSelf = new User(uid,username);
 
         this.userInfo = {
             uid: uid,
             username: username
         };
-        /*
-            eigenes user-Objekt wird erzeugt
-         */
+    }
+    async init(){
+
+        this.initCalled = true;
+
         this.userSelf = new User(uid,username);
+
+        this.userInfo = {
+            uid: uid,
+            username: username
+        };
+        
+        const config = {
+            method: 'GET',
+            headers: {
+                'Accept': 'text/plain'
+            }
+        };
+        const response = await fetch('/IP', config);
+
+        let IP_SERVER = '';
+
+        if (response.ok) {
+
+            IP_SERVER = await(response.text());
+        }
+
+        this.socket = io('http://' + IP_SERVER + ':3002');
+
         /*
             userInfo wird an client gesendet
          */
@@ -573,6 +601,14 @@ class ChatSocket{
 
     set temporaryChat(value) {
         this._temporaryChat = value;
+    }
+
+    get initCalled() {
+        return this._initCalled;
+    }
+
+    set initCalled(value) {
+        this._initCalled = value;
     }
 }
 

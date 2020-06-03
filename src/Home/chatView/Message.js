@@ -16,16 +16,18 @@ export default class Message extends Component{
 
         return(
             <div className={"p-2 border rounded " + (isMsgBySelf() ? "float-right " : "float-left ") + "msg-container-other msg-container"}>
-                <div className="w-100">
-                    <strong className="msg-container-header"><span
-                        style={{
-                            color: Colors.names[user.color]
-                        }}>
-                        {//wenn msg von user selbst ist, wird "Du" angezeigt
-                            isMsgBySelf() ? "Du" : user.username}
-                    </span>
-                    </strong>
-                </div>
+                {(chatSocket.currentChat.type === 'groupChat') ?
+                    <div className="w-100">
+                        <strong className="msg-container-header"><span
+                            style={{
+                                color: Colors.names[user.color]
+                            }}>
+                            {//wenn msg von user selbst ist, wird "Du" angezeigt
+                                isMsgBySelf() ? "Du" : user.username}
+                        </span>
+                        </strong>
+                    </div>
+                : null}
                 <div className="w-100 msg-container-content">
                     <p className="mb-0">
                         {msg.content}
