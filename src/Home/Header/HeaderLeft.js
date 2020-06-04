@@ -1,4 +1,4 @@
-import React,{Component,setGlobal} from "reactn";
+import React,{Component} from "reactn";
 import Responsive from "../../responsive/Responsive";
 import {Link,withRouter} from "react-router-dom";
 
@@ -7,11 +7,6 @@ export const infoHeaderCenter = {
     normalChat: 1,
     groupChat: 2
 };
-
-setGlobal({
-    infoHeaderCenter: infoHeaderCenter.none,
-    data: null
-}).then();
 
 class HeaderLeft extends Component{
 

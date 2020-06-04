@@ -1,4 +1,4 @@
-import React,{Component} from "react";
+import React,{Component} from "reactn";
 import {Link} from "react-router-dom";
 import chatSocket from "../../chatData/chatSocket";
 
@@ -14,7 +14,7 @@ export default class ChatItem extends Component{
     }
 
     isSelected = () => {
-        return this.props.id === chatSocket.currentChat.id && this.props.type === chatSocket.currentChat.type;
+        return this.props.id === this.global.currentChat.id && this.props.type === this.global.currentChat.type;
     };
     /*
         wenn ein user anfängt, oder aufhört zu schreiben, wird diese Methode aufgerufen,

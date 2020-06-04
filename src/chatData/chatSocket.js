@@ -6,6 +6,7 @@ import {GroupChat, NormalChat} from "./Chat";
 import Message from "./Message";
 import EventHandler from "../util/Event";
 import TempChatLoader from "./tempChatLoader";
+import {setGlobal} from 'reactn';
 
 class ChatSocket{
 
@@ -299,14 +300,30 @@ class ChatSocket{
                     type: '',
                     id: 0
                 };
+
+                setGlobal({
+                    currentChat: {
+                        type: '',
+                        id: 0
+                    }
+                }).then(r => {});
+
                 this.event.trigger('currentChat changed', null);
             }
 
         } else if(newChat.type === 'tempChat' && this.currentChat.type !== 'tempChat'){
+
             this.currentChat = {
                 type: 'tempChat',
                 id: 0
             };
+
+            setGlobal({
+                currentChat: {
+                    type: 'tempChat',
+                    id: 0
+                }
+            }).then(r => {});
 
             this.socket.emit('change chat', null);
 
@@ -327,6 +344,13 @@ class ChatSocket{
                      */
                     chat.unreadMessages = 0;
                     this.currentChat = newChat;
+
+                    setGlobal({
+                        currentChat: {
+                            type: newChat.type,
+                            id: newChat.id
+                        }
+                    }).then(r => {});
 
                     this.socket.emit('change chat', {
                         type: this.currentChat.type,
@@ -391,7 +415,11 @@ class ChatSocket{
          */
         let otherUser;
         if(this.users.getIndex(data.members[0].uid) === -1){
-            otherUser = new User(data.members[0].uid,data.members[0].username,data.members[0].online);
+            otherUser = new User(
+                data.members[0].uid,
+                data.members[0].username,
+                data.members[0].online
+            );
             this.users.add(otherUser.uid,otherUser);
         }else{
             otherUser = this.users.get(data.members[0].uid);
@@ -399,7 +427,11 @@ class ChatSocket{
         /*
             new chat gets created
          */
-        const newChat = new NormalChat(data.id,data.chatName,otherUser.uid);
+        const newChat = new NormalChat(
+            data.id,
+            data.chatName,
+            otherUser.uid
+        );
         /*
             normalChat is set at other user
          */
@@ -412,7 +444,16 @@ class ChatSocket{
             if message exists it gets added to the chat
          */
         if(!message.empty)
-            newChat.messages.add(message.mid,new Message(message.mid,message.content,message.uid,newChat,new Date(message.date)));
+            newChat.messages.add(
+                message.mid,
+                new Message(
+                    message.mid,
+                    message.content,
+                    message.uid,
+                    newChat,
+                    new Date(message.date)
+                )
+            );
         /*
             new chat gets added to binSearchArray
          */
@@ -437,7 +478,11 @@ class ChatSocket{
              */
             let user;
             if (this.users.getIndex(member.uid) === -1) {
-                user = new User(member.uid, member.username, member.online);
+                user = new User(
+                    member.uid,
+                    member.username,
+                    member.online
+                );
                 this.users.add(user.uid, user);
             } else {
                 user = this.users.get(member.uid);
@@ -463,7 +508,16 @@ class ChatSocket{
             if message exists it gets added to the chat
          */
         if(!message.empty)
-            newChat.messages.add(message.mid,new Message(message.mid,message.content,message.uid,newChat,new Date(message.date)));
+            newChat.messages.add(
+                message.mid,
+                new Message(
+                    message.mid,
+                    message.content,
+                    message.uid,
+                    newChat,
+                    new Date(message.date)
+                )
+            );
         /*
             new chat gets added to binSearchArray
          */
