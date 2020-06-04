@@ -1,5 +1,90 @@
 import Colors from "../util/Color";
 import BinSearchArray from "../util/BinSearch";
+import chatSocket from "./chatSocket";
+
+export const UserErrorCode = {
+    none: 0,
+    nan: 1,
+    tempChat: 2,
+    userNotExisting: 3,
+    blocked: 4,
+    isSelf: 5,
+    error: 6
+};
+
+export async function getUserNormalChat(uid){
+    /*
+        does the user exist & does normal chat exist
+     */
+    if(chatSocket.users.getIndex(uid) !== -1){
+        /*
+            does a normalChat exist at the user
+         */
+        if(chatSocket.users.get(uid).normalChat !== 0) {
+
+            return UserErrorCode.none;
+        }else{
+            /*
+                chat does not exist in server
+                it gets created
+             */
+            const user = chatSocket.users.get(uid);
+            chatSocket.temporaryChat.createNew(uid,user.username);
+
+            return UserErrorCode.tempChat;
+        }
+        /*
+            does there exist a temporary chat with this user
+        */
+    }else if(chatSocket.temporaryChat.doesExist(uid)){
+        /*
+            user and chat does not exist in server
+         */
+        return UserErrorCode.tempChat;
+
+    }else{
+        /*
+            request user from server
+         */
+        try {
+            const config = {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json'
+                }
+            };
+            const response = await fetch('/user/' + uid, config);
+            /*
+                if ok, modal is closed
+             */
+            if(response.ok) {
+
+                const data = await response.json();
+
+                if(data.userExists && !data.blocked) {
+
+                    chatSocket.temporaryChat.createNew(uid,data.username);
+                    return UserErrorCode.tempChat;
+
+                }else{
+
+                    if(!data.userExists)
+
+                        return UserErrorCode.userNotExisting;
+
+                    else
+
+                        return UserErrorCode.blocked;
+                }
+
+            }else
+                return UserErrorCode.error;
+
+        }catch(error){
+            return UserErrorCode.error;
+        }
+    }
+}
 
 export default class User{
 

@@ -71,7 +71,6 @@ export default class ChatList extends Component{
     };
 
     tempChatHidden = () => {
-        console.log('hidden');
 
         this.setState({
             showTempChat: false ,
