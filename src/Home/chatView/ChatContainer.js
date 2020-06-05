@@ -78,7 +78,9 @@ export default class ChatContainer extends Component{
 
     newMessage = (uid,message) => {
 
-        console.log('new');
+        //empty
+    };
+    newMsg_ChatContainer = (uid,message) => {
         /*
             wenn nach unten gescrollt:
                 state.newMsg = 0
@@ -90,12 +92,11 @@ export default class ChatContainer extends Component{
                     state.newMsg ++
                     derzeitigen scrollstatus beibehalten
          */
-
         if(this.getScrollToBottom() === 0){
             this.setState(state => ({
-                newMessages: 0,
-                messages: state.messages.concat(message)
-            }));
+                    newMessages: 0,
+                    messages: state.messages.concat(message)
+                }));
         }else{
             if(uid === chatSocket.userSelf.uid){
                 this.setState(state => ({
@@ -118,12 +119,12 @@ export default class ChatContainer extends Component{
         /*
             current chat
          */
-        console.log(this.props.chatId);
         const chat = chatSocket.getChat(this.props.chatType,this.props.chatId);
         /*
             event-listeners are initialized
          */
         chat.event.on("new message",this.newMessage);
+        chat.event.on("new message",this.newMsg_ChatContainer);
         /*
             message-array is created
          */
@@ -160,6 +161,7 @@ export default class ChatContainer extends Component{
              */
             const prevChat = chatSocket.getChat(prevProps.chatType,prevProps.chatId);
             prevChat.event.rm("new message",this.newMessage);
+            prevChat.event.rm("new message",this.newMsg_ChatContainer);
 
             //scrollToBottom wird auf 0 gesetzt
             this.setScrollToBottom(0);
@@ -287,6 +289,7 @@ export default class ChatContainer extends Component{
 
         const chat = chatSocket.getChat(this.props.chatType,this.props.chatId);
         chat.event.rm("new message",this.newMessage);
+        chat.event.rm("new message",this.newMsg_ChatContainer);
     }
 
     get isMounted() {

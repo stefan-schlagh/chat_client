@@ -123,8 +123,6 @@ class Chat {
         const message =
             new Message(mid,content,uid,this,new Date(Date.now()));
         this.messages.add(mid,message);
-        console.log(message);
-        console.log(this.id);
         this.event.trigger(
             "new message", uid,
             message.getMessageObject(
