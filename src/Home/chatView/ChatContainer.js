@@ -45,18 +45,29 @@ export default class ChatContainer extends Component{
     };
 
     loadMessages = () => {
-        this.setState({
-            msgLoading: true
-        });
-        const chat = chatSocket.getChat(this.props.chatType,this.props.chatId);
-        chat.loadMessages(10);
-    };
 
-    messagesLoaded = () => {
-        this.setState({
-            msgLoading: false
-        });
-        this.setScrollToBottom(this.state.scrollToBottom);
+        const chat = chatSocket.getChat(this.props.chatType,this.props.chatId);
+        /*
+            loader is only shown, if top not reached
+         */
+        if(!chat.reachedTopMessages)
+            this.setState({
+                msgLoading: true
+            });
+        /*
+            messages are loaded
+         */
+        chat.loadMessages(10)
+            .then(() => {
+                /*
+                    loader is hidden
+                 */
+                this.setState({
+                    msgLoading: false
+                });
+                this.setScrollToBottom(this.state.scrollToBottom);
+            })
+            .catch(err => {});
     };
 
     newMessage = uid => {
@@ -95,7 +106,6 @@ export default class ChatContainer extends Component{
             this.loadMessages();
 
         const chat = chatSocket.getChat(this.props.chatType,this.props.chatId);
-        chat.event.on('messages loaded',this.messagesLoaded);
         chat.event.on('new message',this.newMessage);
 
         this.isMounted = true;
@@ -112,11 +122,9 @@ export default class ChatContainer extends Component{
         if(prevProps.chatType !== this.props.chatType || prevProps.chatId !== this.props.chatId) {
             //message loaded listener
             const prevChat = chatSocket.getChat(prevProps.chatType,prevProps.chatId);
-            prevChat.event.rm('messages loaded',this.messagesLoaded);
             prevChat.event.rm('new message',this.newMessage);
 
             const newChat = chatSocket.getChat(this.props.chatType,this.props.chatId);
-            newChat.event.on('messages loaded',this.messagesLoaded);
             newChat.event.on('new message',this.newMessage);
 
             //scrollToBottom wird auf 0 gesetzt
@@ -245,7 +253,6 @@ export default class ChatContainer extends Component{
         this.isMounted = false;
 
         const chat = chatSocket.getChat(this.props.chatType,this.props.chatId);
-        chat.event.rm('messages loaded',this.messagesLoaded);
         chat.event.rm('new message',this.newMessage);
     }
 

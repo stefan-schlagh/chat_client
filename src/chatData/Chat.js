@@ -13,6 +13,10 @@ class Chat {
     _event = new EventHandler();
     _hasNewMsg = false;
     _unreadMessages = 0;
+    /*
+        are all messages already loaded?
+     */
+    _reachedTopMessages;
 
     constructor(type, id,chatName) {
         this.type = type;
@@ -20,41 +24,58 @@ class Chat {
         this.chatName = chatName;
     }
     /*
-        Nacrichten werden geladen
+        messages are loaded
      */
-    loadMessages(num){
-        const getLastMsgId = () => {
-            const msg = this.getLastMessage();
-            if(msg !== null)
-                return msg.mid;
-            return -1;
-        };
+    async loadMessages(num){
         /*
-            event wird an server emitted,
-            aber nur wenn gerade nicht dieses event in Bearbeitung
+            messages are only loaded, if top not already reached
          */
-        chatSocket.socket.emit('load messages', {
-            chatType: this.type,
-            chatId: this.id,
-            lastMsgId: getLastMsgId(),
-            num: num
-        });
-    }
-    addLoadedMessages(data){
-        /*
-            es wird geschaut, ob schon oben angelangt
-         */
-        this.reachedTop = data.status === 'reached top';
+        if(!this.reachedTopMessages) {
 
-        const lMessages = data.messages;
-        for(let i=lMessages.length-1;i>=0;i--){
-            const lm = lMessages[i];
-            this.messages.add(lm.mid,new Message(lm.mid,lm.content,lm.uid,this,new Date(lm.date)));
+            const getLastMsgId = () => {
+                const msg = this.getLastMessage();
+                if (msg !== null)
+                    return msg.mid;
+                return -1;
+            };
+            /*
+                messages are loaded from server
+             */
+            const config = {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    chatType: this.type,
+                    chatId: this.id,
+                    lastMsgId: getLastMsgId(),
+                    num: num
+                })
+            };
+            const response = await fetch('/message/load', config);
+
+            if (response.ok) {
+
+                const data = await response.json();
+                /*
+                    is top already reached?
+                 */
+                this.reachedTopMessages = data.status === 'reached top';
+                /*
+                    if top not already reached, loaded messages are added
+                */
+                if (!this.reachedTopMessages) {
+                    const lMessages = data.messages;
+                    for (let i = lMessages.length - 1; i >= 0; i--) {
+                        const lm = lMessages[i];
+                        this.messages.add(lm.mid, new Message(lm.mid, lm.content, lm.uid, this, new Date(lm.date)));
+                    }
+                }
+            }
+            return new Error();
         }
-        /*
-            msg loaded wird getriggert
-         */
-        this.event.trigger('messages loaded');
     }
     /*
         gibt die Nachricht, die am längsten zurück liegt, zurück
@@ -71,6 +92,14 @@ class Chat {
         if (this.messages.length !== 0)
             return this.messages[this.messages.length - 1].value;
         return null;
+    }
+    /*
+        returns all messages in an array
+     */
+    getMessages(){
+        /*
+            TODO
+         */
     }
     /*
         neue Nachricht wird hinzugefügt
@@ -142,6 +171,14 @@ class Chat {
 
     set unreadMessages(value) {
         this._unreadMessages = value;
+    }
+
+    get reachedTopMessages() {
+        return this._reachedTopMessages;
+    }
+
+    set reachedTopMessages(value) {
+        this._reachedTopMessages = value;
     }
 }
 

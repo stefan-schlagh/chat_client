@@ -76,17 +76,6 @@ class ChatSocket{
         this.socket.on('all chats', data => {
             this.initChats(data);
         });
-        // wenn messages geladen
-        this.socket.on('messages', data => {
-            /*
-                gets chat of msg
-                loads messages of this chat
-             */
-            const chat = this.getChat(data.chatType,data.chatId);
-            if(chat !== undefined)
-                chat.addLoadedMessages(data);
-        });
-
         /*
             msg-handler
          */
