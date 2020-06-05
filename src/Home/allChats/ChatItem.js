@@ -129,7 +129,7 @@ export default class ChatItem extends Component{
         )
     }
 
-    newMessage = uid => {
+    newMessage = () => {
         /*
             wenn chat nicht selected, wird newMessages inkrmentiert
          */

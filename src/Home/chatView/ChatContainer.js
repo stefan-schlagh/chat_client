@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import MessageForm from "./MessageForm";
 import chatSocket from "../../chatData/chatSocket";
 import Message from "./Message";
+import {isDifferentDay} from '../../chatData/Message'
 
 export default class ChatContainer extends Component{
 
@@ -16,6 +17,7 @@ export default class ChatContainer extends Component{
         this.state = {
             msgLoading: false,
             scrollToBottom: 0,
+            messages: [],
             newMessages: 0,
             typeMessages: []
         };
@@ -58,19 +60,25 @@ export default class ChatContainer extends Component{
             messages are loaded
          */
         chat.loadMessages(10)
-            .then(() => {
+            .then(messages => {
                 /*
                     loader is hidden
+                    messages are added
                  */
-                this.setState({
-                    msgLoading: false
-                });
+                this.setState(state => ({
+                    msgLoading: false,
+                    messages: messages ? messages.concat(state.messages) : state.messages
+                }));
                 this.setScrollToBottom(this.state.scrollToBottom);
             })
-            .catch(err => {});
+            .catch(err => this.setState({
+                msgLoading: false
+            }));
     };
 
-    newMessage = uid => {
+    newMessage = (uid,message) => {
+
+        console.log('new');
         /*
             wenn nach unten gescrollt:
                 state.newMsg = 0
@@ -82,31 +90,58 @@ export default class ChatContainer extends Component{
                     state.newMsg ++
                     derzeitigen scrollstatus beibehalten
          */
+
         if(this.getScrollToBottom() === 0){
-            this.setState({
-                newMessages: 0
-            });
+            this.setState(state => ({
+                newMessages: 0,
+                messages: state.messages.concat(message)
+            }));
         }else{
             if(uid === chatSocket.userSelf.uid){
-                this.setState({
+                this.setState(state => ({
                     scrollToBottom: 0,
-                    newMessages: 0
-                });
+                    newMessages: 0,
+                    messages: state.messages.concat(message)
+                }));
             }else{
                 this.setState(state => ({
-                    newMessages: state.newMessages +1
+                    newMessages: state.newMessages +1,
+                    messages: state.messages.concat(message)
                 }));
             }
         }
     };
+    /*
+        is called when the selected chat changed
+     */
+    chatChanged = () => {
+        /*
+            current chat
+         */
+        console.log(this.props.chatId);
+        const chat = chatSocket.getChat(this.props.chatType,this.props.chatId);
+        /*
+            event-listeners are initialized
+         */
+        chat.event.on("new message",this.newMessage);
+        /*
+            message-array is created
+         */
+        const messages = chat.getMessages();
+        this.setState({
+            messages: messages
+        });
+        /*
+            if scrollToBottom is 0, the messages are loaded
+         */
+        if (this.messagesNode.scrollTop === 0)
+            this.loadMessages();
+    };
 
     componentDidMount() {
         this.messagesNode = ReactDOM.findDOMNode(this.messages);
-        if(this.messagesNode.scrollTop === 0)
-            this.loadMessages();
 
-        const chat = chatSocket.getChat(this.props.chatType,this.props.chatId);
-        chat.event.on('new message',this.newMessage);
+        this.chatChanged();
 
         this.isMounted = true;
     }
@@ -120,18 +155,16 @@ export default class ChatContainer extends Component{
                 scrolltop wird überprüft
          */
         if(prevProps.chatType !== this.props.chatType || prevProps.chatId !== this.props.chatId) {
-            //message loaded listener
+            /*
+                event listeners of previous chat are removed
+             */
             const prevChat = chatSocket.getChat(prevProps.chatType,prevProps.chatId);
-            prevChat.event.rm('new message',this.newMessage);
-
-            const newChat = chatSocket.getChat(this.props.chatType,this.props.chatId);
-            newChat.event.on('new message',this.newMessage);
+            prevChat.event.rm("new message",this.newMessage);
 
             //scrollToBottom wird auf 0 gesetzt
             this.setScrollToBottom(0);
-            //wenn scrolltop = 0, werden messages geladen
-            if (this.messagesNode.scrollTop === 0)
-                this.loadMessages();
+
+            this.chatChanged();
         }
         /*
             wenn scrollToBottom 0 wird zu bottom gescrollt
@@ -197,12 +230,12 @@ export default class ChatContainer extends Component{
             wird ein Container mit Datum gerendert
          */
         const renderDateContainer = msg => {
-            if(msg.isDifferentDay(lastDate)){
+            if(isDifferentDay(msg.date,lastDate)){
                 lastDate = msg.date;
                 return(
                     <div className = "date-container">
                         <div>
-                            {msg.getDateString()}
+                            {msg.dateString}
                         </div>
                     </div>
                 )
@@ -228,12 +261,12 @@ export default class ChatContainer extends Component{
                      ref={this.assignMessagesRef}
                 >
                     {showLoaderTop()}
-                    {chat.messages.map((msg,i) => {
+                    {this.state.messages.map((msg,i) => {
                         return (
                             <div key={i}>
-                                {renderDateContainer(msg.value)}
+                                {renderDateContainer(msg)}
                                 <Message
-                                    msg={msg.value}
+                                    msg={msg}
                                 />
                             </div>
                         );
@@ -253,7 +286,7 @@ export default class ChatContainer extends Component{
         this.isMounted = false;
 
         const chat = chatSocket.getChat(this.props.chatType,this.props.chatId);
-        chat.event.rm('new message',this.newMessage);
+        chat.event.rm("new message",this.newMessage);
     }
 
     get isMounted() {

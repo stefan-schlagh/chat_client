@@ -16,7 +16,7 @@ class Chat {
     /*
         are all messages already loaded?
      */
-    _reachedTopMessages;
+    _reachedTopMessages = false;
 
     constructor(type, id,chatName) {
         this.type = type;
@@ -63,18 +63,24 @@ class Chat {
                     is top already reached?
                  */
                 this.reachedTopMessages = data.status === 'reached top';
+
+                const lMessages = data.messages;
                 /*
-                    if top not already reached, loaded messages are added
-                */
-                if (!this.reachedTopMessages) {
-                    const lMessages = data.messages;
-                    for (let i = lMessages.length - 1; i >= 0; i--) {
-                        const lm = lMessages[i];
-                        this.messages.add(lm.mid, new Message(lm.mid, lm.content, lm.uid, this, new Date(lm.date)));
-                    }
+                    the array that will be returned
+                 */
+                const messages = new Array(lMessages.length);
+                const userTopShown = this.showUserInfoMessage();
+
+                for (let i = lMessages.length - 1; i >= 0; i--) {
+
+                    const lm = lMessages[i];
+                    const message = new Message(lm.mid, lm.content, lm.uid, this, new Date(lm.date));
+                    this.messages.add(lm.mid, message);
+                    messages[i] = message.getMessageObject(userTopShown);
                 }
+                return messages;
             }
-            return new Error();
+            throw new Error();
         }
     }
     /*
@@ -95,18 +101,41 @@ class Chat {
     }
     /*
         returns all messages in an array
+            userTopShown    should the user at the top be shown?
      */
     getMessages(){
-        /*
-            TODO
-         */
+
+        const userTopShown = this.showUserInfoMessage();
+        const rMessages = new Array(this.messages.length);
+
+        for(let i=0;i<this.messages.length;i++){
+
+            const message = this.messages[i].value;
+            rMessages[i] = message.getMessageObject(userTopShown);
+        }
+
+        return rMessages;
     }
     /*
         neue Nachricht wird hinzugefügt
      */
     addMessage(uid,content,mid){
-        this.messages.add(mid,new Message(mid,content,uid,this,new Date(Date.now())));
-        this.event.trigger("new message",uid);
+        const message =
+            new Message(mid,content,uid,this,new Date(Date.now()));
+        this.messages.add(mid,message);
+        console.log(message);
+        console.log(this.id);
+        this.event.trigger(
+            "new message", uid,
+            message.getMessageObject(
+                this.showUserInfoMessage())
+        );
+    }
+    /*
+        should the userInfo at the messages be shown (--> only in groupChats)
+     */
+    showUserInfoMessage(){
+        return(this.type === 'groupChat')
     }
 
     get isSelfPart() {

@@ -2,7 +2,6 @@ import React,{Component} from "react";
 import ChatViewLoader from "../ChatViewLoader";
 import {Link,withRouter} from 'react-router-dom';
 import chatSocket from "../../../chatData/chatSocket";
-import Dummy from "../../../utilComp/Dummy";
 
 class GroupChatInfo extends Component{
 
@@ -46,7 +45,6 @@ class GroupChatInfo extends Component{
                 this.setState({
                     data: data
                 });
-                console.log(data);
             }
         };
 

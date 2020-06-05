@@ -1,5 +1,4 @@
 import React,{Component} from "react";
-import chatSocket from "../../chatData/chatSocket";
 import Colors from "../../util/Color";
 
 export default class Message extends Component{
@@ -8,22 +7,15 @@ export default class Message extends Component{
 
         const msg = this.props.msg;
 
-        const isMsgBySelf = () => {
-            return msg.uid === chatSocket.userSelf.uid;
-        };
-
-        const user = isMsgBySelf() ? chatSocket.userSelf : chatSocket.users.get(msg.uid);
-
         return(
-            <div className={"p-2 border rounded " + (isMsgBySelf() ? "float-right " : "float-left ") + "msg-container-other msg-container"}>
-                {(chatSocket.currentChat.type === 'groupChat') ?
+            <div className={"p-2 border rounded " + (msg.bySelf ? "float-right " : "float-left ") + "msg-container-other msg-container"}>
+                {msg.userTop ?
                     <div className="w-100">
                         <strong className="msg-container-header"><span
                             style={{
-                                color: Colors.names[user.color]
+                                color: Colors.names[msg.userTop.color]
                             }}>
-                            {//wenn msg von user selbst ist, wird "Du" angezeigt
-                                isMsgBySelf() ? "Du" : user.username}
+                            {msg.userTop.username}
                         </span>
                         </strong>
                     </div>
@@ -35,7 +27,7 @@ export default class Message extends Component{
                 </div>
                 <div className="w-100 msg-date-outer">
                     <div className="msg-date">
-                        {msg.getMessageViewDateString()}
+                        {msg.mDateString}
                     </div>
                 </div>
             </div>

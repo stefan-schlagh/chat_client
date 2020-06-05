@@ -160,30 +160,30 @@ class ChatSocket{
 
     getChatArraySortedByDate(){
 
-        const getMessageTime = chat => {
+        function getMessageTime (chat) {
             const c = chat.lastMessage;
             if(c !== null)
                 return c.date.getTime();
             return new Date(0).getTime();
-        };
+        }
 
-        const getMaxDate = (chats,iFrom) => {
+        function getMaxDate (chats,iFrom) {
             let max = iFrom;
             for(let i = iFrom+1;i<chats.length;i++){
                 if(getMessageTime(chats[max]) < getMessageTime(chats[i]))
                     max = i;
             }
             return max;
-        };
-        const swap = (items, firstIndex, secondIndex) => {
+        }
+        function swap (items, firstIndex, secondIndex) {
             let temp = items[firstIndex];
             items[firstIndex] = items[secondIndex];
             items[secondIndex] = temp;
-        };
+        }
         /*
-            Array wird geklont
+            Array is cloned
          */
-        const cloneArr = arr => {
+        function cloneArr (arr) {
             const clone = new Array(arr.length);
             for(let i=0;i<arr.length;i++){
                 const chat = arr[i].value;
@@ -193,6 +193,7 @@ class ChatSocket{
                 }else{
                     const lm = chat.messages[chat.messages.length - 1].value;
                     lastMessage = {
+                        content: lm.content,
                         date: lm.date
                     };
                 }
@@ -204,11 +205,11 @@ class ChatSocket{
                 };
             }
             return clone;
-        };
+        }
         /*
             es wird ein sortiertes Array zurückgegeben
          */
-        const getSorted = chats => {
+        function getSorted (chats) {
             //Array wird erzeugt
             const sorted = cloneArr(chats);
             /*
@@ -219,11 +220,11 @@ class ChatSocket{
                 swap(sorted,i,max);
             }
             return sorted;
-        };
+        }
         /*
             Arrays werden gemerged
          */
-        const mergeArr = (arr1,arr2) => {
+        function mergeArr (arr1,arr2) {
 
             const merged = new Array(arr1.length + arr2.length);
             let p1 = 0;
@@ -244,7 +245,7 @@ class ChatSocket{
                 }
             }
             return merged;
-        };
+        }
         const ncSorted = getSorted(this.chats.normal);
         const gcSorted = getSorted(this.chats.group);
 
