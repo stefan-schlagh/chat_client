@@ -8,11 +8,13 @@ import {
 } from "react-router-dom";
 import Login from "./Auth/Login";
 import Register from "./Auth/Register";
-import 'bootstrap/dist/css/bootstrap.css';
 import {loggedIn} from "./Auth/Auth";
 import Chat from "./Home/Home";
-import 'bootstrap';
 import 'popper.js';
+
+import 'bootstrap';
+import 'bootstrap/dist/css/bootstrap.css';
+import './Colors.scss';
 
 export default function App() {
   return (

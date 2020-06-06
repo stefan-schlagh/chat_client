@@ -250,26 +250,24 @@ export default class ChooseUser extends Component{
         };
 
         return(
-            <div className="modal-main">
-                <div className="user-results">
-                    <div className="newChat-user-top">
-                        <div className="newChat-searchUser">
-                            <input type="text"
-                                   name="newChat-searchUser"
-                                   className="form-control"
-                                   placeholder="Benutzer suchen"
-                                   onChange={this.searchChanged}
-                            />
-                        </div>
-                        <div className="newChat-user-more">
-                            <i className="fas fa-ellipsis-h fa-2x"
-                               onClick={this.showOptions}
-                            />
-                            {renderOptions()}
-                        </div>
+            <div className="user-results">
+                <div className="newChat-user-top">
+                    <div className="newChat-searchUser">
+                        <input type="text"
+                               name="newChat-searchUser"
+                               className="form-control"
+                               placeholder="Benutzer suchen"
+                               onChange={this.searchChanged}
+                        />
                     </div>
-                    {renderResult()}
+                    <div className="newChat-user-more">
+                        <i className="fas fa-ellipsis-h fa-2x"
+                           onClick={this.showOptions}
+                        />
+                        {renderOptions()}
+                    </div>
                 </div>
+                {renderResult()}
             </div>
         );
     }

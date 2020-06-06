@@ -271,7 +271,7 @@
     max-width: 900px;
     margin: 20px auto;
     position: relative;
-    height: calc(100% - 70px)
+    height: calc(100% - 30px)
 }
 .user-results h5{
     padding: 5px;

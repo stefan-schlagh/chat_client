@@ -1,6 +1,8 @@
 import React,{Component} from "react";
 import {Link} from 'react-router-dom';
 import chatSocket from "../../chatData/chatSocket";
+import {ModalHeader,ModalMain} from "../../utilComp/Modal";
+import Dummy from "../../utilComp/Dummy";
 
 const errorCode = {
     none: 0,
@@ -27,16 +29,21 @@ export default class UserInfo extends Component{
 
         }else if(this.state.error === errorCode.isSelf){
             return(
-                <div className="modal-header-b">
-                    <h1>
-                        Du
-                    </h1>
-                </div>
+                <Dummy>
+                    <ModalHeader>
+                        <h1>
+                            Du
+                        </h1>
+                    </ModalHeader>
+                    <ModalMain>
+                        xx
+                    </ModalMain>
+                </Dummy>
             )
         }else{
             return(
-                <div>
-                    <div className="modal-header-b">
+                <Dummy>
+                    <ModalHeader>
                         <h1>
                             {this.state.userInfo.username}
                             &nbsp;
@@ -44,9 +51,11 @@ export default class UserInfo extends Component{
                                 <i className="far fa-comment-alt" />
                             </Link>
                         </h1>
-                    </div>
-                    <h2>Gruppen</h2>
-                </div>
+                    </ModalHeader>
+                    <ModalMain>
+                        <h2>Gruppen</h2>
+                    </ModalMain>
+                </Dummy>
             )
         }
     }
