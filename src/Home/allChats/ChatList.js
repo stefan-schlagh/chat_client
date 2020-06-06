@@ -3,6 +3,8 @@ import ChatSearchBox from "./ChatSearchBox";
 import ChatItem from "./ChatItem";
 import chatSocket from "../../chatData/chatSocket";
 
+import './chatList.scss';
+
 export default class ChatList extends Component{
 
     constructor(props) {
@@ -122,6 +124,7 @@ export default class ChatList extends Component{
         let found = 0;
 
         const showNothingFoundMsg = () => {
+            console.log(found);
             if(found === 0)
                 return(
                     <span>
@@ -152,7 +155,7 @@ export default class ChatList extends Component{
                 paddingTop: paddingTop,
                 height: '100%'
             }}>
-                <div className="chat-container m-2">
+                <div className="chat-c-list">
                     <ChatSearchBox
                         onSearch={searchValue => {
                             this.setState({
@@ -162,7 +165,7 @@ export default class ChatList extends Component{
                         setHomeState={this.props.setHomeState}
                     />
 
-                    <ul className="chat-list list-group pb-5" style={{height: 'calc (100% - 80px'}}>
+                    <ul className="chat-list">
                         {renderTempChat()}
                         {this.state.chats.map((chat,i) => {
                             if(chat.chatName.includes(this.state.searchValue)) {

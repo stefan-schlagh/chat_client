@@ -1,6 +1,8 @@
 import React,{Component} from "react";
 import {Link,withRouter} from "react-router-dom";
 
+import "./chatSearchBox.scss";
+
 class ChatSearchBox extends Component{
 
     searchChanged = event => {
@@ -12,7 +14,7 @@ class ChatSearchBox extends Component{
         const {pathname} = this.props.location;
 
         return(
-            <div className="chat-container-top border rounded mb-2">
+            <div className="chatSearchBox">
                 <div className="chat-select-form">
                     <input
                         type="text"

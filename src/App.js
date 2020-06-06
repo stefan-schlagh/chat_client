@@ -14,7 +14,6 @@ import 'popper.js';
 
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.css';
-import './Colors.scss';
 
 export default function App() {
   return (

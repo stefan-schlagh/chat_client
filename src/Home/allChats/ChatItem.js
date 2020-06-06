@@ -114,7 +114,7 @@ export default class ChatItem extends Component{
 
         return(
             <li key={this.props._key_}
-                className={"list-group-item p-1" + (this.isSelected() ? " selected " : "")}
+                className={(this.isSelected() ? "selected " : "")}
             >
                 <Link to={getLink()}>
                     <div className="w-100">
