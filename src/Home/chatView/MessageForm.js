@@ -3,6 +3,9 @@ import chatSocket from "../../chatData/chatSocket";
 import 'emoji-mart/css/emoji-mart.css';
 import { Picker } from 'emoji-mart';
 import {withRouter} from "react-router-dom";
+import Dummy from "../../utilComp/Dummy";
+
+import './messageForm.scss';
 
 class MessageForm extends Component{
 
@@ -139,7 +142,7 @@ class MessageForm extends Component{
 
     render() {
         return(
-            <div>
+            <Dummy>
                 <form onSubmit={this.onSubmit} className="msg-form">
                     <div className="message-input">
                         <input autoComplete="off"
@@ -168,7 +171,7 @@ class MessageForm extends Component{
                         <Picker onSelect={this.onEmojiInput}/>
                     </div>
                 : null}
-            </div>
+            </Dummy>
         )
     }
 

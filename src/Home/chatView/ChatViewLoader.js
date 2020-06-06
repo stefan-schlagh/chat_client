@@ -1,5 +1,7 @@
 import React from "react";
 
+import './chatViewLoader.scss';
+
 export default function ChatViewLoader (props){
     return(
         <div className="loader-init">

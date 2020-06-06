@@ -1,6 +1,8 @@
 import React,{Component} from "react";
 import Colors from "../../util/Color";
 
+import './message.scss'
+
 export default class Message extends Component{
 
     render() {

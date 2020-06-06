@@ -27,7 +27,7 @@ export default function RouterSmallScreens(props){
     };
 
     return(
-        <div className="row-height position-relative">
+        <div className="main-container">
             <Switch>
                 <Route path={`${path}/user/:uid`} render={
                     routeProps => (

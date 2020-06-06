@@ -1,3 +1,4 @@
+@import '../../sass/colors';
 
 .chatSearchBox {
   margin-bottom: 0.5rem;
@@ -19,7 +20,7 @@
     height: 30px;
     width: 30px;
     color: white;
-    background-color: var(--notification-blue);
+    background-color: $cNotificationBlue;
     border: none;
     border-radius: 15px;
     margin-left: 5px;

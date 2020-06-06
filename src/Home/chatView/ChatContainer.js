@@ -5,6 +5,8 @@ import chatSocket from "../../chatData/chatSocket";
 import Message from "./Message";
 import {isDifferentDay} from '../../chatData/Message'
 
+import './chatContainer.scss';
+
 export default class ChatContainer extends Component{
 
     _isMounted = false;

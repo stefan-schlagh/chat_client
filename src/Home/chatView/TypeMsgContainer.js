@@ -1,6 +1,8 @@
 import React,{Component} from "react";
 import chatSocket from "../../chatData/chatSocket";
 
+import './typeMessageContainer.scss';
+
 export default class TypeMsgContainer extends Component{
 
     constructor(props) {
