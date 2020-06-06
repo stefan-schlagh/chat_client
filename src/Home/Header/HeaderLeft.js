@@ -1,6 +1,9 @@
 import React,{Component} from "reactn";
 import Responsive from "../../responsive/Responsive";
 import {Link,withRouter} from "react-router-dom";
+import Dummy from "../../utilComp/Dummy";
+
+import "./headerLeft.scss";
 
 export const infoHeaderCenter = {
     none: 0,
@@ -32,7 +35,7 @@ class HeaderLeft extends Component{
                 only small screens
              */
             return (
-                <div className="float-left top-left">
+                <div className="float-left left">
                     <i id="btnBackToChatList"
                        className="fas fa-arrow-left fa-2x d-block d-md-none"
                        onClick={() => {this.props.history.goBack()}}
@@ -50,7 +53,7 @@ class HeaderLeft extends Component{
 
                 case infoHeaderCenter.normalChat:
                     return (
-                        <div id="chat-info" className="chat-info float-left top-center pt-2">
+                        <HeaderCenter>
                             <h3 id="chat-info-name">
                                 {this.global.ihcData.name}
                             </h3>
@@ -60,12 +63,12 @@ class HeaderLeft extends Component{
                                    title="chat info"
                                 />
                             </Link>
-                        </div>
+                        </HeaderCenter>
                     );
 
                 case infoHeaderCenter.groupChat:
                     return(
-                        <div id="chat-info" className="chat-info float-left top-center pt-2">
+                        <HeaderCenter>
                             <h3 id="chat-info-name">
                                 {this.global.ihcData.name}
                             </h3>
@@ -75,7 +78,7 @@ class HeaderLeft extends Component{
                                    title="chat info"
                                 />
                             </Link>
-                        </div>
+                        </HeaderCenter>
                     );
 
                 default:
@@ -88,13 +91,21 @@ class HeaderLeft extends Component{
         };
 
         return(
-            <div>
+            <Dummy>
                 <Responsive displayIn={["Mobile"]}>
                     {renderBtnBack()}
                 </Responsive>
                 {renderChatInfo()}
-            </div>
+            </Dummy>
         )
     }
 }
 export default withRouter(HeaderLeft);
+
+function HeaderCenter(props){
+    return(
+        <div id="chat-info" className="center pt-2">
+            {props.children}
+        </div>
+    )
+}

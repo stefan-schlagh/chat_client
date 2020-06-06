@@ -5,6 +5,8 @@ import HeaderLeft from "./HeaderLeft";
 import chatSocket from "../../chatData/chatSocket";
 import {Link,withRouter} from "react-router-dom";
 
+import './header.scss';
+
 class Header extends Component{
 
     constructor(props) {
@@ -39,27 +41,25 @@ class Header extends Component{
         const {pathname} = this.props.location;
 
         return (
-            <div className="container-top">
+            <div className="c-header">
 
                 <HeaderLeft
                     newMessages={this.props.headerLeft.newMessages}
                 />
 
-                <div id="top-right" className="top-right" onClick={this.clickCheckBox}>
+                <div id="top-right" className="right" onClick={this.clickCheckBox}>
 
-                    <div className="top-right-left">
-
-                    </div>
+                    <div className="right-l" />
 
                     <input type="checkbox"
                            id="btnControlTopRight"
+                           className="btnControl"
                            checked={this.state.checkBoxClicked}
                            onChange={this.changeChecked}
                     />
-                    <label className="button-top-right"
-                           htmlFor="btnControlTopRight">
+                    <label htmlFor="btnControlTopRight">
 
-                        <div className="top-right-center">
+                        <div className="right-c">
                             <div className="d-only-when-small">
                                 <i  id="user-info"
                                     className="fas fa-user fa-2x user-icon"
