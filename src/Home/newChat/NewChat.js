@@ -4,6 +4,8 @@ import NewGroup from "./newGroup/NewGroup";
 import Dummy from "../../utilComp/Dummy";
 import {ModalHeader,ModalMain} from "../../utilComp/Modal";
 
+import './newChat.scss';
+
 export const tabs = {
     chooseUser: 0,
     newGroup: 1,
@@ -92,7 +94,9 @@ export default class NewChat extends Component{
                     <h1>{getHeader()}</h1>
                 </ModalHeader>
                 <ModalMain>
-                    {router()}
+                    <div className="newChat">
+                        {router()}
+                    </div>
                 </ModalMain>
             </Dummy>
         )

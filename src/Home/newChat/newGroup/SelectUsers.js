@@ -1,6 +1,9 @@
 import React,{Component} from "react";
 import UserList from "./UserList";
 import UserItem from "./UserItem";
+import Dummy from "../../../utilComp/Dummy";
+
+import './selectUsers.scss';
 
 export default class SelectUsers extends Component{
 
@@ -91,7 +94,7 @@ export default class SelectUsers extends Component{
             });
 
         return(
-            <div className="user-results">
+            <Dummy>
                 <div className="select-users">
                     {renderSelectedUsers()}
                 </div>
@@ -101,7 +104,7 @@ export default class SelectUsers extends Component{
                               isUserSelected={this.isUserSelected}
                     />
                 :
-                    <ul className="list-group">
+                    <ul className="selectUsers-list only-selected result-list">
                         {this.state.selectedUsers.map((item,index) => (
                             <UserItem
                                 key={index}
@@ -115,7 +118,7 @@ export default class SelectUsers extends Component{
                         ))}
                     </ul>
                 }
-            </div>
+            </Dummy>
         )
     }
 }

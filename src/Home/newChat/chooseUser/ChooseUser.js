@@ -4,6 +4,8 @@ import {tabs} from "../NewChat";
 import UserItem from "./UserItem";
 import Dummy from "../../../utilComp/Dummy";
 
+import './chooseUser.scss';
+
 const errorCode={
     none: 0,
     error: 1
@@ -185,17 +187,11 @@ export default class ChooseUser extends Component{
             if(this.state.showOptions)
                 return(
                     <div className="options">
-                        <ul className="list-group"
-                            ref={this.assignListRef}
-                        >
-                            <li className="list-group-item"
-                                onClick={this.newGroupClick}
-                            >
+                        <ul ref={this.assignListRef}>
+                            <li onClick={this.newGroupClick}>
                                 neue Gruppe
                             </li>
-                            <li className="list-group-item"
-                                onClick={this.joinGroupClick}
-                            >
+                            <li onClick={this.joinGroupClick}>
                                 einer Gruppe beitreten
                             </li>
                         </ul>
@@ -219,7 +215,7 @@ export default class ChooseUser extends Component{
                     return (
                         <Dummy>
                             <h5>Ergebnisse:</h5>
-                            <ul className="list-user list-group result-list">
+                            <ul className="searchUser-list result-list">
                                 {this.state.searchResult.map((item, index) => (
                                     <UserItem
                                         key={index}
@@ -233,7 +229,7 @@ export default class ChooseUser extends Component{
                     );
                 }else{
                     return(
-                        <ul className="list-user result-list">
+                        <ul className="result-list">
                             <div className="alert alert-warning" role="alert">
                                 Nichts gefunden!
                             </div>
@@ -250,9 +246,9 @@ export default class ChooseUser extends Component{
         };
 
         return(
-            <div className="user-results">
-                <div className="newChat-user-top">
-                    <div className="newChat-searchUser">
+            <Dummy>
+                <div className="user-top">
+                    <div className="searchUser">
                         <input type="text"
                                name="newChat-searchUser"
                                className="form-control"
@@ -260,7 +256,7 @@ export default class ChooseUser extends Component{
                                onChange={this.searchChanged}
                         />
                     </div>
-                    <div className="newChat-user-more">
+                    <div className="user-more">
                         <i className="fas fa-ellipsis-h fa-2x"
                            onClick={this.showOptions}
                         />
@@ -268,7 +264,7 @@ export default class ChooseUser extends Component{
                     </div>
                 </div>
                 {renderResult()}
-            </div>
+            </Dummy>
         );
     }
     componentDidMount() {

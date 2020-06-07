@@ -11,15 +11,14 @@ class UserItem extends Component{
 
     render() {
         return(
-
-                <li className="list-group-item">
-                    <Link to={"/chat/user/" + this.props.uid}
-                          onClick={this.elementClicked}
-                          replace={true}
-                    >
-                    {this.props.username}
-                    </Link>
-                </li>
+            <li>
+                <Link to={"/chat/user/" + this.props.uid}
+                      onClick={this.elementClicked}
+                      replace={true}
+                >
+                {this.props.username}
+                </Link>
+            </li>
         )
     }
 }

@@ -14,11 +14,6 @@
     @extend .v-list-item;
     padding: 0.25rem;
   }
-  li:hover {
-    background-color: $cListItemHoverYes;
-    cursor: pointer;
-    transition: 0.3s;
-  }
   li.selected {
     background-color: $cListItemHoverYes;
   }

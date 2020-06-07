@@ -124,7 +124,6 @@ export default class ChatList extends Component{
         let found = 0;
 
         const showNothingFoundMsg = () => {
-            console.log(found);
             if(found === 0)
                 return(
                     <span>

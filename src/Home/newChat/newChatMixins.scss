@@ -1,0 +1,7 @@
+@import '../../sass/colors';
+@import "../../sass/list";
+
+@mixin resultListMobile($headerHeight) {
+    width: 100%;
+    height: calc(100% - #{$headerHeight});
+}

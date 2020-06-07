@@ -1,7 +1,7 @@
 import React,{Component} from "react";
 import {withRouter} from 'react-router-dom';
 
-import './Modal.scss';
+import './modal.scss';
 
 class Modal extends Component{
 

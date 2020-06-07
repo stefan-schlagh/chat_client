@@ -2,8 +2,6 @@ $listBorder: 1px solid rgba(0,0,0,0.125);
 $cListItemHoverYes: #ebebeb;
 
 .v-list {
-  display: flex;
-  flex-direction: column;
   padding-left: 0;
   margin-bottom: 0;
   list-style-type: none;
@@ -23,4 +21,10 @@ $cListItemHoverYes: #ebebeb;
   display: block;
   border: $listBorder;
   border-top: none;
+
+  &:hover {
+    background-color: $cListItemHoverYes;
+    cursor: pointer;
+    transition: 0.3s;
+  }
 }
