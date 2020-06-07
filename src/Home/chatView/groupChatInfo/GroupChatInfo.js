@@ -3,6 +3,8 @@ import ChatViewLoader from "../ChatViewLoader";
 import {Link,withRouter} from 'react-router-dom';
 import chatSocket from "../../../chatData/chatSocket";
 
+import'./groupChatInfo.scss';
+
 class GroupChatInfo extends Component{
 
     constructor(props) {
