@@ -11,40 +11,9 @@ export default class ChatList extends Component{
         super(props);
         this.state = {
             //the current searchValue at the chatlist
-            searchValue: '',
-            //should the tempChat be shown?
-            showTempChat: false,
-            tempChatName: ''
+            searchValue: ''
         };
     }
-
-    tempChatShown = () => {
-
-        const chat = chatSocket.temporaryChat.chatNow;
-
-        this.setState({
-            showTempChat: true ,
-            tempChatName: chat.chatName
-        });
-    };
-
-    tempChatUpdated = () => {
-
-        const chat = chatSocket.temporaryChat.chatNow;
-
-        this.setState({
-            showTempChat: true ,
-            tempChatName: chat.chatName
-        });
-    };
-
-    tempChatHidden = () => {
-
-        this.setState({
-            showTempChat: false ,
-            tempChatName: ''
-        });
-    };
 
     chatsLoaded = chats => {
         this.setGlobal({
@@ -53,19 +22,6 @@ export default class ChatList extends Component{
     };
 
     componentDidMount() {
-        /*
-            is a tempChat already shown?
-         */
-        if(chatSocket.temporaryChat.isShown)
-            this.setState({
-                showTempChat: true
-            });
-        /*
-            Listeners are attached
-         */
-        chatSocket.event.on("tempChat shown",this.tempChatShown);
-        chatSocket.event.on("tempChat updated",this.tempChatUpdated);
-        chatSocket.event.on("tempChat hidden",this.tempChatHidden);
         /*
             chats get initialized
             is loading of chats already finished?
@@ -99,15 +55,18 @@ export default class ChatList extends Component{
         };
 
         const renderTempChat = () => {
-            if(this.state.showTempChat){
+            /*
+                is tempChat not null?
+             */
+            if(this.global.tempChat){
                 return(
                     <ChatItem
                         key={-1}
-                        _key_={-1}
                         id={0}
                         type={'tempChat'}
-                        name={this.state.tempChatName}
-                        toTop={() => {}}
+                        name={this.global.tempChat.chatName}
+                        unreadMessages={0}
+                        latestMessage={null}
                     />
                 );
             }
@@ -157,9 +116,6 @@ export default class ChatList extends Component{
         /*
             Listeners are removed
          */
-        chatSocket.event.rm("tempChat shown",this.tempChatShown);
-        chatSocket.event.rm("tempChat updated",this.tempChatUpdated);
-        chatSocket.event.rm("tempChat hidden",this.tempChatHidden);
         chatSocket.event.rm('chats loaded',this.chatsLoaded);
     }
 }

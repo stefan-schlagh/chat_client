@@ -170,8 +170,6 @@ export function initGlobal(){
      */
     addReducer('addChat',(global,dispatch,chat) => {
 
-        console.log('add2');
-
         function isDateBefore(chat1,chat2){
             /*
                 do latestMessages exist?
@@ -190,13 +188,9 @@ export function initGlobal(){
         const chatsClone = global.chats.splice(0);
         const chatObject = chat.getChatObject();
 
-        console.log(chatsClone);
-
         for(let i=0;i<chatsClone.length;i++){
             if(isDateBefore(chatsClone[i],chatObject)){
-                console.log(chatsClone);
                 chatsClone.splice(i,0,chatObject);
-                console.log(chatsClone);
                 break;
             }
         }
@@ -229,7 +223,18 @@ export function initGlobal(){
         tempChat is shown
      */
     addReducer('showTempChat',(global,dispatch,chat) => ({
-        tempChat: chat,
+        tempChat: chat.getChatObject(),
+        currentChat: {
+            type: 'tempChat',
+            id: 0,
+            messages: []
+        }
+    }));
+    /*
+        tempChat is updated
+     */
+    addReducer('updateTempChat',(global,dispatch,chat) => ({
+        tempChat: chat.getChatObject(),
         currentChat: {
             type: 'tempChat',
             id: 0,

@@ -29,15 +29,18 @@ export default class TempChatLoader{
     show(){
         this.isShown = true;
         chatSocket.event.trigger("tempChat shown");
+        getDispatch().showTempChat(this.chatNow);
     }
 
     update(){
         chatSocket.event.trigger("tempChat updated");
+        getDispatch().updateTempChat(this.chatNow);
     }
 
     hide(){
         this.isShown = false;
         chatSocket.event.trigger("tempChat hidden");
+        getDispatch().hideTempChat();
     }
     /*
         a new normalChat is created out of the current tempChat
