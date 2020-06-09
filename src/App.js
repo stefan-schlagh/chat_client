@@ -16,6 +16,10 @@ import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
 
+/*
+    TODO: loader, authentication
+ */
+
 export default function App() {
   return (
       <Router>

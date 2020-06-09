@@ -6,7 +6,7 @@ import {GroupChat, NormalChat} from "./Chat";
 import Message from "./Message";
 import EventHandler from "../util/Event";
 import TempChatLoader from "./tempChatLoader";
-import {setGlobal} from 'reactn';
+import {setGlobal,getDispatch} from 'reactn';
 
 class ChatSocket{
 
@@ -161,7 +161,7 @@ class ChatSocket{
     getChatArraySortedByDate(){
 
         function getMessageTime (chat) {
-            const c = chat.lastMessage;
+            const c = chat.latestMessage;
             if(c !== null)
                 return c.date.getTime();
             return new Date(0).getTime();
@@ -187,22 +187,7 @@ class ChatSocket{
             const clone = new Array(arr.length);
             for(let i=0;i<arr.length;i++){
                 const chat = arr[i].value;
-                let lastMessage;
-                if(chat.messages.length === 0){
-                    lastMessage = null;
-                }else{
-                    const lm = chat.messages[chat.messages.length - 1].value;
-                    lastMessage = {
-                        content: lm.content,
-                        date: lm.date
-                    };
-                }
-                clone[i] = {
-                    type: chat.type,
-                    id: chat.id,
-                    chatName: chat.chatName,
-                    lastMessage: lastMessage
-                };
+                clone[i] = chat.getChatObject();
             }
             return clone;
         }
@@ -298,6 +283,8 @@ class ChatSocket{
                     }
                 }).then(r => {});
 
+                getDispatch().selectNoChat();
+
                 this.event.trigger('currentChat changed', null);
             }
 
@@ -314,6 +301,8 @@ class ChatSocket{
                     id: 0
                 }
             }).then(r => {});
+
+            getDispatch().showTempChat(newChat);
 
             this.socket.emit('change chat', null);
 
@@ -335,18 +324,12 @@ class ChatSocket{
                     chat.unreadMessages = 0;
                     this.currentChat = newChat;
 
-                    setGlobal({
-                        currentChat: {
-                            type: newChat.type,
-                            id: newChat.id
-                        }
-                    }).then(r => {});
-
                     this.socket.emit('change chat', {
                         type: this.currentChat.type,
                         id: this.currentChat.id
                     });
 
+                    getDispatch().selectChat(chat);
                     //console.log(this.currentChat);
 
                     this.event.trigger('currentChat changed', newChat);
@@ -393,7 +376,7 @@ class ChatSocket{
         /*
             event gets triggered
          */
-        chatSocket.event.trigger('new chat',newChat);
+        getDispatch().addChat(newChat.getChatObject());
     }
     /*
         a new normalChat gets added

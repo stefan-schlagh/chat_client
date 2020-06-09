@@ -1,21 +1,13 @@
 import React,{Component} from "react";
-import {setGlobal} from 'reactn';
 import Header from "./Header/Header";
 import {logout} from "../Auth/Auth";
 import Responsive from "../responsive/Responsive";
 import GridBigScreens from "./GridBigScreens";
 import RouterSmallScreens from "./RouterSmallScreens";
 import chatSocket from "../chatData/chatSocket";
-import {infoHeaderCenter} from "./Header/HeaderLeft";
+import {initGlobal} from "../global/global";
 
-setGlobal({
-    infoHeaderCenter: infoHeaderCenter.none,
-    ihcData: null,
-    currentChat: {
-        type: '',
-        id: 0
-    }
-}).then();
+initGlobal();
 
 export default class Chat extends Component{
 

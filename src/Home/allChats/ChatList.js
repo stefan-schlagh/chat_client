@@ -1,4 +1,4 @@
-import React,{Component} from "react";
+import React,{Component} from "reactn";
 import ChatSearchBox from "./ChatSearchBox";
 import ChatItem from "./ChatItem";
 import chatSocket from "../../chatData/chatSocket";
@@ -10,8 +10,6 @@ export default class ChatList extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            //a array with all chats
-            chats: [],
             //the current searchValue at the chatlist
             searchValue: '',
             //should the tempChat be shown?
@@ -19,38 +17,6 @@ export default class ChatList extends Component{
             tempChatName: ''
         };
     }
-
-    chatItemToTop = index => {
-        const chatsClone = this.state.chats.splice(0);
-        const item = chatsClone[index];
-        chatsClone.splice(index,1);
-        chatsClone.unshift(item);
-        this.setState({
-            chats: chatsClone
-        });
-    };
-    /*
-        gets emitted if a new chat gets loaded
-     */
-    newChat = chat => {
-        /*
-            chat object gets created
-         */
-        const chatObj = {
-            type: chat.type,
-            id: chat.id,
-            chatName: chat.chatName,
-            lastMessage: {
-                date: chat.date
-            }
-        };
-        /*
-            this is concatenated with the Array
-         */
-        this.setState(state => ({
-            chats: [chatObj].concat(state.chats)
-        }));
-    };
 
     tempChatShown = () => {
 
@@ -81,7 +47,7 @@ export default class ChatList extends Component{
     };
 
     chatsLoaded = chats => {
-        this.setState({
+        this.setGlobal({
             chats: chats
         });
     };
@@ -100,14 +66,13 @@ export default class ChatList extends Component{
         chatSocket.event.on("tempChat shown",this.tempChatShown);
         chatSocket.event.on("tempChat updated",this.tempChatUpdated);
         chatSocket.event.on("tempChat hidden",this.tempChatHidden);
-        chatSocket.event.on('new chat',this.newChat);
         /*
             chats get initialized
             is loading of chats already finished?
                 --> chatArray gets requested immediately
          */
         if(chatSocket.finishedLoading){
-            this.setState({
+            this.setGlobal({
                 chats: chatSocket.getChatArraySortedByDate()
             });
         /*
@@ -166,17 +131,17 @@ export default class ChatList extends Component{
 
                     <ul className="chat-list">
                         {renderTempChat()}
-                        {this.state.chats.map((chat,i) => {
+                        {this.global.chats.map((chat,i) => {
                             if(chat.chatName.includes(this.state.searchValue)) {
                                 found++;
                                 return (
                                     <ChatItem
                                         key={i}
-                                        _key_={i}
                                         id={chat.id}
                                         type={chat.type}
                                         name={chat.chatName}
-                                        toTop={this.chatItemToTop}
+                                        unreadMessages={chat.unreadMessages}
+                                        latestMessage={chat.latestMessage}
                                     />
                                 );
                             }
@@ -195,7 +160,6 @@ export default class ChatList extends Component{
         chatSocket.event.rm("tempChat shown",this.tempChatShown);
         chatSocket.event.rm("tempChat updated",this.tempChatUpdated);
         chatSocket.event.rm("tempChat hidden",this.tempChatHidden);
-        chatSocket.event.rm('new chat',this.newChat);
         chatSocket.event.rm('chats loaded',this.chatsLoaded);
     }
 }

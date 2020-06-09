@@ -2,10 +2,10 @@ import BinSearchArray from "../util/BinSearch";
 import Message from "./Message";
 import EventHandler from "../util/Event";
 import chatSocket from "./chatSocket";
+import {getGlobal,setGlobal,getDispatch} from 'reactn';
 
 class Chat {
 
-    _isSelfPart;
     _type;
     _id;
     _chatName;
@@ -128,6 +128,10 @@ class Chat {
             message.getMessageObject(
                 this.showUserInfoMessage())
         );
+        getDispatch().newMsg(
+            this,
+            this.unreadMessages,
+            message.getMessageObject())
     }
     /*
         should the userInfo at the messages be shown (--> only in groupChats)
@@ -135,13 +139,35 @@ class Chat {
     showUserInfoMessage(){
         return(this.type === 'groupChat')
     }
-
-    get isSelfPart() {
-        return this._isSelfPart;
+    /*
+        an object of this chat is returned
+     */
+    getChatObject(){
+        return {
+            type: this.type,
+            id: this.id,
+            chatName: this.chatName,
+            latestMessage: this.getLatestMessageObject(),
+            unreadMessages: 0
+        };
     }
-
-    set isSelfPart(value) {
-        this._isSelfPart = value;
+    /*
+        an object with the latest message is returned
+     */
+    getLatestMessageObject(){
+        /*
+            are there messages?
+        */
+        if(this.messages.length === 0){
+            return null;
+        }else{
+            const lm = this.getFirstMessage();
+            return {
+                msgString: lm.getChatViewMsgString(),
+                dateString: lm.getChatViewDateString(),
+                date: lm.date
+            };
+        }
     }
 
     get type() {

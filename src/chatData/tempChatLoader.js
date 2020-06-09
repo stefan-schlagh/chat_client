@@ -2,6 +2,7 @@ import {NormalChat} from "./Chat";
 import chatSocket from "./chatSocket";
 import User from "./User";
 import Message from "./Message";
+import {getDispatch} from 'reactn';
 
 export default class TempChatLoader{
 
@@ -79,7 +80,7 @@ export default class TempChatLoader{
                 newChat.messages.add(res.mid,new Message(res.mid,message,chatSocket.userSelf.uid,newChat,new Date(Date.now())));
 
                 //args: chat
-                chatSocket.event.trigger('new chat',newChat);
+                getDispatch().addChat(newChat);
                 /*
                     currentChat gets changed
                  */
