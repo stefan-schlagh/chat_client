@@ -123,15 +123,12 @@ class Chat {
         const message =
             new Message(mid,content,uid,this,new Date(Date.now()));
         this.messages.add(mid,message);
-        this.event.trigger(
-            "new message", uid,
-            message.getMessageObject(
-                this.showUserInfoMessage())
-        );
         getDispatch().newMsg(
             this,
             this.unreadMessages,
-            message.getMessageObject())
+            message.getMessageObject(
+                this.showUserInfoMessage()
+            ));
     }
     /*
         should the userInfo at the messages be shown (--> only in groupChats)

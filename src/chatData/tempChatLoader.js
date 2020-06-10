@@ -84,6 +84,7 @@ export default class TempChatLoader{
 
                 //args: chat
                 getDispatch().addChat(newChat);
+
                 /*
                     currentChat gets changed
                  */

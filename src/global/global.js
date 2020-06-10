@@ -54,6 +54,7 @@ export function initGlobal(){
      */
     addReducer('newMsg',(global,dispatch,chat,unreadMessages,message) => {
 
+        console.log('newMsg');
         const index = findIndex(global,chat);
         /*
             if the index is -1, the chat does not exist
@@ -141,7 +142,7 @@ export function initGlobal(){
                 currentChat: {
                     type: chat.type,
                     id: chat.id,
-                    messages: []
+                    messages: chat.getMessages()
                 },
                 chats: chatsClone,
                 tempChat: null
@@ -151,18 +152,25 @@ export function initGlobal(){
     /*
         is called when no chat should be selected
      */
-    addReducer('selectNoChat',(global,dispatch) => {
-
-    });
+    addReducer('selectNoChat',(global,dispatch) => ({
+        currentChat: {
+            type: '',
+            id: 0,
+            messages: []
+        },
+    }));
     /*
         loaded messages are added
      */
     addReducer('addLoadedMessages',(global,dispatch,messages) => {
 
         return {
-            messages: messages ?
-                messages.concat(global.currentChat.messages)
-                : global.currentChat.messages
+            currentChat: {
+                ...global.currentChat,
+                messages: messages ?
+                    messages.concat(global.currentChat.messages)
+                    : global.currentChat.messages
+            }
         };
     });
     /*

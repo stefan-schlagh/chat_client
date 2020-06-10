@@ -1,4 +1,4 @@
-import React,{Component} from "react";
+import React,{Component} from "reactn";
 import ReactDOM from 'react-dom';
 import MessageForm from "./MessageForm";
 import chatSocket from "../../chatData/chatSocket";
@@ -67,9 +67,9 @@ export default class ChatContainer extends Component{
                     loader is hidden
                     messages are added
                  */
+                this.dispatch.addLoadedMessages(messages);
                 this.setState(state => ({
-                    msgLoading: false,
-                    messages: messages ? messages.concat(state.messages) : state.messages
+                    msgLoading: false
                 }));
                 this.setScrollToBottom(this.state.scrollToBottom);
             })
@@ -77,63 +77,10 @@ export default class ChatContainer extends Component{
                 msgLoading: false
             }));
     };
-
-    newMessage = (uid,message) => {
-
-        //empty
-    };
-    newMsg_ChatContainer = (uid,message) => {
-        /*
-            wenn nach unten gescrollt:
-                state.newMsg = 0
-            wenn nicht nach unten gescrollt
-                wenn eigene msg
-                     state.newMsg = 0
-                     nach unten scrollen
-                wenn nicht eigene msg
-                    state.newMsg ++
-                    derzeitigen scrollstatus beibehalten
-         */
-        if(this.getScrollToBottom() === 0){
-            this.setState(state => ({
-                    newMessages: 0,
-                    messages: state.messages.concat(message)
-                }));
-        }else{
-            if(uid === chatSocket.userSelf.uid){
-                this.setState(state => ({
-                    scrollToBottom: 0,
-                    newMessages: 0,
-                    messages: state.messages.concat(message)
-                }));
-            }else{
-                this.setState(state => ({
-                    newMessages: state.newMessages +1,
-                    messages: state.messages.concat(message)
-                }));
-            }
-        }
-    };
     /*
         is called when the selected chat changed
      */
     chatChanged = () => {
-        /*
-            current chat
-         */
-        const chat = chatSocket.getChat(this.props.chatType,this.props.chatId);
-        /*
-            event-listeners are initialized
-         */
-        chat.event.on("new message",this.newMessage);
-        chat.event.on("new message",this.newMsg_ChatContainer);
-        /*
-            message-array is created
-         */
-        const messages = chat.getMessages();
-        this.setState({
-            messages: messages
-        });
         /*
             if scrollToBottom is 0, the messages are loaded
          */
@@ -158,12 +105,6 @@ export default class ChatContainer extends Component{
                 scrolltop wird überprüft
          */
         if(prevProps.chatType !== this.props.chatType || prevProps.chatId !== this.props.chatId) {
-            /*
-                event listeners of previous chat are removed
-             */
-            const prevChat = chatSocket.getChat(prevProps.chatType,prevProps.chatId);
-            prevChat.event.rm("new message",this.newMessage);
-            prevChat.event.rm("new message",this.newMsg_ChatContainer);
 
             //scrollToBottom wird auf 0 gesetzt
             this.setScrollToBottom(0);
@@ -179,8 +120,6 @@ export default class ChatContainer extends Component{
     }
 
     render() {
-
-        const chat = chatSocket.getChat(this.props.chatType,this.props.chatId);
 
         const showLoaderTop = () => {
             if(this.state.msgLoading)
@@ -249,7 +188,7 @@ export default class ChatContainer extends Component{
         };
 
         const renderAlertNoMessages = () => {
-            if(chat.messages.length === 0)
+            if(this.global.currentChat.messages.length === 0)
                 return(
                     <div className="alert alert-primary" role="alert">
                         Noch keine Nachrichten vorhanden
@@ -265,7 +204,7 @@ export default class ChatContainer extends Component{
                      ref={this.assignMessagesRef}
                 >
                     {showLoaderTop()}
-                    {this.state.messages.map((msg,i) => {
+                    {this.global.currentChat.messages.map((msg,i) => {
                         return (
                             <div key={i}>
                                 {renderDateContainer(msg)}
@@ -288,10 +227,6 @@ export default class ChatContainer extends Component{
 
     componentWillUnmount() {
         this.isMounted = false;
-
-        const chat = chatSocket.getChat(this.props.chatType,this.props.chatId);
-        chat.event.rm("new message",this.newMessage);
-        chat.event.rm("new message",this.newMsg_ChatContainer);
     }
 
     get isMounted() {

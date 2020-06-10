@@ -124,22 +124,12 @@ export default class ChatItem extends Component{
 
     componentDidMount() {
         const chat = chatSocket.getChat(this.props.type,this.props.id);
-        this.setState({
-            unreadMessages: chat.unreadMessages
-        });
         /*
             event listener werden angelegt
          */
         chat.event.on("typeState changed",this.typeStateChanged);
     }
     componentDidUpdate(prevProps, prevState, snapshot) {
-        /*
-            wenn component selected, wird newMessages counter zurückgesetzt
-         */
-        if(this.isSelected() && this.state.unreadMessages !== 0)
-            this.setState({
-                unreadMessages: 0
-            });
         /*
             did component update?
          */

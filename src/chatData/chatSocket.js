@@ -6,7 +6,7 @@ import {GroupChat, NormalChat} from "./Chat";
 import Message from "./Message";
 import EventHandler from "../util/Event";
 import TempChatLoader from "./tempChatLoader";
-import {setGlobal,getDispatch} from 'reactn';
+import {getGlobal,getDispatch} from 'reactn';
 
 class ChatSocket{
 
@@ -276,13 +276,6 @@ class ChatSocket{
                     id: 0
                 };
 
-                setGlobal({
-                    currentChat: {
-                        type: '',
-                        id: 0
-                    }
-                }).then(r => {});
-
                 getDispatch().selectNoChat();
 
                 this.event.trigger('currentChat changed', null);
@@ -295,14 +288,7 @@ class ChatSocket{
                 id: 0
             };
 
-            setGlobal({
-                currentChat: {
-                    type: 'tempChat',
-                    id: 0
-                }
-            }).then(r => {});
-
-            getDispatch().showTempChat(newChat);
+            getDispatch().showTempChat(this.temporaryChat.chatNow);
 
             this.socket.emit('change chat', null);
 
@@ -313,8 +299,8 @@ class ChatSocket{
                 /*
                    if something changed, currentChat gets updated
                  */
-                if (this.currentChat.type !== newChat.type ||
-                    this.currentChat.id !== newChat.id) {
+                if (getGlobal().currentChat.type !== newChat.type ||
+                    getGlobal().currentChat.id !== newChat.id) {
 
                     const chat = this.getChat(newChat.type, newChat.id);
                     chat.hasNewMsg = false;
@@ -376,7 +362,7 @@ class ChatSocket{
         /*
             event gets triggered
          */
-        getDispatch().addChat(newChat.getChatObject());
+        getDispatch().addChat(newChat);
     }
     /*
         a new normalChat gets added
