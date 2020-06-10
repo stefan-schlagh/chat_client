@@ -57,28 +57,11 @@ export default class GroupChatView extends Component{
 
                 const gcid = parseInt(this.props.gcid);
 
-                const setCurrentChat = () => {
-                    /*
-                        currentChat in chatSocket gets updated
-                        if the chat does not exist, id is -1
-                    */
-                    if (chatSocket.chats.group.getIndex(gcid) === -1) {
-                        /*
-                            current chat gets set to null -> no chat selected
-                         */
-                        chatSocket.setCurrentChat(null);
-                    } else {
-                        chatSocket.setCurrentChat({
-                            type: 'groupChat',
-                            id: gcid
-                        });
-                    }
-                };
-
                 this.groupChatExists(gcid)
                     .then(r => {
                         if (r === groupChatErrorCode.none) {
-                            setCurrentChat();
+
+                            this.selectGroupChat(gcid);
                             this.setState({
                                 loaded: true,
                                 error: groupChatErrorCode.none,
@@ -92,7 +75,6 @@ export default class GroupChatView extends Component{
                                 }
                             }).then();
                         } else {
-                            setCurrentChat();
                             this.setState({
                                 loaded: true,
                                 error: r
@@ -111,6 +93,24 @@ export default class GroupChatView extends Component{
             }
         }
     };
+    /*
+        groupChat is selected
+     */
+    selectGroupChat(gcid){
+        /*
+            does the chat exist?
+         */
+        if (chatSocket.chats.group.getIndex(gcid) === -1) {
+
+            this.setState({
+                error: groupChatErrorCode.chatNotExisting
+            })
+        } else {
+
+            const chat = chatSocket.chats.group.get(gcid)
+            this.dispatch.selectChat(chat);
+        }
+    }
 
     componentDidMount() {
         this.chatChanged();
@@ -169,8 +169,8 @@ export default class GroupChatView extends Component{
                             case(groupChatTabs.chat):
                                 return (
                                     <ChatContainer
-                                        chatType={chatSocket.currentChat.type}
-                                        chatId={chatSocket.currentChat.id}
+                                        chatType={this.global.currentChat.type}
+                                        chatId={this.global.currentChat.id}
                                     />
                                 );
 

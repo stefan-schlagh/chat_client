@@ -28,18 +28,15 @@ export default class TempChatLoader{
      */
     show(){
         this.isShown = true;
-        chatSocket.event.trigger("tempChat shown");
         getDispatch().showTempChat(this.chatNow);
     }
 
     update(){
-        chatSocket.event.trigger("tempChat updated");
         getDispatch().updateTempChat(this.chatNow);
     }
 
     hide(){
         this.isShown = false;
-        chatSocket.event.trigger("tempChat hidden");
         getDispatch().hideTempChat();
     }
     /*
@@ -54,6 +51,9 @@ export default class TempChatLoader{
             const otherUid = this.chatNow.otherUser;
             const otherUsername = this.chatNow.chatName;
 
+            /*
+                TODO: http-request
+             */
             chatSocket.socket.emit('new normalChat',{
                 uid: otherUid,
                 username: otherUsername,
@@ -88,7 +88,7 @@ export default class TempChatLoader{
                 /*
                     currentChat gets changed
                  */
-                chatSocket.setCurrentChat(newChat);
+                getDispatch().selectChat(newChat);
                 this.hide();
 
                 resolve(true);

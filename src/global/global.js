@@ -1,5 +1,6 @@
 import {addReducer, setGlobal} from 'reactn';
 import {infoHeaderCenter} from "../Home/Header/HeaderLeft";
+import chatSocket from "../chatData/chatSocket";
 
 export function initGlobal(){
 
@@ -54,7 +55,6 @@ export function initGlobal(){
      */
     addReducer('newMsg',(global,dispatch,chat,unreadMessages,message) => {
 
-        console.log('newMsg');
         const index = findIndex(global,chat);
         /*
             if the index is -1, the chat does not exist
@@ -137,6 +137,13 @@ export function initGlobal(){
              */
             item.unreadMessages = 0;
             chatsClone[index] = item;
+            /*
+                change is emitted to server
+             */
+            chatSocket.socket.emit('change chat', {
+                type: chat.type,
+                id: chat.id
+            });
 
             return {
                 currentChat: {
@@ -152,13 +159,20 @@ export function initGlobal(){
     /*
         is called when no chat should be selected
      */
-    addReducer('selectNoChat',(global,dispatch) => ({
-        currentChat: {
-            type: '',
-            id: 0,
-            messages: []
-        },
-    }));
+    addReducer('selectNoChat',(global,dispatch) => {
+        /*
+            change is emitted to server
+         */
+        chatSocket.socket.emit('change chat', null);
+
+        return {
+            currentChat: {
+                type: '',
+                    id: 0,
+                    messages: []
+            },
+        }
+    });
     /*
         loaded messages are added
      */
@@ -230,14 +244,23 @@ export function initGlobal(){
     /*
         tempChat is shown
      */
-    addReducer('showTempChat',(global,dispatch,chat) => ({
-        tempChat: chat.getChatObject(),
-        currentChat: {
-            type: 'tempChat',
-            id: 0,
-            messages: []
+    addReducer('showTempChat',(global,dispatch) => {
+
+        const chat = chatSocket.temporaryChat.chatNow;
+        /*
+            change is emitted to server
+         */
+        chatSocket.socket.emit('change chat', null);
+
+        return {
+            tempChat: chat.getChatObject(),
+            currentChat: {
+                type: 'tempChat',
+                id: 0,
+                messages: []
+            }
         }
-    }));
+    });
     /*
         tempChat is updated
      */

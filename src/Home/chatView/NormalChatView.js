@@ -1,4 +1,4 @@
-import React,{Component} from "reactn";
+import React, {Component} from "reactn";
 import chatSocket from "../../chatData/chatSocket";
 import ChatViewLoader from "./ChatViewLoader";
 import ChatContainer from "./ChatContainer";
@@ -56,8 +56,8 @@ export default class NormalChatView extends Component{
 
                     return(
                         <ChatContainer
-                            chatType={chatSocket.currentChat.type}
-                            chatId={chatSocket.currentChat.id}
+                            chatType={this.global.currentChat.type}
+                            chatId={this.global.currentChat.id}
                         />
                     )
                 }else if(this.state.error === UserErrorCode.tempChat){
@@ -146,7 +146,10 @@ export default class NormalChatView extends Component{
                                     uid: uid
                                 }
                             }).then();
-                            setCurrentChat(false);
+                            /*
+                                normalChat is selected
+                             */
+                            this.selectNormalChat(uid);
                             /*
                                 tempChat
                              */
@@ -161,7 +164,10 @@ export default class NormalChatView extends Component{
                                     uid: uid
                                 }
                             }).then();
-                            setCurrentChat(true);
+                            /*
+                                the temporary chat is selected
+                             */
+                            this.selectTempChat();
                         }
                         /*
                             some error has occured, state is set
@@ -181,33 +187,6 @@ export default class NormalChatView extends Component{
                     }));
             };
 
-            const setCurrentChat = tempChat => {
-                /*
-                    is the chat a tempchat?
-                 */
-                if (tempChat) {
-                    chatSocket.setCurrentChat({
-                        type: 'tempChat',
-                        id: 0
-                    });
-                }
-                /*
-                    currentChat in chatSocket gets updated
-                    if the chat does not exist, id is -1
-                */
-                else if (chatSocket.users.getIndex(uid) === -1) {
-                    /*
-                        current chat gets set to null -> no chat selected
-                     */
-                    chatSocket.setCurrentChat(null);
-                } else {
-                    chatSocket.setCurrentChat({
-                        type: 'normalChat',
-                        id: chatSocket.users.get(uid).normalChat
-                    });
-                }
-            };
-
             if (chatSocket.finishedLoading) {
                 userExists();
             } else {
@@ -221,6 +200,34 @@ export default class NormalChatView extends Component{
             });
         }
     };
+    /*
+        the tempChat is selected
+     */
+    selectTempChat(){
+        this.dispatch.showTempChat();
+    }
+    /*
+        a normalCHat is selected
+     */
+    selectNormalChat(uid){
+        /*
+            does the user exist?
+         */
+        if (chatSocket.users.getIndex(uid) === -1) {
+
+            this.setState({
+                error: UserErrorCode.userNotExisting
+            });
+        }else {
+            /*
+                chat is pulled from chatSocket
+             */
+            const id = chatSocket.users.get(uid).normalChat;
+            const chat = chatSocket.getChat('normalChat', id);
+
+            this.dispatch.selectChat(chat);
+        }
+    }
     /*
         property- display normalChat is removed from global
      */

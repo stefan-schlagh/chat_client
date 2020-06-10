@@ -6,7 +6,7 @@ import {GroupChat, NormalChat} from "./Chat";
 import Message from "./Message";
 import EventHandler from "../util/Event";
 import TempChatLoader from "./tempChatLoader";
-import {getGlobal,getDispatch} from 'reactn';
+import {getDispatch} from 'reactn';
 
 class ChatSocket{
 
@@ -19,10 +19,6 @@ class ChatSocket{
     };
     _event = new EventHandler();
     _finishedLoading = false;
-    _currentChat = {
-        type: '',
-        id: 0
-    };
     /*
         normalchat not saved in the database
      */
@@ -253,76 +249,6 @@ class ChatSocket{
             return this.chats.group.get(id);
     }
 
-    isCurrentChat(type,id){
-        return this.currentChat.type === type && this.currentChat.id === id;
-    };
-
-    setCurrentChat(newChat){
-        /*
-            if chat is null, no chat will be selected:
-                type: '', id: 0
-
-            changes only if something has changed --> otherwise endless loop
-         */
-        if(newChat === null){
-            /*
-                check if something has been changed
-             */
-            if (this.currentChat.type !== '' ||
-                this.currentChat.id !== 0) {
-
-                this.currentChat = {
-                    type: '',
-                    id: 0
-                };
-
-                getDispatch().selectNoChat();
-
-                this.event.trigger('currentChat changed', null);
-            }
-
-        } else if(newChat.type === 'tempChat' && this.currentChat.type !== 'tempChat'){
-
-            this.currentChat = {
-                type: 'tempChat',
-                id: 0
-            };
-
-            getDispatch().showTempChat(this.temporaryChat.chatNow);
-
-            this.socket.emit('change chat', null);
-
-            this.event.trigger('currentChat changed', newChat);
-        }
-        else{
-            if(newChat.type !== '' && newChat.id !== 0) {
-                /*
-                   if something changed, currentChat gets updated
-                 */
-                if (getGlobal().currentChat.type !== newChat.type ||
-                    getGlobal().currentChat.id !== newChat.id) {
-
-                    const chat = this.getChat(newChat.type, newChat.id);
-                    chat.hasNewMsg = false;
-                    /*
-                        unreadMessages gets set to 0
-                     */
-                    chat.unreadMessages = 0;
-                    this.currentChat = newChat;
-
-                    this.socket.emit('change chat', {
-                        type: this.currentChat.type,
-                        id: this.currentChat.id
-                    });
-
-                    getDispatch().selectChat(chat);
-                    //console.log(this.currentChat);
-
-                    this.event.trigger('currentChat changed', newChat);
-                }
-            }
-        }
-    }
     /*
         returns number of new messages
      */
@@ -531,14 +457,6 @@ class ChatSocket{
 
     set finishedLoading(value) {
         this._finishedLoading = value;
-    }
-
-    get currentChat() {
-        return this._currentChat;
-    }
-
-    set currentChat(value) {
-        this._currentChat = value;
     }
 
     get temporaryChat() {
