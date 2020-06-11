@@ -1,12 +1,12 @@
 import io from 'socket.io-client';
-import {uid, username} from "../Auth/Auth";
+//import {uid, username} from "../Auth/Auth";
 import User from "./User";
 import BinSearchArray from "../util/BinSearch";
 import {GroupChat, NormalChat} from "./Chat";
 import Message from "./Message";
 import EventHandler from "../util/Event";
 import TempChatLoader from "./tempChatLoader";
-import {getDispatch} from 'reactn';
+import {getGlobal,getDispatch} from 'reactn';
 
 class ChatSocket{
 
@@ -25,7 +25,9 @@ class ChatSocket{
     _temporaryChat = new TempChatLoader();
     _initCalled = false;
 
-    constructor() {
+    async init(){
+
+        const {uid,username} = getGlobal().userSelf;
         /*
             user-Object is created
          */
@@ -35,8 +37,6 @@ class ChatSocket{
             uid: uid,
             username: username
         };
-    }
-    async init(){
 
         this.initCalled = true;
 
@@ -232,6 +232,11 @@ class ChatSocket{
 
         return mergeArr(ncSorted, gcSorted);
     }
+
+    isCurrentChat(type,id){
+        const currentChat = getGlobal().currentChat;
+        return currentChat.type === type && currentChat.id === id;
+    };
 
     getChat(type,id){
         /*
@@ -477,5 +482,9 @@ class ChatSocket{
 }
 
 let chatSocket = new ChatSocket();
+
+export function resetChatSocket(){
+    chatSocket = new ChatSocket();
+}
 
 export default chatSocket;

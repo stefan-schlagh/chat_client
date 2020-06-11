@@ -2,7 +2,7 @@ import BinSearchArray from "../util/BinSearch";
 import Message from "./Message";
 import EventHandler from "../util/Event";
 import chatSocket from "./chatSocket";
-import {getGlobal,setGlobal,getDispatch} from 'reactn';
+import {getDispatch} from 'reactn';
 
 class Chat {
 

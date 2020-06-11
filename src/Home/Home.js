@@ -1,13 +1,9 @@
 import React,{Component} from "react";
 import Header from "./Header/Header";
-import {logout} from "../Auth/Auth";
 import Responsive from "../responsive/Responsive";
 import GridBigScreens from "./GridBigScreens";
 import RouterSmallScreens from "./RouterSmallScreens";
 import chatSocket from "../chatData/chatSocket";
-import {initGlobal} from "../global/global";
-
-initGlobal();
 
 export default class Chat extends Component{
 
@@ -77,14 +73,6 @@ export default class Chat extends Component{
             });
         }
     };
-
-    logout = () => {
-        logout().then(() => {
-            // eslint-disable-next-line no-restricted-globals
-            location.reload();
-        });
-    };
-
     /*
         gets called if there is a new msg
      */
@@ -104,7 +92,6 @@ export default class Chat extends Component{
         return (
             <div className="h-100">
                 <Header
-                    logout={this.logout}
                     headerLeft={{
                         newMessages: this.state.newMessages
                     }}

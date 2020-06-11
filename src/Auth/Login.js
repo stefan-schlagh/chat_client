@@ -1,15 +1,18 @@
-import React,{Component} from "react";
+import React,{Component} from "reactn";
 import {
     Link,
-    Redirect
+    withRouter
 } from "react-router-dom";
 import validate from "validate.js";
 import {ErrorMsg} from "./MsgBox";
-import {setLoggedIn,login} from "./Auth";
 import $ from 'jquery';
 import {extendJQuery} from './authUI';
+import {AuthContext} from "./AuthContext";
 
 class Login extends Component{
+
+    setAuthContext;
+
     constructor(props) {
         super(props);
         this.state = {
@@ -94,13 +97,9 @@ class Login extends Component{
            /*
                 request to server
             */
-           login(this.state.username,this.state.password).then(data => {
-               if(data.success){
-                   this.setState({
-                       valid: true,
-                       redirect: true
-                   });
-               }else{
+           this.login(this.state.username,this.state.password).then(data => {
+               if(!data.success){
+
                    if(data.username !== undefined)
                        this.setState({
                            valid: false,
@@ -132,70 +131,100 @@ class Login extends Component{
                 </ErrorMsg>
             )
     };
-    render(){
-        /*
-            wenn bereits eingeloggt --> redirect
-         */
-        if(this.state.redirect){
-            //TODO redirect should work
-            setLoggedIn(true);
-            //console.log('redirect');
-            // eslint-disable-next-line no-restricted-globals
-            location.reload();
-            //this.props.history.push("/chat");
-            return(
-                <div>
-                    <div>redirect</div>
-                    <Redirect to="/chat" />
-                </div>
-            )
-        }else {
-            return (
-                <div className="h-100" style={{display: "flex"}}>
-                    <div className="col-sm-12 my-auto">
-                        <div className="container border rounded p-3" style={{maxWidth: "800px"}}>
-                            <h1>Login</h1>
-                            <form onSubmit={this.submitHandler}>
-                                <div className="form-group">
-                                    <label htmlFor="username">Benutzername:</label>
-                                    {this.uNameErr()}
-                                    <input type="text"
-                                           name="username"
-                                           className="form-control"
-                                           placeholder="Benutzernamen eingeben"
-                                           onChange={this.changeHandler}
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="password">Passwort:</label>
-                                    {this.pwErr()}
-                                    <div id="psw-group">
-                                        <input type="password"
-                                               name="password"
-                                               className="form-control"
-                                               placeholder="Passwort eingeben"
-                                               onChange={this.changeHandler}
-                                        />
-                                    </div>
-                                </div>
-                                <div className="form-group">
-                                    haben Sie noch keinen Account? <Link to="/register">Jetzt registrieren</Link>
-                                </div>
-                                <input
-                                    type="submit"
-                                    className="btn btn-primary"
-                                    value="Login"
-                                />
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            )
+
+    login = async (username,password) => {
+        try {
+            const config = {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    username: username,
+                    password: password
+                })
+            };
+            const response = await fetch('/auth/login', config);
+            //const json = await response.json()
+            if (response.ok) {
+                //return json
+                let data = await response.json();
+
+                if(data.success) {
+                    this.dispatch.setUserSelf(data.uid,username);
+                    if(this.setAuthContext)
+                        this.setAuthContext({
+                            username: username,
+                            uid: data.uid
+                        });
+                    this.props.history.push('/chat');
+                }
+                return data;
+            } else {
+                return null;
+            }
+        } catch (error) {
+            return null;
         }
+    };
+
+    render(){
+
+        return (
+            <AuthContext.Consumer>
+                {({authTokens, setAuthTokens}) => {
+
+                    this.setAuthContext = setAuthTokens;
+
+                    return(
+                        <div className="h-100" style={{display: "flex"}}>
+                            <div className="col-sm-12 my-auto">
+                                <div className="container border rounded p-3" style={{maxWidth: "800px"}}>
+                                    <h1>Login</h1>
+                                    <form onSubmit={this.submitHandler}>
+                                        <div className="form-group">
+                                            <label htmlFor="username">Benutzername:</label>
+                                            {this.uNameErr()}
+                                            <input type="text"
+                                                   name="username"
+                                                   className="form-control"
+                                                   placeholder="Benutzernamen eingeben"
+                                                   onChange={this.changeHandler}
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label htmlFor="password">Passwort:</label>
+                                            {this.pwErr()}
+                                            <div id="psw-group">
+                                                <input type="password"
+                                                       name="password"
+                                                       className="form-control"
+                                                       placeholder="Passwort eingeben"
+                                                       onChange={this.changeHandler}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="form-group">
+                                            haben Sie noch keinen Account? <Link to="/register">Jetzt registrieren</Link>
+                                        </div>
+                                        <input
+                                            type="submit"
+                                            className="btn btn-primary"
+                                            value="Login"
+                                        />
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    )
+                }}
+            </AuthContext.Consumer>
+        )
     }
     componentDidMount() {
         $('#psw-group').pwToggle();
     }
 }
 
-export default Login;
+export default withRouter(Login);

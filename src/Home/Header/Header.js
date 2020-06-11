@@ -1,18 +1,19 @@
-import React,{Component} from "react";
-import {username} from "../../Auth/Auth";
+import React,{Component} from "reactn";
 import $ from 'jquery';
 import HeaderLeft from "./HeaderLeft";
 import chatSocket from "../../chatData/chatSocket";
 import {Link,withRouter} from "react-router-dom";
 
 import './header.scss';
+import {AuthContext} from "../../Auth/AuthContext";
 
 class Header extends Component{
+
+    deleteAuthTokens;
 
     constructor(props) {
         super(props);
         this.state = {
-            username: username,
             checkBoxClicked: false
         };
     }
@@ -36,69 +37,96 @@ class Header extends Component{
             checkBoxClicked: !state.checkBoxClicked
         }));
     };
+
+    logout = () => {
+
+        const config = {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
+            }
+        };
+        fetch('/auth/logout', config)
+            .then(() => {
+                if(this.deleteAuthTokens)
+                    this.deleteAuthTokens();
+            })
+            .catch();
+
+    };
+
     render() {
 
         const {pathname} = this.props.location;
 
         return (
-            <div className="c-header">
+            <AuthContext.Consumer>
+                {({authTokens, setAuthTokens,deleteAuthTokens}) => {
 
-                <HeaderLeft
-                    newMessages={this.props.headerLeft.newMessages}
-                />
+                    this.deleteAuthTokens = deleteAuthTokens;
 
-                <div id="top-right" className="right" onClick={this.clickCheckBox}>
+                    return(
+                        <div className="c-header">
 
-                    <div className="right-l" />
+                            <HeaderLeft
+                                newMessages={this.props.headerLeft.newMessages}
+                            />
 
-                    <input type="checkbox"
-                           id="btnControlTopRight"
-                           className="btnControl"
-                           checked={this.state.checkBoxClicked}
-                           onChange={this.changeChecked}
-                    />
-                    <label htmlFor="btnControlTopRight">
+                            <div id="top-right" className="right" onClick={this.clickCheckBox}>
 
-                        <div className="right-c">
-                            <div className="d-only-when-small">
-                                <i  id="user-info"
-                                    className="fas fa-user fa-2x user-icon"
-                                    data-toggle="tooltip"
-                                    title="Benutzer-Info"
+                                <div className="right-l" />
+
+                                <input type="checkbox"
+                                       id="btnControlTopRight"
+                                       className="btnControl"
+                                       checked={this.state.checkBoxClicked}
+                                       onChange={this.changeChecked}
                                 />
-                            </div>
-                            <div className="d-only-when-big top-2right">
+                                <label htmlFor="btnControlTopRight">
 
-                                <Link to={pathname + "/userInfo/" + chatSocket.userSelf.uid}>
-                                    <h4 id="username"
-                                        className="p-2 username"
-                                        data-toggle="tooltip"
-                                        title="Benutzer-Info"
-                                    >
-                                            {this.state.username}
-                                    </h4>
-                                </Link>
-                                <div className="float-right">
-                                    <Link to={pathname + "/settings"}>
-                                        <i className="fas fa-user-cog fa-2x"
-                                           data-toggle="tooltip"
-                                           title="Einstellungen"
-                                        />
-                                    </Link>
-                                    &nbsp;
-                                    <i id="user-logout"
-                                       className="fas fa-sign-out-alt fa-2x logout"
-                                       data-toggle="tooltip"
-                                       title="logout"
-                                       onClick={this.props.logout}
-                                    />
-                                </div>
+                                    <div className="right-c">
+                                        <div className="d-only-when-small">
+                                            <i  id="user-info"
+                                                className="fas fa-user fa-2x user-icon"
+                                                data-toggle="tooltip"
+                                                title="Benutzer-Info"
+                                            />
+                                        </div>
+                                        <div className="d-only-when-big top-2right">
 
+                                            <Link to={pathname + "/userInfo/" + chatSocket.userSelf.uid}>
+                                                <h4 id="username"
+                                                    className="p-2 username"
+                                                    data-toggle="tooltip"
+                                                    title="Benutzer-Info"
+                                                >
+                                                        {this.global.userSelf.username}
+                                                </h4>
+                                            </Link>
+                                            <div className="float-right">
+                                                <Link to={pathname + "/settings"}>
+                                                    <i className="fas fa-user-cog fa-2x"
+                                                       data-toggle="tooltip"
+                                                       title="Einstellungen"
+                                                    />
+                                                </Link>
+                                                &nbsp;
+                                                <i id="user-logout"
+                                                   className="fas fa-sign-out-alt fa-2x logout"
+                                                   data-toggle="tooltip"
+                                                   title="logout"
+                                                   onClick={this.logout}
+                                                />
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </label>
                             </div>
                         </div>
-                    </label>
-                </div>
-            </div>
+                    )
+                }}
+            </AuthContext.Consumer>
         );
     }
     componentDidMount() {

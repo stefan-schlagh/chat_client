@@ -6,6 +6,10 @@ export function initGlobal(){
 
     setGlobal({
         /*
+            info about the user self
+         */
+        userSelf: {},
+        /*
             what info should be shown at the left center of the header?
          */
         infoHeaderCenter: infoHeaderCenter.none,
@@ -29,6 +33,30 @@ export function initGlobal(){
             all chats of the user are stored here
          */
         chats: []
+        /*
+            TODO: notifications mobile
+         */
+    });
+    /*
+        the userSelf gets set
+     */
+    addReducer('setUserSelf',(global,dispatch,uid,username) => {
+
+        return {
+            userSelf: {
+                uid: uid,
+                username: username
+            }
+        }
+    });
+    /*
+        userSelf is deleted
+     */
+    addReducer('deleteUserSelf',(global,dispatch) => {
+
+       return {
+           userSelf: {}
+       }
     });
     /*
         is the chat the current chat?
