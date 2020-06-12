@@ -1,5 +1,4 @@
 import io from 'socket.io-client';
-//import {uid, username} from "../Auth/Auth";
 import User from "./User";
 import BinSearchArray from "../util/BinSearch";
 import {GroupChat, NormalChat} from "./Chat";
@@ -252,25 +251,6 @@ class ChatSocket{
         }
         else if(type === 'groupChat')
             return this.chats.group.get(id);
-    }
-
-    /*
-        returns number of new messages
-     */
-    getNumberNewMessages(){
-
-        let newMessages = 0;
-
-        for(let i=0;i<this.chats.normal.length;i++){
-            if(this.chats.normal[i].value.hasNewMsg)
-                newMessages ++;
-        }
-
-        for(let i=0;i<this.chats.group.length;i++){
-            if(this.chats.group[i].value.hasNewMsg)
-                newMessages ++;
-        }
-        return newMessages;
     }
     /*
         a new chat gets added

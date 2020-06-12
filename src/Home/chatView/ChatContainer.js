@@ -50,7 +50,7 @@ export default class ChatContainer extends Component{
 
     loadMessages = () => {
 
-        const chat = chatSocket.getChat(this.props.chatType,this.props.chatId);
+        const chat = chatSocket.getChat(this.global.currentChat.type,this.global.currentChat.id);
         /*
             loader is only shown, if top not reached
          */

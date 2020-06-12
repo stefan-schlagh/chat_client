@@ -11,7 +11,6 @@ class Chat {
     _chatName;
     _messages = new BinSearchArray();
     _event = new EventHandler();
-    _hasNewMsg = false;
     _unreadMessages = 0;
     /*
         are all messages already loaded?
@@ -205,14 +204,6 @@ class Chat {
 
     set event(value) {
         this._event = value;
-    }
-
-    get hasNewMsg() {
-        return this._hasNewMsg;
-    }
-
-    set hasNewMsg(value) {
-        this._hasNewMsg = value;
     }
 
     get unreadMessages() {

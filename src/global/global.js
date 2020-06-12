@@ -32,11 +32,40 @@ export function initGlobal(){
         /*
             all chats of the user are stored here
          */
-        chats: []
+        chats: [],
+        /*
+            number of chats with new messages
+         */
+        newMessages: 0
         /*
             TODO: notifications mobile
          */
     });
+
+    initChats();
+
+    function initChats(){
+
+        function chatsLoaded(chats){
+            setGlobal({
+                chats: chats
+            });
+        }
+        /*
+           chats get initialized
+           is loading of chats already finished?
+               --> chatArray gets requested immediately
+        */
+        if(chatSocket.finishedLoading){
+            chatsLoaded(chatSocket.getChatArraySortedByDate());
+            /*
+                otherwise --> event handler that gets triggered when loading finished
+             */
+        }else{
+            chatSocket.event.on('chats loaded',chatsLoaded);
+        }
+    }
+
     /*
         the userSelf gets set
      */
@@ -129,6 +158,14 @@ export function initGlobal(){
                 const chatsClone = global.chats.splice(0);
                 const chatObject = chatsClone[index];
                 chatObject.latestMessage = chat.getLatestMessageObject();
+                /*
+                    if the unread messages of the chat have been 0 until now, newMessages is incremented
+                 */
+                let newMessages = global.newMessages;
+                if(chatObject.unreadMessages === 0){
+                    newMessages++;
+                }
+
                 chatObject.unreadMessages = unreadMessages + 1;
                 /*
                     item is deleted from array
@@ -140,7 +177,8 @@ export function initGlobal(){
                 chatsClone.unshift(chatObject);
 
                 return {
-                    chats: chatsClone
+                    chats: chatsClone,
+                    newMessages: newMessages
                 };
             }
         }
@@ -161,6 +199,13 @@ export function initGlobal(){
             const chatsClone = global.chats.splice(0);
             const item = chatsClone[index];
             /*
+                if there where unread messages, newMessages counter is decremented by 1
+             */
+            let newMessages = global.newMessages;
+            if(item.unreadMessages > 0){
+                newMessages--;
+            }
+            /*
                 unreadMessages is set to 0
              */
             item.unreadMessages = 0;
@@ -180,7 +225,8 @@ export function initGlobal(){
                     messages: chat.getMessages()
                 },
                 chats: chatsClone,
-                tempChat: null
+                tempChat: null,
+                newMessages: newMessages
             }
         }
     });

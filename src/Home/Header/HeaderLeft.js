@@ -20,10 +20,10 @@ class HeaderLeft extends Component{
             renders number of new messages
          */
         const renderNewMsgNumber = () => {
-            if(this.props.newMessages > 0){
+            if(this.global.newMessages > 0){
                 return (
                     <div className="btnBack-number">
-                        {this.props.newMessages}
+                        {this.global.newMessages}
                     </div>
                 )
             }

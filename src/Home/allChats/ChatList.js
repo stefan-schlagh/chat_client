@@ -1,7 +1,6 @@
 import React,{Component} from "reactn";
 import ChatSearchBox from "./ChatSearchBox";
 import ChatItem from "./ChatItem";
-import chatSocket from "../../chatData/chatSocket";
 
 import './chatList.scss';
 
@@ -13,30 +12,6 @@ export default class ChatList extends Component{
             //the current searchValue at the chatlist
             searchValue: ''
         };
-    }
-
-    chatsLoaded = chats => {
-        this.setGlobal({
-            chats: chats
-        });
-    };
-
-    componentDidMount() {
-        /*
-            chats get initialized
-            is loading of chats already finished?
-                --> chatArray gets requested immediately
-         */
-        if(chatSocket.finishedLoading){
-            this.setGlobal({
-                chats: chatSocket.getChatArraySortedByDate()
-            });
-        /*
-            otherwise --> event handler that gets triggered when loading finished
-         */
-        }else{
-            chatSocket.event.on('chats loaded',this.chatsLoaded);
-        }
     }
 
     render() {
@@ -111,11 +86,5 @@ export default class ChatList extends Component{
                 </div>
             </div>
         )
-    }
-    componentWillUnmount() {
-        /*
-            Listeners are removed
-         */
-        chatSocket.event.rm('chats loaded',this.chatsLoaded);
     }
 }
