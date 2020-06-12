@@ -68,9 +68,6 @@ class ChatSocket{
          */
         this.socket.emit('auth', uid, username);
 
-        this.socket.on('all chats', data => {
-            this.initChats(data);
-        });
         /*
             msg-handler
          */
@@ -287,8 +284,7 @@ class ChatSocket{
         if(this.users.getIndex(data.members[0].uid) === -1){
             otherUser = new User(
                 data.members[0].uid,
-                data.members[0].username,
-                data.members[0].online
+                data.members[0].username
             );
             this.users.add(otherUser.uid,otherUser);
         }else{
@@ -350,8 +346,7 @@ class ChatSocket{
             if (this.users.getIndex(member.uid) === -1) {
                 user = new User(
                     member.uid,
-                    member.username,
-                    member.online
+                    member.username
                 );
                 this.users.add(user.uid, user);
             } else {

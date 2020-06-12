@@ -68,9 +68,7 @@ class Header extends Component{
                     return(
                         <div className="c-header">
 
-                            <HeaderLeft
-                                newMessages={this.props.headerLeft.newMessages}
-                            />
+                            <HeaderLeft />
 
                             <div id="top-right" className="right" onClick={this.clickCheckBox}>
 

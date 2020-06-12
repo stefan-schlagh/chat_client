@@ -91,17 +91,15 @@ export default class User{
     _uid;
     _username;
     _color;
-    _online;
     //ids der chats des Users
     _normalChat = 0;
     //ids of the groupchats
     _groupChats = new BinSearchArray();
 
-    constructor(uid,username,online) {
+    constructor(uid,username) {
         this.uid = uid;
         this.username = username;
         this.color = Colors.random();
-        this.online = online;
     }
     /*
         groupChat is added
@@ -136,14 +134,6 @@ export default class User{
 
     set color(value) {
         this._color = value;
-    }
-
-    get online() {
-        return this._online;
-    }
-
-    set online(value) {
-        this._online = value;
     }
 
     get normalChat() {

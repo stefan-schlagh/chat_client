@@ -1,4 +1,4 @@
-import React,{useEffect} from "react";
+import React from "react";
 import {
     Switch,
     Route,
@@ -15,24 +15,11 @@ export default function GridBigScreens(props){
     let { path, url } = useRouteMatch();
     let params = useParams();
 
-
-    useEffect(() => {
-       /*
-            newMessages is set to 0, because big screen
-        */
-        if(props.newMessages !== 0)
-            props.setParentState({
-                newMessages: 0
-            });
-    });
-
     return(
         <div className="row justify-content-end main-container">
             <div className="col-md-5 col-lg-4 col-xl-3 d-none d-md-block pr-3 pl-0 h-100">
 
-                <ChatList
-                    setHomeState={props.setParentState}
-                />
+                <ChatList />
             </div>
             <div className="col-md-7 col-lg-8 col-xl-9 col-overflow"
                  style={{padding:'0'}}

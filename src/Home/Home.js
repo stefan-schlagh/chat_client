@@ -11,13 +11,6 @@ export default class Chat extends Component{
         super(props);
         this.state = {
             /*
-                the current chat of the user
-             */
-            currentChat: {
-                type: '',
-                id: 0
-            },
-            /*
                 which modal is currently open
                     0: none
              */
@@ -27,11 +20,6 @@ export default class Chat extends Component{
              */
             modalInfo: null,
             /*
-                only relevant for mobile devices, is shown at btn back
-                gets incremented if there is a message in a non-selected chat
-             */
-            newMessages: 0,
-            /*
                 is shown at the user-icon
              */
             notifications: 0
@@ -39,51 +27,12 @@ export default class Chat extends Component{
         /*
             if chatsocket is undefined, it gets initialized
          */
-        if(!chatSocket.initCalled) {
-            chatSocket.init().then(r => {});
+        if (!chatSocket.initCalled) {
+            chatSocket.init().then(r => {
+            });
         }
 
     }
-
-    componentDidMount() {
-        //event-listener: gets triggered if current chat changes
-        chatSocket.event.on('currentChat changed',this.currentChatChanged);
-        //event-lister: gets triggered if there is a new message
-        chatSocket.event.on('new message',this.newMsg);
-    }
-
-    currentChatChanged = currentChat => {
-        /*
-            current chat gets changed
-         */
-        if(currentChat === null) {
-            this.setState({
-                currentChat: {
-                    type: '',
-                    id: 0
-                }
-            });
-        }else{
-            this.setState({
-                currentChat: {
-                    type: currentChat.type,
-                    id: currentChat.id
-                },
-                newMessages: chatSocket.getNumberNewMessages()
-            });
-        }
-    };
-    /*
-        gets called if there is a new msg
-     */
-    newMsg = () => {
-        /*
-            newMsg gets set
-         */
-        this.setState(state => ({
-            newMessages: chatSocket.getNumberNewMessages()
-        }));
-    };
 
     render() {
 
@@ -91,36 +40,20 @@ export default class Chat extends Component{
 
         return (
             <div className="h-100">
-                <Header
-                    headerLeft={{
-                        newMessages: this.state.newMessages
-                    }}
-                />
+
+                <Header/>
 
                 <Responsive displayIn={["Mobile"]}>
-                    <RouterSmallScreens
-                        currentChat={this.state.currentChat}
-                        setParentState={setState}
-                    />
+
+                    <RouterSmallScreens />
                 </Responsive>
 
                 <Responsive displayIn={["Laptop","Tablet"]}>
 
-                    <GridBigScreens
-                        newMessages={this.state.newMessages}
-                        setParentState={setState}
-                    />
-
+                    <GridBigScreens/>
                 </Responsive>
 
             </div>
         );
-    }
-    componentWillUnmount() {
-        /*
-            event-listeners get removed
-         */
-        chatSocket.event.rm('currentChat changed',this.currentChatChanged);
-        chatSocket.event.rm('new message',this.newMsg);
     }
 }

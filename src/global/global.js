@@ -1,6 +1,7 @@
 import {addReducer, setGlobal} from 'reactn';
 import {infoHeaderCenter} from "../Home/Header/HeaderLeft";
 import chatSocket from "../chatData/chatSocket";
+import {initChats} from "./initChats";
 
 export function initGlobal(){
 
@@ -20,6 +21,10 @@ export function initGlobal(){
         currentChat: {
             type: '',
             id: 0,
+            /*
+                unread messages inside the currentChat
+             */
+            newMessages: 0,
             /*
                 the messages in the currentChat, displayed in chatContainer
              */
@@ -43,28 +48,6 @@ export function initGlobal(){
     });
 
     initChats();
-
-    function initChats(){
-
-        function chatsLoaded(chats){
-            setGlobal({
-                chats: chats
-            });
-        }
-        /*
-           chats get initialized
-           is loading of chats already finished?
-               --> chatArray gets requested immediately
-        */
-        if(chatSocket.finishedLoading){
-            chatsLoaded(chatSocket.getChatArraySortedByDate());
-            /*
-                otherwise --> event handler that gets triggered when loading finished
-             */
-        }else{
-            chatSocket.event.on('chats loaded',chatsLoaded);
-        }
-    }
 
     /*
         the userSelf gets set
@@ -143,7 +126,8 @@ export function initGlobal(){
                  */
                 const currentChat = {
                     ...global.currentChat,
-                    messages: global.currentChat.messages.concat(message)
+                    messages: global.currentChat.messages.concat(message),
+                    newMessages: global.currentChat.newMessages + 1
                 };
                 return {
                     chats: chatsClone,
@@ -222,7 +206,8 @@ export function initGlobal(){
                 currentChat: {
                     type: chat.type,
                     id: chat.id,
-                    messages: chat.getMessages()
+                    messages: chat.getMessages(),
+                    newMessages: 0
                 },
                 chats: chatsClone,
                 tempChat: null,

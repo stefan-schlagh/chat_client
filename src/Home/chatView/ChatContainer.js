@@ -20,7 +20,6 @@ export default class ChatContainer extends Component{
             msgLoading: false,
             scrollToBottom: 0,
             messages: [],
-            newMessages: 0,
             typeMessages: []
         };
     }
@@ -114,8 +113,19 @@ export default class ChatContainer extends Component{
         /*
             wenn scrollToBottom 0 wird zu bottom gescrollt
          */
-        if(this.state.scrollToBottom === 0)
+        if(this.state.scrollToBottom === 0) {
             this.setScrollToBottom(0);
+            /*
+                newMessages is set to 0
+             */
+            if(this.global.currentChat.newMessages > 0)
+                this.setGlobal(global => ({
+                   currentChat: {
+                       ...global.currentChat,
+                       newMessages: 0
+                   }
+                }));
+        }
 
     }
 
@@ -134,10 +144,11 @@ export default class ChatContainer extends Component{
         };
 
         const renderNewMessages = () => {
-            if(this.state.newMessages > 0)
+
+            if(this.global.currentChat.newMessages > 0)
                 return(
                     <div id="scroll-down-number" className="number">
-                        {this.state.newMessages}
+                        {this.global.currentChat.newMessages}
                     </div>
                 );
             return null;
@@ -151,8 +162,7 @@ export default class ChatContainer extends Component{
                              className="messages-bottom"
                              onClick={() => {
                                  this.setState({
-                                     scrollToBottom: 0,
-                                     newMessages: 0
+                                     scrollToBottom: 0
                                  })
                              }}
                         >
