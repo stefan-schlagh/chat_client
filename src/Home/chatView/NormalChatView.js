@@ -120,7 +120,7 @@ export default class NormalChatView extends Component{
         /*
             is the user self?
          */
-        if(chatSocket.userSelf.uid === uid){
+        if(this.global.userSelf.uid === uid){
             this.setState({
                 error: UserErrorCode.isSelf,
                 loaded: true
