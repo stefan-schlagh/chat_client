@@ -24,14 +24,15 @@ export default class Chat extends Component{
              */
             notifications: 0
         };
+    }
+
+    componentDidMount() {
         /*
             if chatsocket is undefined, it gets initialized
          */
         if (!chatSocket.initCalled) {
-            chatSocket.init().then(r => {
-            });
+            chatSocket.init().then(r => {});
         }
-
     }
 
     render() {

@@ -92,7 +92,7 @@ class Header extends Component{
                                         </div>
                                         <div className="d-only-when-big top-2right">
 
-                                            <Link to={pathname + "/userInfo/" + chatSocket.userSelf.uid}>
+                                            <Link to={pathname + "/userInfo/" + this.global.userSelf.uid}>
                                                 <h4 id="username"
                                                     className="p-2 username"
                                                     data-toggle="tooltip"

@@ -16,7 +16,9 @@ function PrivateRoute({ component: Component, ...rest }) {
             {...rest}
             render={props =>
                 authTokens ? (
-                    <Component {...props} />
+                    authTokens.loading ? null : (
+                        <Component {...props} />
+                    )
                 ) : (
                     <Redirect
                         to={{

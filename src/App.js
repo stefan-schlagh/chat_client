@@ -1,4 +1,4 @@
-import React, {useState,useDispatch} from "reactn";
+import React, {useState,useDispatch,useEffect} from "reactn";
 import {
     BrowserRouter as Router,
     Switch,
@@ -53,21 +53,29 @@ export default function App() {
 
     const dispatch = useDispatch();
 
-    const initTokens = (data) => {
-        updateUserSelf(data,dispatch);
+    const initTokens = (tokens) => {
 
         isLoggedIn()
             .then(res => {
-                if(!res){
+                if(res) {
+                    updateUserSelf(tokens,dispatch);
+                    setAuthTokens(tokens);
+                }else{
                     localStorage.removeItem("tokens");
                     setAuthTokens(undefined);
                 }
             });
     };
 
-    const existingTokens = JSON.parse(localStorage.getItem("tokens"));
-    initTokens(existingTokens);
-    const [authTokens, setAuthTokens] = useState(existingTokens);
+    const tokens = {
+        loading: true
+    };
+    const [authTokens, setAuthTokens] = useState(tokens);
+
+    useEffect(() => {
+        const existingTokens = JSON.parse(localStorage.getItem("tokens"));
+        initTokens(existingTokens);
+    },[]);
 
     const setTokens = (data) => {
         localStorage.setItem("tokens", JSON.stringify(data));
