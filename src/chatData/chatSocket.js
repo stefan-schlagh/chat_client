@@ -45,29 +45,19 @@ class ChatSocket{
             uid: uid,
             username: username
         };
-        
-        const config = {
-            method: 'GET',
-            headers: {
-                'Accept': 'text/plain'
-            }
-        };
-        const response = await fetch('/IP', config);
 
-        let IP_SERVER = '';
-
-        if (response.ok) {
-
-            IP_SERVER = await(response.text());
-        }
-
-        this.socket = io('http://' + IP_SERVER + ':3002');
-
+        this.socket = io.connect('/', {secure: true});
         /*
             userInfo wird an client gesendet
          */
         this.socket.emit('auth', uid, username);
+        /*
+            is called when user is initialized
+         */
+        this.socket.on('initialized',() => {
 
+            this.initChats();
+        });
         /*
             msg-handler
          */
@@ -133,17 +123,34 @@ class ChatSocket{
         });
     }
 
-    initChats(data){
+    async initChats(){
 
-        for(let i=0;i<data.length;i++){
-
-            if(data[i].type === 'normalChat'){
-
-                this.addNewNormalChat(data[i]);
+        const config = {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
             }
-            else if(data[i].type === 'groupChat'){
+        };
+        /*
+            chats are requested
+         */
+        const response = await fetch('/chats', config);
 
-                this.addNewGroupChat(data[i]);
+        if(response.status === 200) {
+
+            const data = await response.json();
+            for (let i = 0; i < data.length; i++) {
+                if (data[i].type === 'normalChat') {
+                    /*
+                        normalChat is added
+                     */
+                    this.addNewNormalChat(data[i]);
+                } else if (data[i].type === 'groupChat') {
+                    /*
+                        groupChat is added
+                     */
+                    this.addNewGroupChat(data[i]);
+                }
             }
         }
         this.finishedLoading = true;

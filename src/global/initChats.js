@@ -3,24 +3,6 @@ import {setGlobal} from "reactn";
 
 export function initChats(){
 
-    loadChats();
-
-    async function loadChats() {
-        const config = {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json'
-            }
-        };
-        const response = await fetch('/chats', config);
-
-        if(response.status === 200){
-            chatSocket.initChats(await response.json());
-        }else if(response.status === 403){
-            setTimeout(loadChats,1000);
-        }
-    }
-
     function chatsLoaded(chats){
         setGlobal({
             chats: chats
