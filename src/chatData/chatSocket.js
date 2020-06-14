@@ -24,6 +24,15 @@ class ChatSocket{
     _temporaryChat = new TempChatLoader();
     _initCalled = false;
 
+    destruct(){
+
+        if(this.socket) {
+            this.socket.removeAllListeners();
+            this.socket.disconnect();
+        }
+        this.initCalled = false;
+    }
+
     async init(){
 
         const {uid,username} = getGlobal().userSelf;
@@ -116,6 +125,10 @@ class ChatSocket{
          */
         this.socket.on('disconnect',() => {
             setTimeout(function() {
+
+                getDispatch().deleteUserSelf();
+                getDispatch().resetGlobal();
+                resetChatSocket();
                 alert('Verbindung verloren! Seite wird neu geladen');
                 // eslint-disable-next-line no-restricted-globals
                 location.reload();
@@ -466,6 +479,7 @@ class ChatSocket{
 let chatSocket = new ChatSocket();
 
 export function resetChatSocket(){
+    chatSocket.destruct();
     chatSocket = new ChatSocket();
 }
 

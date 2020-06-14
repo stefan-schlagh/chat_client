@@ -13,7 +13,7 @@ import ModalRouterSmallScreens from "./ModalRouterSmallScreens";
 export default function RouterSmallScreens(props){
 
     let { path } = useRouteMatch();
-    const global = useGlobal();
+    const [global,setGlobal] = useGlobal();
 
     const renderTypeMsgContainer = () => {
         if(global.currentChat.type !== '' && global.currentChat.id !== 0){

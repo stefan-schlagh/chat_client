@@ -43,7 +43,7 @@ export function initGlobal(){
          */
         newMessages: 0
         /*
-            TODO: notifications mobile
+            TODO: notifications
          */
     });
 
@@ -70,6 +70,23 @@ export function initGlobal(){
            userSelf: {}
        }
     });
+    /*
+        // eslint-disable-next-line no-unused-vars
+        global gets reseted
+     */
+    addReducer('resetGlobal',(global,dispatch) => ({
+        infoHeaderCenter: infoHeaderCenter.none,
+        ihcData: null,
+        currentChat: {
+            type: '',
+            id: 0,
+            newMessages: 0,
+            messages: []
+        },
+        tempChat: null,
+        chats: [],
+        newMessages: 0
+    }));
     /*
         is the chat the current chat?
      */

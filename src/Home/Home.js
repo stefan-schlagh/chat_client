@@ -36,8 +36,6 @@ export default class Chat extends Component{
 
     render() {
 
-        const setState = this.setState.bind(this);
-
         return (
             <div className="h-100">
 

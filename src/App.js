@@ -83,9 +83,9 @@ export default function App() {
             TODO: without reload
          */
         // eslint-disable-next-line no-restricted-globals
-        location.reload();
-
+        //location.reload();
         dispatch.deleteUserSelf();
+        dispatch.resetGlobal();
         resetChatSocket();
     };
 
