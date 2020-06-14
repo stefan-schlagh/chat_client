@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useGlobal} from "reactn";
 import {
     Switch,
     Route,
@@ -13,13 +13,14 @@ import ModalRouterSmallScreens from "./ModalRouterSmallScreens";
 export default function RouterSmallScreens(props){
 
     let { path } = useRouteMatch();
+    const [global,setGlobal] = useGlobal();
 
     const renderTypeMsgContainer = () => {
-        if(props.currentChat.type !== '' && props.currentChat.id !== 0){
+        if(global.currentChat.type !== '' && global.currentChat.id !== 0){
             return(
                 <TypeMsgContainer
-                    chatType={props.currentChat.type}
-                    chatId={props.currentChat.id}
+                    chatType={global.currentChat.type}
+                    chatId={global.currentChat.id}
                 />
             )
         }
@@ -27,7 +28,7 @@ export default function RouterSmallScreens(props){
     };
 
     return(
-        <div className="row-height position-relative">
+        <div className="main-container">
             <Switch>
                 <Route path={`${path}/user/:uid`} render={
                     routeProps => (
@@ -65,7 +66,6 @@ export default function RouterSmallScreens(props){
                     <ModalRouterSmallScreens>
                         <ChatList
                             paddingTop="20px"
-                            setHomeState={props.setParentState}
                         />
                     </ModalRouterSmallScreens>
                 </Route>

@@ -1,6 +1,8 @@
 import React,{Component} from "react";
 import {withRouter} from 'react-router-dom';
 
+import './modal.scss';
+
 class Modal extends Component{
 
     render() {
@@ -17,7 +19,7 @@ class Modal extends Component{
                             className="modal-inner"
                             onClick={event => {event.stopPropagation()}}>
                             <div
-                                className="modal-btn-close"
+                                className="btn-close"
                                 onClick={() => {this.props.history.goBack()}}>
                                 &times;
                             </div>
@@ -30,3 +32,19 @@ class Modal extends Component{
     }
 }
 export default withRouter(Modal);
+
+export function ModalHeader(props){
+    return(
+        <div className="m-header">
+            {props.children}
+        </div>
+    )
+}
+
+export function ModalMain(props){
+    return(
+        <div className="m-main">
+            {props.children}
+        </div>
+    )
+}

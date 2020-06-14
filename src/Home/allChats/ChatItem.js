@@ -1,4 +1,4 @@
-import React,{Component} from "react";
+import React,{Component} from "reactn";
 import {Link} from "react-router-dom";
 import chatSocket from "../../chatData/chatSocket";
 
@@ -7,14 +7,15 @@ export default class ChatItem extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            unreadMessages: 0,
             lastMsg: undefined,
             typeMsg: ''
         }
     }
-
+    /*
+        is this chat selected?
+     */
     isSelected = () => {
-        return this.props.id === chatSocket.currentChat.id && this.props.type === chatSocket.currentChat.type;
+        return this.props.id === this.global.currentChat.id && this.props.type === this.global.currentChat.type;
     };
     /*
         wenn ein user anfängt, oder aufhört zu schreiben, wird diese Methode aufgerufen,
@@ -39,19 +40,13 @@ export default class ChatItem extends Component{
 
     render() {
 
-        const chat = chatSocket.getChat(this.props.type,this.props.id);
-
-        const lastMsg = chat.getFirstMessage();
-
         const renderUnreadMsg = () => {
-            if(this.state.unreadMessages === 0)
+            if(this.props.unreadMessages === 0)
                 return null;
             else
                 return(
                     <div className="newMsg-number">
-                        {/*TODO unreadMessages do not get incremented the first time
-                        */}
-                        {this.state.unreadMessages}
+                        {this.props.unreadMessages}
                     </div>
                 );
         };
@@ -77,10 +72,10 @@ export default class ChatItem extends Component{
         };
 
         const renderMsg = () => {
-            if(lastMsg)
+            if(this.props.latestMessage)
                 return(
                     <span>
-                        {lastMsg.getChatViewMsgString()}
+                        {this.props.latestMessage.msgString}
                     </span>
                 );
             else
@@ -92,10 +87,10 @@ export default class ChatItem extends Component{
         };
 
         const renderDate = () => {
-            if(lastMsg)
+            if(this.props.latestMessage)
                 return(
                     <div className="lastMsg-date">
-                        {lastMsg.getChatViewDateString()}
+                        {this.props.latestMessage.dateString}
                     </div>
                 );
             else
@@ -113,9 +108,7 @@ export default class ChatItem extends Component{
         };
 
         return(
-            <li key={this.props._key_}
-                className={"list-group-item p-1" + (this.isSelected() ? " selected " : "")}
-            >
+            <li className={(this.isSelected() ? "selected " : "")}>
                 <Link to={getLink()}>
                     <div className="w-100">
                         <strong>
@@ -129,57 +122,28 @@ export default class ChatItem extends Component{
         )
     }
 
-    newMessage = uid => {
-        /*
-            wenn chat nicht selected, wird newMessages inkrmentiert
-         */
-        if(!this.isSelected()) {
-            this.setState(state => ({
-                unreadMessages: state.unreadMessages + 1
-            }));
-        }
-        /*
-            chat wird nach oben gereiht
-         */
-        this.props.toTop(this.props._key_);
-    };
-
     componentDidMount() {
         const chat = chatSocket.getChat(this.props.type,this.props.id);
-        this.setState({
-            unreadMessages: chat.unreadMessages
-        });
         /*
             event listener werden angelegt
          */
-        chat.event.on("new message",this.newMessage);
         chat.event.on("typeState changed",this.typeStateChanged);
     }
     componentDidUpdate(prevProps, prevState, snapshot) {
-        /*
-            wenn component selected, wird newMessages counter zurückgesetzt
-         */
-        if(this.isSelected() && this.state.unreadMessages !== 0)
-            this.setState({
-                unreadMessages: 0
-            });
         /*
             did component update?
          */
         if(prevProps.type !== this.props.type || prevProps.id !== this.props.id) {
             //Listeners get replaced
             const prevChat = chatSocket.getChat(prevProps.type,prevProps.id);
-            prevChat.event.rm("new message",this.newMessage);
             prevChat.event.rm("typeState changed",this.typeStateChanged);
 
             const newChat = chatSocket.getChat(this.props.type,this.props.id);
-            newChat.event.on("new message",this.newMessage);
             newChat.event.on("typeState changed",this.typeStateChanged);
 
             //typeMsg gets deleted
             this.setState({
-                typeMsg: '',
-                unreadMessages: newChat.unreadMessages
+                typeMsg: ''
             });
         }
 
@@ -189,7 +153,6 @@ export default class ChatItem extends Component{
         /*
             event listener werden entfernt
          */
-        chat.event.rm("new message",this.newMessage);
         chat.event.rm("typeState changed",this.typeStateChanged);
     }
 }

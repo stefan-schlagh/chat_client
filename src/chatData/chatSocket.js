@@ -1,11 +1,11 @@
 import io from 'socket.io-client';
-import {uid, username} from "../Auth/Auth";
 import User from "./User";
 import BinSearchArray from "../util/BinSearch";
 import {GroupChat, NormalChat} from "./Chat";
 import Message from "./Message";
 import EventHandler from "../util/Event";
 import TempChatLoader from "./tempChatLoader";
+import {getGlobal,getDispatch} from 'reactn';
 
 class ChatSocket{
 
@@ -18,17 +18,24 @@ class ChatSocket{
     };
     _event = new EventHandler();
     _finishedLoading = false;
-    _currentChat = {
-        type: '',
-        id: 0
-    };
     /*
         normalchat not saved in the database
      */
     _temporaryChat = new TempChatLoader();
     _initCalled = false;
 
-    constructor() {
+    destruct(){
+
+        if(this.socket) {
+            this.socket.removeAllListeners();
+            this.socket.disconnect();
+        }
+        this.initCalled = false;
+    }
+
+    async init(){
+
+        const {uid,username} = getGlobal().userSelf;
         /*
             user-Object is created
          */
@@ -38,8 +45,6 @@ class ChatSocket{
             uid: uid,
             username: username
         };
-    }
-    async init(){
 
         this.initCalled = true;
 
@@ -49,43 +54,19 @@ class ChatSocket{
             uid: uid,
             username: username
         };
-        
-        const config = {
-            method: 'GET',
-            headers: {
-                'Accept': 'text/plain'
-            }
-        };
-        const response = await fetch('/IP', config);
 
-        let IP_SERVER = '';
-
-        if (response.ok) {
-
-            IP_SERVER = await(response.text());
-        }
-
-        this.socket = io('http://' + IP_SERVER + ':3002');
-
+        this.socket = io.connect('/', {secure: true});
         /*
             userInfo wird an client gesendet
          */
         this.socket.emit('auth', uid, username);
+        /*
+            is called when user is initialized
+         */
+        this.socket.on('initialized',() => {
 
-        this.socket.on('all chats', data => {
-            this.initChats(data);
+            this.initChats();
         });
-        // wenn messages geladen
-        this.socket.on('messages', data => {
-            /*
-                gets chat of msg
-                loads messages of this chat
-             */
-            const chat = this.getChat(data.chatType,data.chatId);
-            if(chat !== undefined)
-                chat.addLoadedMessages(data);
-        });
-
         /*
             msg-handler
          */
@@ -144,6 +125,10 @@ class ChatSocket{
          */
         this.socket.on('disconnect',() => {
             setTimeout(function() {
+
+                getDispatch().deleteUserSelf();
+                getDispatch().resetGlobal();
+                resetChatSocket();
                 alert('Verbindung verloren! Seite wird neu geladen');
                 // eslint-disable-next-line no-restricted-globals
                 location.reload();
@@ -151,17 +136,34 @@ class ChatSocket{
         });
     }
 
-    initChats(data){
+    async initChats(){
 
-        for(let i=0;i<data.length;i++){
-
-            if(data[i].type === 'normalChat'){
-
-                this.addNewNormalChat(data[i]);
+        const config = {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
             }
-            else if(data[i].type === 'groupChat'){
+        };
+        /*
+            chats are requested
+         */
+        const response = await fetch('/chats', config);
 
-                this.addNewGroupChat(data[i]);
+        if(response.status === 200) {
+
+            const data = await response.json();
+            for (let i = 0; i < data.length; i++) {
+                if (data[i].type === 'normalChat') {
+                    /*
+                        normalChat is added
+                     */
+                    this.addNewNormalChat(data[i]);
+                } else if (data[i].type === 'groupChat') {
+                    /*
+                        groupChat is added
+                     */
+                    this.addNewGroupChat(data[i]);
+                }
             }
         }
         this.finishedLoading = true;
@@ -170,55 +172,41 @@ class ChatSocket{
 
     getChatArraySortedByDate(){
 
-        const getMessageTime = chat => {
-            const c = chat.lastMessage;
+        function getMessageTime (chat) {
+            const c = chat.latestMessage;
             if(c !== null)
                 return c.date.getTime();
             return new Date(0).getTime();
-        };
+        }
 
-        const getMaxDate = (chats,iFrom) => {
+        function getMaxDate (chats,iFrom) {
             let max = iFrom;
             for(let i = iFrom+1;i<chats.length;i++){
                 if(getMessageTime(chats[max]) < getMessageTime(chats[i]))
                     max = i;
             }
             return max;
-        };
-        const swap = (items, firstIndex, secondIndex) => {
+        }
+        function swap (items, firstIndex, secondIndex) {
             let temp = items[firstIndex];
             items[firstIndex] = items[secondIndex];
             items[secondIndex] = temp;
-        };
+        }
         /*
-            Array wird geklont
+            Array is cloned
          */
-        const cloneArr = arr => {
+        function cloneArr (arr) {
             const clone = new Array(arr.length);
             for(let i=0;i<arr.length;i++){
                 const chat = arr[i].value;
-                let lastMessage;
-                if(chat.messages.length === 0){
-                    lastMessage = null;
-                }else{
-                    const lm = chat.messages[chat.messages.length - 1].value;
-                    lastMessage = {
-                        date: lm.date
-                    };
-                }
-                clone[i] = {
-                    type: chat.type,
-                    id: chat.id,
-                    chatName: chat.chatName,
-                    lastMessage: lastMessage
-                };
+                clone[i] = chat.getChatObject();
             }
             return clone;
-        };
+        }
         /*
             es wird ein sortiertes Array zurückgegeben
          */
-        const getSorted = chats => {
+        function getSorted (chats) {
             //Array wird erzeugt
             const sorted = cloneArr(chats);
             /*
@@ -229,11 +217,11 @@ class ChatSocket{
                 swap(sorted,i,max);
             }
             return sorted;
-        };
+        }
         /*
             Arrays werden gemerged
          */
-        const mergeArr = (arr1,arr2) => {
+        function mergeArr (arr1,arr2) {
 
             const merged = new Array(arr1.length + arr2.length);
             let p1 = 0;
@@ -254,12 +242,17 @@ class ChatSocket{
                 }
             }
             return merged;
-        };
+        }
         const ncSorted = getSorted(this.chats.normal);
         const gcSorted = getSorted(this.chats.group);
 
         return mergeArr(ncSorted, gcSorted);
     }
+
+    isCurrentChat(type,id){
+        const currentChat = getGlobal().currentChat;
+        return currentChat.type === type && currentChat.id === id;
+    };
 
     getChat(type,id){
         /*
@@ -275,155 +268,6 @@ class ChatSocket{
         }
         else if(type === 'groupChat')
             return this.chats.group.get(id);
-    }
-
-    isCurrentChat(type,id){
-        return this.currentChat.type === type && this.currentChat.id === id;
-    };
-
-    async userExists(uid){
-
-        /*
-            does the user exist & does normal chat exist
-         */
-        if(this.users.getIndex(uid) !== -1){
-            /*
-                does a normalChat exist at the user
-             */
-            if(this.users.get(uid).normalChat !== 0) {
-                return {
-                    userExists: true,
-                    //does the user exist in client
-                    isUserSaved: true,
-                    //does a normalChat exist for this user
-                    chatExists: true,
-                    //is user self blocked by this user
-                    isUserBlocked: false,
-                    //does a temporary chat exist
-                    tempChat: false
-                };
-            }else{
-                /*
-                    chat does not exist in server
-                    it gets created
-                 */
-                const user = this.users.get(uid);
-                this.temporaryChat.createNew(uid,user.username);
-
-                return {
-                    userExists: true,
-                    //does the user exist in client
-                    isUserSaved: true,
-                    //does a normalChat exist for this user
-                    chatExists: false,
-                    //is user self blocked by this user
-                    isUserBlocked: false,
-                    //does a temporary chat exist
-                    tempChat: false
-                };
-            }
-        /*
-            does there exist a temporary chat with this user
-        */
-        }else if(this.temporaryChat.doesExist(uid)){
-            /*
-                user and chat does not exist in server
-             */
-            return {
-                userExists: true,
-                //does the user exist in client
-                isUserSaved: false,
-                //does a normalChat exist for this user
-                chatExists: false,
-                //is user self blocked by this user
-                isUserBlocked: false,
-                //does a temporary chat exist
-                tempChat: true
-            };
-        }else{
-            /*
-                request user from server
-             */
-            return  await this.temporaryChat.requestUser(uid);
-        }
-    }
-
-    setCurrentChat(newChat){
-        /*
-            if chat is null, no chat will be selected:
-                type: '', id: 0
-
-            changes only if something has changed --> otherwise endless loop
-         */
-        if(newChat === null){
-            /*
-                check if something has been changed
-             */
-            if (this.currentChat.type !== '' ||
-                this.currentChat.id !== 0) {
-
-                this.currentChat = {
-                    type: '',
-                    id: 0
-                };
-                this.event.trigger('currentChat changed', null);
-            }
-
-        } else if(newChat.type === 'tempChat' && this.currentChat.type !== 'tempChat'){
-            this.currentChat = {
-                type: 'tempChat',
-                id: 0
-            };
-
-            this.socket.emit('change chat', null);
-
-            this.event.trigger('currentChat changed', newChat);
-        }
-        else{
-            if(newChat.type !== '' && newChat.id !== 0) {
-                /*
-                   if something changed, currentChat gets updated
-                 */
-                if (this.currentChat.type !== newChat.type ||
-                    this.currentChat.id !== newChat.id) {
-
-                    const chat = this.getChat(newChat.type, newChat.id);
-                    chat.hasNewMsg = false;
-                    /*
-                        unreadMessages gets set to 0
-                     */
-                    chat.unreadMessages = 0;
-                    this.currentChat = newChat;
-
-                    this.socket.emit('change chat', {
-                        type: this.currentChat.type,
-                        id: this.currentChat.id
-                    });
-
-                    //console.log(this.currentChat);
-
-                    this.event.trigger('currentChat changed', newChat);
-                }
-            }
-        }
-    }
-    /*
-        returns number of new messages
-     */
-    getNumberNewMessages(){
-
-        let newMessages = 0;
-
-        for(let i=0;i<this.chats.normal.length;i++){
-            if(this.chats.normal[i].value.hasNewMsg)
-                newMessages ++;
-        }
-
-        for(let i=0;i<this.chats.group.length;i++){
-            if(this.chats.group[i].value.hasNewMsg)
-                newMessages ++;
-        }
-        return newMessages;
     }
     /*
         a new chat gets added
@@ -446,7 +290,7 @@ class ChatSocket{
         /*
             event gets triggered
          */
-        chatSocket.event.trigger('new chat',newChat);
+        getDispatch().addChat(newChat);
     }
     /*
         a new normalChat gets added
@@ -458,7 +302,10 @@ class ChatSocket{
          */
         let otherUser;
         if(this.users.getIndex(data.members[0].uid) === -1){
-            otherUser = new User(data.members[0].uid,data.members[0].username,data.members[0].online);
+            otherUser = new User(
+                data.members[0].uid,
+                data.members[0].username
+            );
             this.users.add(otherUser.uid,otherUser);
         }else{
             otherUser = this.users.get(data.members[0].uid);
@@ -466,7 +313,11 @@ class ChatSocket{
         /*
             new chat gets created
          */
-        const newChat = new NormalChat(data.id,data.chatName,otherUser.uid);
+        const newChat = new NormalChat(
+            data.id,
+            data.chatName,
+            otherUser.uid
+        );
         /*
             normalChat is set at other user
          */
@@ -479,7 +330,16 @@ class ChatSocket{
             if message exists it gets added to the chat
          */
         if(!message.empty)
-            newChat.messages.add(message.mid,new Message(message.mid,message.content,message.uid,newChat,new Date(message.date)));
+            newChat.messages.add(
+                message.mid,
+                new Message(
+                    message.mid,
+                    message.content,
+                    message.uid,
+                    newChat,
+                    new Date(message.date)
+                )
+            );
         /*
             new chat gets added to binSearchArray
          */
@@ -504,7 +364,10 @@ class ChatSocket{
              */
             let user;
             if (this.users.getIndex(member.uid) === -1) {
-                user = new User(member.uid, member.username, member.online);
+                user = new User(
+                    member.uid,
+                    member.username
+                );
                 this.users.add(user.uid, user);
             } else {
                 user = this.users.get(member.uid);
@@ -530,7 +393,16 @@ class ChatSocket{
             if message exists it gets added to the chat
          */
         if(!message.empty)
-            newChat.messages.add(message.mid,new Message(message.mid,message.content,message.uid,newChat,new Date(message.date)));
+            newChat.messages.add(
+                message.mid,
+                new Message(
+                    message.mid,
+                    message.content,
+                    message.uid,
+                    newChat,
+                    new Date(message.date)
+                )
+            );
         /*
             new chat gets added to binSearchArray
          */
@@ -587,14 +459,6 @@ class ChatSocket{
         this._finishedLoading = value;
     }
 
-    get currentChat() {
-        return this._currentChat;
-    }
-
-    set currentChat(value) {
-        this._currentChat = value;
-    }
-
     get temporaryChat() {
         return this._temporaryChat;
     }
@@ -613,5 +477,10 @@ class ChatSocket{
 }
 
 let chatSocket = new ChatSocket();
+
+export function resetChatSocket(){
+    chatSocket.destruct();
+    chatSocket = new ChatSocket();
+}
 
 export default chatSocket;

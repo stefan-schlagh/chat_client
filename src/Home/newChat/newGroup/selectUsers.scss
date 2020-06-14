@@ -1,0 +1,72 @@
+@import '../newChatMixins';
+
+$cUnderlineGrey: #888;
+
+.select-users {
+  position: relative;
+  max-width: 700px;
+
+  h4 {
+    display: inline-block;
+    padding-left: 10px;
+  }
+  .selected-num{
+    text-decoration: underline solid $cUnderlineGrey;
+    text-decoration-thickness: 5px;
+    cursor: pointer;
+
+    &:hover,
+    &.selected{
+      text-decoration-color: $cNotificationBlue;
+    }
+  }
+  .btn-next{
+    cursor: pointer;
+    display: inline-block;
+    margin-right: 20px;
+    margin-top: 10px;
+  }
+}
+
+.selectUsers-list {
+
+  li {
+
+    &:hover .user-select,.user-select.selected{
+      background-color: $cNotificationBlue;
+      border: none;
+      transition: 0.3s;
+    }
+    .username {
+      padding: 0.5rem !important;
+    }
+    .user-select {
+      position: absolute;
+      height: 30px;
+      width: 30px;
+      top: 5px;
+      right: 15px;
+      border: 1px solid $cLightGrey;
+      border-radius: 15px;
+
+      i {
+        position: absolute;
+        top: 5px;
+        left: 4px;
+        display: none;
+      }
+    }
+    &:hover i,.user-select.selected i {
+      display: block;
+      color: white;
+    }
+  }
+}
+@media screen and (max-width: 765px){
+  .selectUsers-list {
+    @include resultListMobile(110px);
+  }
+  .selectUsers-list.only-selected {
+    @include resultListMobile(45px);
+  }
+}

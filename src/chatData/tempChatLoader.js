@@ -2,6 +2,7 @@ import {NormalChat} from "./Chat";
 import chatSocket from "./chatSocket";
 import User from "./User";
 import Message from "./Message";
+import {getDispatch} from 'reactn';
 
 export default class TempChatLoader{
 
@@ -13,71 +14,6 @@ export default class TempChatLoader{
      */
     createNew(uid,username){
         this.chatNow = new NormalChat(0, username, uid);
-    }
-    /*
-        user gets requested
-     */
-    async requestUser(uid){
-
-        return new Promise((resolve, reject) =>  {
-            /*
-                the userInfo gets requested
-             */
-            chatSocket.socket.emit('getUserInfo',uid,(res,error) => {
-                /*
-                    if success, the temporary chat gets created
-                 */
-                if(!error){
-                    /*
-                        if user does exist and user is not blocked, the temporary chat is created
-                     */
-                    if(res.userExists && !res.blocked) {
-
-                        this.createNew(uid,res.username);
-
-                        resolve({
-                            userExists: true,
-                            //does the user exist in client
-                            isUserSaved: false,
-                            //does a normalChat exist for this user
-                            chatExists: false,
-                            //is user self blocked by this user
-                            isUserBlocked: false,
-                            //does a temporary chat exist
-                            tempChat: true
-                        });
-                    }else{
-                        resolve({
-                            userExists: res.userExists,
-                            //does the user exist in client
-                            isUserSaved: false,
-                            //does a normalChat exist for this user
-                            chatExists: false,
-                            //is user self blocked by this user
-                            isUserBlocked: res.blocked,
-                            //does a temporary chat exist
-                            tempChat: false
-                        });
-                    }
-                /*
-                    else false is returned
-                 */
-                }else{
-
-                    resolve({
-                        userExists: false,
-                        //does the user exist in client
-                        isUserSaved: false,
-                        //does a normalChat exist for this user
-                        chatExists: false,
-                        //is user self blocked by this user
-                        isUserBlocked: false,
-                        //does a temporary chat exist
-                        tempChat: false
-                    });
-                }
-            });
-        });
     }
     /*
         is the current tempChat already the one with this uid?
@@ -92,16 +28,16 @@ export default class TempChatLoader{
      */
     show(){
         this.isShown = true;
-        chatSocket.event.trigger("tempChat shown");
+        getDispatch().showTempChat(this.chatNow);
     }
 
     update(){
-        chatSocket.event.trigger("tempChat updated");
+        getDispatch().updateTempChat(this.chatNow);
     }
 
     hide(){
         this.isShown = false;
-        chatSocket.event.trigger("tempChat hidden");
+        getDispatch().hideTempChat();
     }
     /*
         a new normalChat is created out of the current tempChat
@@ -115,6 +51,9 @@ export default class TempChatLoader{
             const otherUid = this.chatNow.otherUser;
             const otherUsername = this.chatNow.chatName;
 
+            /*
+                TODO: http-request
+             */
             chatSocket.socket.emit('new normalChat',{
                 uid: otherUid,
                 username: otherUsername,
@@ -144,11 +83,12 @@ export default class TempChatLoader{
                 newChat.messages.add(res.mid,new Message(res.mid,message,chatSocket.userSelf.uid,newChat,new Date(Date.now())));
 
                 //args: chat
-                chatSocket.event.trigger('new chat',newChat);
+                getDispatch().addChat(newChat);
+
                 /*
                     currentChat gets changed
                  */
-                chatSocket.setCurrentChat(newChat);
+                getDispatch().selectChat(newChat);
                 this.hide();
 
                 resolve(true);

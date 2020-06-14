@@ -1,0 +1,30 @@
+$listBorder: 1px solid rgba(0,0,0,0.125);
+$cListItemHoverYes: #ebebeb;
+
+.v-list {
+  padding-left: 0;
+  margin-bottom: 0;
+  list-style-type: none;
+
+  li:first-child {
+    border-top: $listBorder;
+    border-top-left-radius: 0.25rem;
+    border-top-right-radius: 0.25rem;
+  }
+  li:last-child {
+    border-bottom-left-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+  }
+}
+.v-list-item {
+  position: relative;
+  display: block;
+  border: $listBorder;
+  border-top: none;
+
+  &:hover {
+    background-color: $cListItemHoverYes;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+}

@@ -1,0 +1,53 @@
+@import '../newChatMixins';
+
+.user-top {
+  display: flex;
+  flex-direction: row;
+  max-width: 700px;
+
+  .searchUser {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+    margin-right: 20px;
+
+    label {
+      margin: 0 10px 0 0;
+      flex-shrink: 0;
+    }
+    h4 {
+      margin: 0;
+    }
+  }
+  .user-more {
+    cursor: pointer;
+    color: $cBlack2HoverNo;
+    position: relative;
+
+    &:hover {
+      color: $cBlack2HoverYes;
+    }
+    .options {
+      position: absolute;
+      top: 0;
+      right: 0;
+      z-index: 10;
+      width: 300px;
+      background-color: white;
+
+      ul {
+        @extend .v-list;
+
+        li {
+          @extend .v-list-item;
+          padding: 5px;
+        }
+      }
+    }
+  }
+}
+@media screen and (max-width: 765px){
+  .searchUser-list {
+    @include resultListMobile(90px);
+  }
+}

@@ -8,7 +8,6 @@ import Modal from "../utilComp/Modal";
 import NewChat from "./newChat/NewChat";
 import Dummy from "../utilComp/Dummy";
 import UserInfo from "./userInfo/UserInfo";
-import UserItem from "./newChat/chooseUser/UserItem";
 /*
     modals are always at the end of the url
  */

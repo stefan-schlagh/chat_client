@@ -1,5 +1,11 @@
 import chatSocket from "./chatSocket";
 
+export function isDifferentDay(date1,date2){
+    return date1.getDay() !== date2.getDay()
+        || date1.getMonth() !== date2.getMonth()
+        || date1.getFullYear() !== date2.getFullYear();
+}
+
 export default class Message {
 
     _mid;
@@ -15,6 +21,49 @@ export default class Message {
         this.date = date;
         //type: object of Chat
         this.chat = chat;
+    }
+    /*
+        a object representing the message is returned
+     */
+    getMessageObject(userTopShown){
+
+        const message = {
+            content: this.content,
+            mDateString: this.getMessageViewDateString(),
+            dateString: this.getDateString(),
+            date: this.date,
+            bySelf: this.uid === chatSocket.userSelf.uid
+        };
+        /*
+            if the user top should be shown, the property is added
+         */
+        if(userTopShown)
+            message.userTop = this.getUserTop();
+
+        return message;
+    }
+    /*
+        a object for the userinfo at the top of the message is returned
+     */
+    getUserTop(){
+        /*
+            is the message written by the user self?
+         */
+        if(this.uid === chatSocket.userSelf.uid)
+            return {
+                uid: this.uid,
+                username: 'Du:',
+                color: chatSocket.userSelf.color
+            };
+        /*
+            if the user is not self
+         */
+        const user = chatSocket.users.get(this.uid);
+        return {
+            uid: this.uid,
+            username: user.username + ':',
+            color: user.color
+        };
     }
 
     getChatViewDateString(){

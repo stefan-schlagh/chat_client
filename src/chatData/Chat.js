@@ -2,17 +2,20 @@ import BinSearchArray from "../util/BinSearch";
 import Message from "./Message";
 import EventHandler from "../util/Event";
 import chatSocket from "./chatSocket";
+import {getDispatch} from 'reactn';
 
 class Chat {
 
-    _isSelfPart;
     _type;
     _id;
     _chatName;
     _messages = new BinSearchArray();
     _event = new EventHandler();
-    _hasNewMsg = false;
     _unreadMessages = 0;
+    /*
+        are all messages already loaded?
+     */
+    _reachedTopMessages = false;
 
     constructor(type, id,chatName) {
         this.type = type;
@@ -20,41 +23,64 @@ class Chat {
         this.chatName = chatName;
     }
     /*
-        Nacrichten werden geladen
+        messages are loaded
      */
-    loadMessages(num){
-        const getLastMsgId = () => {
-            const msg = this.getLastMessage();
-            if(msg !== null)
-                return msg.mid;
-            return -1;
-        };
+    async loadMessages(num){
         /*
-            event wird an server emitted,
-            aber nur wenn gerade nicht dieses event in Bearbeitung
+            messages are only loaded, if top not already reached
          */
-        chatSocket.socket.emit('load messages', {
-            chatType: this.type,
-            chatId: this.id,
-            lastMsgId: getLastMsgId(),
-            num: num
-        });
-    }
-    addLoadedMessages(data){
-        /*
-            es wird geschaut, ob schon oben angelangt
-         */
-        this.reachedTop = data.status === 'reached top';
+        if(!this.reachedTopMessages) {
 
-        const lMessages = data.messages;
-        for(let i=lMessages.length-1;i>=0;i--){
-            const lm = lMessages[i];
-            this.messages.add(lm.mid,new Message(lm.mid,lm.content,lm.uid,this,new Date(lm.date)));
+            const getLastMsgId = () => {
+                const msg = this.getLastMessage();
+                if (msg !== null)
+                    return msg.mid;
+                return -1;
+            };
+            /*
+                messages are loaded from server
+             */
+            const config = {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    chatType: this.type,
+                    chatId: this.id,
+                    lastMsgId: getLastMsgId(),
+                    num: num
+                })
+            };
+            const response = await fetch('/message/load', config);
+
+            if (response.ok) {
+
+                const data = await response.json();
+                /*
+                    is top already reached?
+                 */
+                this.reachedTopMessages = data.status === 'reached top';
+
+                const lMessages = data.messages;
+                /*
+                    the array that will be returned
+                 */
+                const messages = new Array(lMessages.length);
+                const userTopShown = this.showUserInfoMessage();
+
+                for (let i = lMessages.length - 1; i >= 0; i--) {
+
+                    const lm = lMessages[i];
+                    const message = new Message(lm.mid, lm.content, lm.uid, this, new Date(lm.date));
+                    this.messages.add(lm.mid, message);
+                    messages[i] = message.getMessageObject(userTopShown);
+                }
+                return messages;
+            }
+            throw new Error();
         }
-        /*
-            msg loaded wird getriggert
-         */
-        this.event.trigger('messages loaded');
     }
     /*
         gibt die Nachricht, die am längsten zurück liegt, zurück
@@ -73,19 +99,71 @@ class Chat {
         return null;
     }
     /*
+        returns all messages in an array
+            userTopShown    should the user at the top be shown?
+     */
+    getMessages(){
+
+        const userTopShown = this.showUserInfoMessage();
+        const rMessages = new Array(this.messages.length);
+
+        for(let i=0;i<this.messages.length;i++){
+
+            const message = this.messages[i].value;
+            rMessages[i] = message.getMessageObject(userTopShown);
+        }
+
+        return rMessages;
+    }
+    /*
         neue Nachricht wird hinzugefügt
      */
     addMessage(uid,content,mid){
-        this.messages.add(mid,new Message(mid,content,uid,this,new Date(Date.now())));
-        this.event.trigger("new message",uid);
+        const message =
+            new Message(mid,content,uid,this,new Date(Date.now()));
+        this.messages.add(mid,message);
+        getDispatch().newMsg(
+            this,
+            this.unreadMessages,
+            message.getMessageObject(
+                this.showUserInfoMessage()
+            ));
     }
-
-    get isSelfPart() {
-        return this._isSelfPart;
+    /*
+        should the userInfo at the messages be shown (--> only in groupChats)
+     */
+    showUserInfoMessage(){
+        return(this.type === 'groupChat')
     }
-
-    set isSelfPart(value) {
-        this._isSelfPart = value;
+    /*
+        an object of this chat is returned
+     */
+    getChatObject(){
+        return {
+            type: this.type,
+            id: this.id,
+            chatName: this.chatName,
+            latestMessage: this.getLatestMessageObject(),
+            unreadMessages: 0
+        };
+    }
+    /*
+        an object with the latest message is returned
+     */
+    getLatestMessageObject(){
+        /*
+            are there messages?
+        */
+        if(this.messages.length === 0){
+            return null;
+        }else{
+            const lm = this.getFirstMessage();
+            return {
+                msgString: lm.getChatViewMsgString(),
+                dateString: lm.getChatViewDateString(),
+                date: lm.date
+            };
+        }
     }
 
     get type() {
@@ -128,20 +206,20 @@ class Chat {
         this._event = value;
     }
 
-    get hasNewMsg() {
-        return this._hasNewMsg;
-    }
-
-    set hasNewMsg(value) {
-        this._hasNewMsg = value;
-    }
-
     get unreadMessages() {
         return this._unreadMessages;
     }
 
     set unreadMessages(value) {
         this._unreadMessages = value;
+    }
+
+    get reachedTopMessages() {
+        return this._reachedTopMessages;
+    }
+
+    set reachedTopMessages(value) {
+        this._reachedTopMessages = value;
     }
 }
 

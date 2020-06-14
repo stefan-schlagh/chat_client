@@ -12,10 +12,11 @@ export default class UserItem extends Component{
     render() {
         return(
             <li key={this.props.index}
-                className="list-group-item p-2"
                 onClick={this.clicked}
             >
-                {this.props.username}
+                <div className="username">
+                    {this.props.username}
+                </div>
                 <div className={"user-select fa-lg" + (this.props.isSelected ? " selected" : "")}>
                     <i className="fas fa-check" />
                 </div>

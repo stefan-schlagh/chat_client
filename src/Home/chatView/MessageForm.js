@@ -3,6 +3,9 @@ import chatSocket from "../../chatData/chatSocket";
 import 'emoji-mart/css/emoji-mart.css';
 import { Picker } from 'emoji-mart';
 import {withRouter} from "react-router-dom";
+import Dummy from "../../utilComp/Dummy";
+
+import './messageForm.scss';
 
 class MessageForm extends Component{
 
@@ -82,18 +85,45 @@ class MessageForm extends Component{
                         }
                     });
             }else{
-                /*
-                    message wird zu server emitted, über callback wird msgId geholt
-                 */
-                chatSocket.socket.emit('chat message', message, mid => {
-                    /*
-                        eigene msg wird angehängt
-                    */
-                    const chat = chatSocket.getChat(this.props.chatType, this.props.chatId);
-                    chat.addMessage(chatSocket.userSelf.uid, message, mid);
-                });
+
+                this.sendMessage(message)
+                    .then(mid => {
+                        /*
+                            message is added to chat
+                         */
+                        const chat = chatSocket.getChat(this.props.chatType, this.props.chatId);
+                        chat.addMessage(chatSocket.userSelf.uid, message, mid);
+                    })
+                    .catch(err => {});
             }
         }
+    };
+
+    sendMessage = async msg => {
+        /*
+            message is sent to server
+         */
+        const config = {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                msg: msg
+            })
+        };
+        const response = await fetch('/message', config);
+
+        if (response.ok) {
+
+            const data = await response.json();
+            /*
+                mid is returned
+             */
+            return data.mid;
+        }
+        return new Error();
     };
 
     onEmojiInput = emoji => {
@@ -112,7 +142,7 @@ class MessageForm extends Component{
 
     render() {
         return(
-            <div>
+            <Dummy>
                 <form onSubmit={this.onSubmit} className="msg-form">
                     <div className="message-input">
                         <input autoComplete="off"
@@ -141,7 +171,7 @@ class MessageForm extends Component{
                         <Picker onSelect={this.onEmojiInput}/>
                     </div>
                 : null}
-            </div>
+            </Dummy>
         )
     }
 

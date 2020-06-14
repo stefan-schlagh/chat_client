@@ -1,0 +1,78 @@
+$cModalBG: white;
+$cModalHeaderBG: #80b3ff;
+$cModalHeader: #eee;
+$cBtnClose: #eee;
+$cBtnCloseHover: #ccc;
+
+.modal-outer{
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 5;
+  overflow-y: auto;
+}
+.modal-inner{
+  background-color: $cModalBG;
+  opacity: 1;
+  width: 90%;
+  margin: 5% auto auto;
+  box-sizing: content-box;
+  padding: 0 !important;
+  position: relative;
+
+  a {
+    color: inherit;
+    cursor: pointer;
+  }
+  a:hover {
+    text-decoration: none;
+    color: inherit;
+  }
+  .btn-close {
+    position: absolute;
+    top:-20px;
+    right: 10px;
+    font-size: 50pt;
+    color: $cBtnClose;
+    cursor: pointer;
+  }
+  .btn-close:hover {
+    color: $cBtnCloseHover;
+    transition: 0.3s;
+  }
+  .m-header {
+    height: 100px;
+    background-color: $cModalHeaderBG;
+    padding: 20px;
+    color: $cModalHeader;
+  }
+  .m-main{
+    padding: 20px;
+  }
+}
+/*
+  media-query for small screens
+ */
+@media screen and (max-width: 765px){
+  .m-main {
+    height: calc(100% - 70px);
+    padding: 10px 10px 0;
+  }
+  .m-header {
+    height: 70px;
+    background-color: $cModalHeaderBG;
+    padding: 5px;
+    color: $cModalHeader;
+  }
+  .m-header a {
+    color: inherit;
+    cursor: pointer;
+  }
+  .m-header a:hover {
+    text-decoration: none;
+    color: inherit;
+  }
+}

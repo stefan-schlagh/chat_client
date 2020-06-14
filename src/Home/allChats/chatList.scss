@@ -1,0 +1,51 @@
+@import "../../sass/list";
+
+.chat-c-list {
+  height: 100%;
+  margin: 0.5rem;
+}
+.chat-list {
+  @extend .v-list;
+
+  height: calc(100% - 60px);
+  overflow-y: auto;
+
+  li {
+    @extend .v-list-item;
+    padding: 0.25rem;
+  }
+  li.selected {
+    background-color: $cListItemHoverYes;
+  }
+  .newMsg-number{
+    width: 20px;
+    height: 20px;
+    font-size: 10pt;
+    color: white;
+    text-align: center;
+    background-color: var(--notification-blue);
+    border-radius: 10px;
+    float: right;
+  }
+  .lastMsg{
+    font-size: 10pt;
+    overflow: auto;
+    height: 20px;
+  }
+  .lastMsg-date{
+    float: right;
+  }
+  .typeMsg{
+    font-size: 10pt;
+    height: 20px;
+    font-weight: bold;
+    color: var(--notification-blue);
+  }
+  a{
+    color: #000;
+  }
+  a:hover{
+    text-decoration: none;
+    color: #000;
+  }
+}

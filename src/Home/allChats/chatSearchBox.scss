@@ -1,0 +1,28 @@
+@import '../../sass/colors';
+
+.chatSearchBox {
+  margin-bottom: 0.5rem;
+  border-radius: 0.25rem;
+  border: 1px solid #dee2e6;
+}
+.chat-select-form{
+  display: flex;
+  padding: 4px;
+
+  input{
+    flex-grow: 1;
+    border-radius: 15px;
+    border: 1.5px solid #888;
+    padding-left: 14px;
+  }
+  button{
+    padding: 0;
+    height: 30px;
+    width: 30px;
+    color: white;
+    background-color: $cNotificationBlue;
+    border: none;
+    border-radius: 15px;
+    margin-left: 5px;
+  }
+}

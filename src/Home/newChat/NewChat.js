@@ -2,6 +2,9 @@ import React,{Component} from "react";
 import ChooseUser from "./chooseUser/ChooseUser";
 import NewGroup from "./newGroup/NewGroup";
 import Dummy from "../../utilComp/Dummy";
+import {ModalHeader,ModalMain} from "../../utilComp/Modal";
+
+import './newChat.scss';
 
 export const tabs = {
     chooseUser: 0,
@@ -87,10 +90,14 @@ export default class NewChat extends Component{
 
         return(
             <Dummy>
-                <div className="modal-header-b">
+                <ModalHeader>
                     <h1>{getHeader()}</h1>
-                </div>
-                {router()}
+                </ModalHeader>
+                <ModalMain>
+                    <div className="newChat">
+                        {router()}
+                    </div>
+                </ModalMain>
             </Dummy>
         )
     }
