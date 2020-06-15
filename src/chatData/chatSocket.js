@@ -126,9 +126,6 @@ class ChatSocket{
         this.socket.on('disconnect',() => {
             setTimeout(function() {
 
-                getDispatch().deleteUserSelf();
-                getDispatch().resetGlobal();
-                resetChatSocket();
                 alert('Verbindung verloren! Seite wird neu geladen');
                 // eslint-disable-next-line no-restricted-globals
                 location.reload();
