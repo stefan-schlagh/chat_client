@@ -144,7 +144,7 @@ class Chat {
             id: this.id,
             chatName: this.chatName,
             latestMessage: this.getLatestMessageObject(),
-            unreadMessages: 0
+            unreadMessages: this.unreadMessages
         };
     }
     /*
@@ -228,10 +228,10 @@ export class NormalChat extends Chat{
     _otherUser;
     _isTyping = false;
 
-    constructor(id,chatName,uid) {
+    constructor(id,chatName,uid,unreadMessages = 0) {
         super('normalChat',id,chatName);
         this.otherUser = uid;
-
+        this.unreadMessages = unreadMessages;
     }
 
     getUsersTyping(){
@@ -300,9 +300,10 @@ export class GroupChat extends Chat{
     //Array mit uids von den usern, die gerade schreibem
     _usersTyping = [];
 
-    constructor(id,chatName,uids) {
+    constructor(id,chatName,uids,unreadMessages = 0) {
         super('groupChat',id,chatName);
         this.users = uids;
+        this.unreadMessages = unreadMessages;
     }
 
     getUsersTyping(){

@@ -313,7 +313,8 @@ class ChatSocket{
         const newChat = new NormalChat(
             data.id,
             data.chatName,
-            otherUser.uid
+            otherUser.uid,
+            data.unreadMessages
         );
         /*
             normalChat is set at other user
@@ -381,7 +382,13 @@ class ChatSocket{
         /*
             new chat gets created
          */
-        const newChat = new GroupChat(data.id,data.chatName,members);
+        const newChat =
+            new GroupChat(
+                data.id,
+                data.chatName,
+                members,
+                data.unreadMessages
+            );
         /*
             first message is initialized
          */
