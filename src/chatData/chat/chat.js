@@ -22,6 +22,24 @@ export class Chat {
         this.chatName = chatName;
     }
     /*
+        the first message of the object is initialized
+     */
+    initFirstMessage(messageData){
+
+        if(!messageData.empty)
+            this.messages.add(
+                messageData.mid,
+                new Message(
+                    messageData.mid,
+                    messageData.uid,
+                    this,
+                    new Date(messageData.date),
+                    messageData.type,
+                    messageData.content
+                )
+            );
+    }
+    /*
         messages are loaded
      */
     async loadMessages(num){
@@ -71,9 +89,26 @@ export class Chat {
 
                 for (let i = lMessages.length - 1; i >= 0; i--) {
 
-                    const lm = lMessages[i];
-                    const message = new Message(lm.mid, lm.content, lm.uid, this, new Date(lm.date));
-                    this.messages.add(lm.mid, message);
+                    const messageData = lMessages[i];
+                    /*
+                        message is created
+                     */
+                    const message =
+                        new Message(
+                            messageData.mid,
+                            messageData.uid,
+                            this,
+                            new Date(messageData.date),
+                            messageData.type,
+                            messageData.content
+                        );
+                    /*
+                        message is added to chat
+                     */
+                    this.messages.add(
+                        messageData.mid,
+                        message
+                    );
                     messages[i] = message.getMessageObject(userTopShown);
                 }
                 return messages;

@@ -1,5 +1,6 @@
 import React,{Component} from "react";
 import Colors from "../../util/Color";
+import {globalData} from "../../global/globalData";
 
 import './message.scss'
 
@@ -24,7 +25,10 @@ export default class Message extends Component{
                 : null}
                 <div className="w-100 msg-container-content">
                     <p className="mb-0">
-                        {msg.content}
+                        {msg.type === globalData.messageTypes.normalMessage ?
+                            msg.content.text
+                        : null
+                        }
                     </p>
                 </div>
                 <div className="w-100 msg-date-outer">

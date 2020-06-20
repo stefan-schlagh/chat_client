@@ -324,21 +324,7 @@ class ChatSocket{
         /*
             first message is initialized
          */
-        const message = data.firstMessage;
-        /*
-            if message exists it gets added to the chat
-         */
-        if(!message.empty)
-            newChat.messages.add(
-                message.mid,
-                new Message(
-                    message.mid,
-                    message.content,
-                    message.uid,
-                    newChat,
-                    new Date(message.date)
-                )
-            );
+        newChat.initFirstMessage(data.firstMessage);
         /*
             new chat gets added to binSearchArray
          */
@@ -393,21 +379,7 @@ class ChatSocket{
         /*
             first message is initialized
          */
-        const message = data.firstMessage;
-        /*
-            if message exists it gets added to the chat
-         */
-        if(!message.empty)
-            newChat.messages.add(
-                message.mid,
-                new Message(
-                    message.mid,
-                    message.content,
-                    message.uid,
-                    newChat,
-                    new Date(message.date)
-                )
-            );
+        newChat.initFirstMessage(data.firstMessage);
         /*
             new chat gets added to binSearchArray
          */

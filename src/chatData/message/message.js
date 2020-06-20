@@ -1,4 +1,5 @@
 import chatSocket from "../chatSocket";
+import {globalData} from "../../global/globalData";
 
 export function isDifferentDay(date1,date2){
     return date1.getDay() !== date2.getDay()
@@ -9,18 +10,27 @@ export function isDifferentDay(date1,date2){
 export default class Message {
 
     _mid;
-    _content;
     _uid;
     _date;
     _chat;
+    _type;
+    _content;
 
-    constructor(mid,content,uid,chat,date = new Date(Date.now())) {
+    constructor(
+        mid,
+        uid,
+        chat,
+        date = new Date(Date.now()),
+        type,
+        content
+    ) {
         this.mid = mid;
-        this.content = content;
         this.uid = uid;
         this.date = date;
         //type: object of Chat
         this.chat = chat;
+        this.type = type;
+        this.content = content;
     }
     /*
         a object representing the message is returned
@@ -28,11 +38,12 @@ export default class Message {
     getMessageObject(userTopShown){
 
         const message = {
-            content: this.content,
             mDateString: this.getMessageViewDateString(),
             dateString: this.getDateString(),
             date: this.date,
-            bySelf: this.uid === chatSocket.userSelf.uid
+            bySelf: this.uid === chatSocket.userSelf.uid,
+            type: this.type,
+            content: this.content
         };
         /*
             if the user top should be shown, the property is added
@@ -90,24 +101,34 @@ export default class Message {
     }
 
     getChatViewMsgString(){
-        let msgString = this.content;
-        /*
-            Wenn string länger als 18 Zeichen, wird verkürzt
-         */
-        if(msgString.length>18)
-            msgString = msgString.substr(0,18) + '...';
-        /*
-            wenn selbst geschrieben, steht Du: davor
-         */
-        if(this.uid === chatSocket.userSelf.uid)
-            return `Du: ${msgString}`;
 
-        else if(this.chat.type === 'normalchat')
-            return this.content;
+        switch(this.type) {
 
-        else
-            return `${chatSocket.users.get(this.uid).username}: ${msgString}`;
+            case globalData.messageTypes.normalMessage: {
 
+                let msgString = this.content.text;
+                /*
+                    Wenn string länger als 18 Zeichen, wird verkürzt
+                 */
+                if(msgString.length > 18)
+                msgString = msgString.substr(0, 18) + '...';
+                /*
+                    wenn selbst geschrieben, steht Du: davor
+                 */
+                if(this.uid === chatSocket.userSelf.uid)
+                    return`Du: ${msgString}`;
+
+                else if (this.chat.type === 'normalchat')
+                    return this.content.text;
+
+                else
+                    return `${chatSocket.users.get(this.uid).username}: ${msgString}`;
+            }
+            case globalData.messageTypes.statusmessage: {
+
+                return'';
+            }
+        }
     }
 
     getMessageViewDateString(){
@@ -189,14 +210,6 @@ export default class Message {
         this._mid = value;
     }
 
-    get content() {
-        return this._content;
-    }
-
-    set content(value) {
-        this._content = value;
-    }
-
     get uid() {
         return this._uid;
     }
@@ -219,5 +232,21 @@ export default class Message {
 
     set chat(value) {
         this._chat = value;
+    }
+
+    get type() {
+        return this._type;
+    }
+
+    set type(value) {
+        this._type = value;
+    }
+
+    get content() {
+        return this._content;
+    }
+
+    set content(value) {
+        this._content = value;
     }
 }
