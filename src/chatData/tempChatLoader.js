@@ -3,6 +3,7 @@ import chatSocket from "./chatSocket";
 import User from "./User";
 import Message from "./message/message";
 import {getDispatch} from 'reactn';
+import {globalData} from "../global/globalData";
 
 export default class TempChatLoader{
 
@@ -42,7 +43,7 @@ export default class TempChatLoader{
     /*
         a new normalChat is created out of the current tempChat
      */
-    async createNewNormalChat(message){
+    async createNewNormalChat(msg){
 
         /*
             the request gets sent to the server
@@ -59,7 +60,14 @@ export default class TempChatLoader{
             body: JSON.stringify({
                 uid: otherUid,
                 username: otherUsername,
-                message: message
+                message: {
+                    type: globalData.messageTypes.normalMessage,
+                    content: {
+                        text: msg,
+                        mentions: [],
+                        media: []
+                    }
+                }
             })
         };
 
@@ -86,7 +94,19 @@ export default class TempChatLoader{
             /*
                 message is added to chat
              */
-            newChat.messages.add(data.mid,new Message(data.mid,message,chatSocket.userSelf.uid,newChat,new Date(Date.now())));
+            const message = new Message(
+                data.mid,
+                chatSocket.userSelf.uid,
+                newChat,
+                new Date(Date.now()),
+                globalData.messageTypes.normalMessage,
+                {
+                    text: msg,
+                    mentions: [],
+                    media: []
+                }
+            );
+            newChat.messages.add(message.mid,message);
 
             //args: chat
             getDispatch().addChat(newChat);
