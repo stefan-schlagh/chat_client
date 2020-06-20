@@ -76,10 +76,21 @@ class ChatSocket{
                 gets chat of msg
                 adds this message to chat
             */
-            const chat = this.getChat(data.type,data.id);
+            const chat = this.getChat(
+                data.chat.type,
+                data.chat.id
+            );
             if(chat !== null) {
-                const isCurrentChat = this.isCurrentChat(chat.type, chat.id);
-                chat.addMessage(data.uid, data.content, data.mid);
+                const isCurrentChat = this.isCurrentChat(
+                    chat.type,
+                    chat.id
+                );
+                chat.addMessage(
+                    data.uid,
+                    data.mid,
+                    data.type,
+                    data.content
+                );
                 /*
                     hasNewMsg gets updated
                     if current chat --> false
@@ -92,21 +103,37 @@ class ChatSocket{
                 /*
                     new message event is triggered
                  */
-                this.event.trigger('new message', data.type, data.id);
+                this.event.trigger(
+                    'new message',
+                    data.chat.type,
+                    data.chat.id
+                );
             }
         });
         /*
             started typing
          */
         this.socket.on('started typing',data => {
-            const chat = this.getChat(data.type,data.id);
+            /*
+                chat is searched
+             */
+            const chat = this.getChat(
+                data.chat.type,
+                data.chat.id
+            );
             chat.startedTyping(data.uid);
         });
         /*
             stopped typing
          */
         this.socket.on('stopped typing',data => {
-            const chat = this.getChat(data.type,data.id);
+            /*
+                chat is searched
+             */
+            const chat = this.getChat(
+                data.chat.type,
+                data.chat.id
+            );
             chat.stoppedTyping(data.uid);
         });
         /*

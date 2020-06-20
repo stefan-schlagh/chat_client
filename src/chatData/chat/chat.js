@@ -152,9 +152,16 @@ export class Chat {
     /*
         neue Nachricht wird hinzugefügt
      */
-    addMessage(uid,content,mid){
+    addMessage(uid,mid,type,content){
         const message =
-            new Message(mid,content,uid,this,new Date(Date.now()));
+            new Message(
+                mid,
+                uid,
+                this,
+                new Date(Date.now()),
+                type,
+                content
+            );
         this.messages.add(mid,message);
         getDispatch().newMsg(
             this,

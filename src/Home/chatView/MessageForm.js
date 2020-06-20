@@ -4,6 +4,7 @@ import 'emoji-mart/css/emoji-mart.css';
 import { Picker } from 'emoji-mart';
 import {withRouter} from "react-router-dom";
 import Dummy from "../../utilComp/Dummy";
+import {globalData} from "../../global/globalData";
 
 import './messageForm.scss';
 
@@ -92,7 +93,16 @@ class MessageForm extends Component{
                             message is added to chat
                          */
                         const chat = chatSocket.getChat(this.props.chatType, this.props.chatId);
-                        chat.addMessage(chatSocket.userSelf.uid, message, mid);
+                        chat.addMessage(
+                            chatSocket.userSelf.uid,
+                            mid,
+                            globalData.messageTypes.normalMessage,
+                            {
+                                text: message,
+                                mentions: [],
+                                media: []
+                            }
+                        );
                     })
                     .catch(err => {});
             }
@@ -110,7 +120,12 @@ class MessageForm extends Component{
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                msg: msg
+                type: globalData.messageTypes.normalMessage,
+                content: {
+                    text: msg,
+                    mentions: [],
+                    media: []
+                }
             })
         };
         const response = await fetch('/message', config);
@@ -143,7 +158,8 @@ class MessageForm extends Component{
     render() {
         return(
             <Dummy>
-                <form onSubmit={this.onSubmit} className="msg-form">
+                <form onSubmit={this.onSubmit}
+                      className="msg-form">
                     <div className="message-input">
                         <input autoComplete="off"
                                placeholder="Nachricht:"
