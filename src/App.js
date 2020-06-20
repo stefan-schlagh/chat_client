@@ -11,6 +11,7 @@ import PrivateRoute from "./Auth/PrivateRoute";
 import {AuthContext} from "./Auth/AuthContext";
 import {resetChatSocket} from "./chatData/chatSocket";
 import Chat from "./Home/Home";
+import {fetchData} from "./global/globalData";
 import 'popper.js';
 
 import 'bootstrap';
@@ -32,6 +33,8 @@ function updateUserSelf(data,dispatch){
 
 async function isLoggedIn(){
     try {
+        await fetchData();
+
         const config = {
             method: 'GET',
             headers: {

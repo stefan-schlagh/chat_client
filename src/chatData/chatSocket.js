@@ -1,8 +1,9 @@
 import io from 'socket.io-client';
 import User from "./User";
 import BinSearchArray from "../util/BinSearch";
-import {GroupChat, NormalChat} from "./Chat";
-import Message from "./Message";
+import {NormalChat} from './chat/normalChat';
+import {GroupChat} from "./chat/groupChat";
+import Message from "./message/message";
 import EventHandler from "../util/Event";
 import TempChatLoader from "./tempChatLoader";
 import {getGlobal,getDispatch} from 'reactn';

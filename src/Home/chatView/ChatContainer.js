@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import MessageForm from "./MessageForm";
 import chatSocket from "../../chatData/chatSocket";
 import Message from "./Message";
-import {isDifferentDay} from '../../chatData/Message'
+import {isDifferentDay} from '../../chatData/message/message'
 
 import './chatContainer.scss';
 

@@ -1,4 +1,4 @@
-import chatSocket from "./chatSocket";
+import chatSocket from "../chatSocket";
 
 export function isDifferentDay(date1,date2){
     return date1.getDay() !== date2.getDay()

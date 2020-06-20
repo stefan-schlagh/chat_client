@@ -1,7 +1,7 @@
-import {NormalChat} from "./Chat";
+import {NormalChat} from "./chat/normalChat";
 import chatSocket from "./chatSocket";
 import User from "./User";
-import Message from "./Message";
+import Message from "./message/message";
 import {getDispatch} from 'reactn';
 
 export default class TempChatLoader{
