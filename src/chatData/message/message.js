@@ -1,5 +1,6 @@
 import chatSocket from "../chatSocket";
 import {globalData} from "../../global/globalData";
+import {statusMessages} from "./statusMessage";
 
 export function isDifferentDay(date1,date2){
     return date1.getDay() !== date2.getDay()
@@ -60,10 +61,10 @@ export default class Message {
         /*
             is the message written by the user self?
          */
-        if(this.uid === chatSocket.userSelf.uid)
+        if(this.isBySelf())
             return {
                 uid: this.uid,
-                username: 'Du:',
+                username: 'Du',
                 color: chatSocket.userSelf.color
             };
         /*
@@ -72,9 +73,15 @@ export default class Message {
         const user = chatSocket.users.get(this.uid);
         return {
             uid: this.uid,
-            username: user.username + ':',
+            username: user.username,
             color: user.color
         };
+    }
+    /*
+        is the message by the client self?
+     */
+    isBySelf(){
+        return this.uid === chatSocket.userSelf.uid;
     }
 
     getChatViewDateString(){
@@ -102,6 +109,16 @@ export default class Message {
 
     getChatViewMsgString(){
 
+        const getStatusMsgString = (s2) => {
+
+            return this.getUserTop().username +
+            (this.isBySelf() ? " hast " : " hat ") +
+            (this.content.passiveUsers.length > 0
+                ? (this.content.passiveUsers.length + " Benutzer ")
+                : ""
+            ) + s2;
+        };
+
         switch(this.type) {
 
             case globalData.messageTypes.normalMessage: {
@@ -124,9 +141,11 @@ export default class Message {
                 else
                     return `${chatSocket.users.get(this.uid).username}: ${msgString}`;
             }
-            case globalData.messageTypes.statusmessage: {
+            case globalData.messageTypes.statusMessage: {
 
-                return'';
+                return getStatusMsgString(
+                    statusMessages[this.content.type]
+                );
             }
         }
     }
