@@ -4,6 +4,12 @@ import ChatContainer from "./chatContainer/ChatContainer";
 import chatSocket from "../../chatData/chatSocket";
 import {infoHeaderCenter} from "../Header/HeaderLeft";
 import GroupChatInfo from "./groupChatInfo/GroupChatInfo";
+import {
+    AddressNotValid,
+    ChatNotExisting,
+    NoAuthorization,
+    NoMemberInPublicChat
+} from "./chatViewErrorMessages";
 
 export const groupChatErrorCode = {
     none: 0,
@@ -151,9 +157,7 @@ export default class GroupChatView extends Component{
              */
             if (this.state.error === groupChatErrorCode.nan) {
                 return (
-                    <div>
-                        <h2>ungültige Addresse</h2>
-                    </div>
+                    <AddressNotValid/>
                 );
             }
             /*
@@ -187,23 +191,17 @@ export default class GroupChatView extends Component{
 
                     case groupChatErrorCode.notPartOfChat:
                         return (
-                            <div>
-                                <h2>Du bist nicht Mitglied in diesem chat jetzt beitreten</h2>
-                            </div>
+                            <NoMemberInPublicChat/>
                         );
 
                     case groupChatErrorCode.private:
                         return (
-                            <div>
-                                <h2>Du bist nicht dazu berechtigt diesen chat anzusehen</h2>
-                            </div>
+                            <NoAuthorization/>
                         );
 
                     case groupChatErrorCode.chatNotExisting:
                         return (
-                            <div>
-                                <h2>Dieser Chat existiert nicht</h2>
-                            </div>
+                            <ChatNotExisting/>
                         );
 
                     default:
