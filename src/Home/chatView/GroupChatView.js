@@ -1,6 +1,6 @@
 import React,{Component} from "reactn";
 import ChatViewLoader from "./ChatViewLoader";
-import ChatContainer from "./ChatContainer";
+import ChatContainer from "./chatContainer/ChatContainer";
 import chatSocket from "../../chatData/chatSocket";
 import {infoHeaderCenter} from "../Header/HeaderLeft";
 import GroupChatInfo from "./groupChatInfo/GroupChatInfo";

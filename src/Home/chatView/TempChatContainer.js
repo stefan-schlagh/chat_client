@@ -1,5 +1,5 @@
 import React,{Component} from "react";
-import MessageForm from "./MessageForm";
+import MessageForm from "./chatContainer/MessageForm";
 import chatSocket from "../../chatData/chatSocket";
 
 export default class TempChatContainer extends Component{

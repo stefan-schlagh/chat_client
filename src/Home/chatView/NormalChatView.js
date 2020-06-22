@@ -1,7 +1,7 @@
 import React, {Component} from "reactn";
 import chatSocket from "../../chatData/chatSocket";
 import ChatViewLoader from "./ChatViewLoader";
-import ChatContainer from "./ChatContainer";
+import ChatContainer from "./chatContainer/ChatContainer";
 import TempChatContainer from "./TempChatContainer";
 import {infoHeaderCenter} from "../Header/HeaderLeft";
 import {UserErrorCode,getUserNormalChat} from "../../chatData/User";

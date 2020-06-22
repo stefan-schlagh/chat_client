@@ -1,10 +1,10 @@
 import React,{Component} from "react";
-import chatSocket from "../../chatData/chatSocket";
+import chatSocket from "../../../chatData/chatSocket";
 import 'emoji-mart/css/emoji-mart.css';
 import { Picker } from 'emoji-mart';
 import {withRouter} from "react-router-dom";
-import Dummy from "../../utilComp/Dummy";
-import {globalData} from "../../global/globalData";
+import Dummy from "../../../utilComp/Dummy";
+import {globalData} from "../../../global/globalData";
 
 import './messageForm.scss';
 

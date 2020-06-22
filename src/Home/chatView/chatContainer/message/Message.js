@@ -1,6 +1,6 @@
 import React,{Component} from "react";
-import Colors from "../../util/Color";
-import {globalData} from "../../global/globalData";
+import Colors from "../../../../util/Color";
+import {globalData} from "../../../../global/globalData";
 
 import './message.scss'
 
