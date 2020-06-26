@@ -3,10 +3,10 @@ import User from "./User";
 import BinSearchArray from "../util/BinSearch";
 import {NormalChat} from './chat/normalChat';
 import {GroupChat} from "./chat/groupChat";
-import Message from "./message/message";
 import EventHandler from "../util/Event";
 import TempChatLoader from "./tempChatLoader";
 import {getGlobal,getDispatch} from 'reactn';
+import {makeRequest} from "../global/requests";
 
 class ChatSocket{
 
@@ -60,7 +60,7 @@ class ChatSocket{
         /*
             userInfo wird an client gesendet
          */
-        this.socket.emit('auth', uid, username);
+        this.socket.emit('auth', getGlobal().authTokens);
         /*
             is called when user is initialized
          */
@@ -172,7 +172,7 @@ class ChatSocket{
         /*
             chats are requested
          */
-        const response = await fetch('/chats', config);
+        const response = await makeRequest('/chats', config);
 
         if(response.status === 200) {
 

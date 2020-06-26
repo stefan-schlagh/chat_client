@@ -4,6 +4,7 @@ import User from "./User";
 import Message from "./message/message";
 import {getDispatch} from 'reactn';
 import {globalData} from "../global/globalData";
+import {makeRequest} from "../global/requests";
 
 export default class TempChatLoader{
 
@@ -71,7 +72,7 @@ export default class TempChatLoader{
             })
         };
 
-        const response = await fetch('/user/chat', config);
+        const response = await makeRequest('/user/chat', config);
 
         if(response.ok){
 

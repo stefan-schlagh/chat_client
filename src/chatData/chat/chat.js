@@ -2,6 +2,7 @@ import BinSearchArray from "../../util/BinSearch";
 import Message from "../message/message";
 import EventHandler from "../../util/Event";
 import {getDispatch} from 'reactn';
+import {makeRequest} from "../../global/requests";
 
 export class Chat {
 
@@ -70,7 +71,7 @@ export class Chat {
                     num: num
                 })
             };
-            const response = await fetch('/message/load', config);
+            const response = await makeRequest('/message/load', config);
 
             if (response.ok) {
 

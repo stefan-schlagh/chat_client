@@ -2,6 +2,7 @@ import React,{Component} from "react";
 import ChatViewLoader from "../ChatViewLoader";
 import {Link,withRouter} from 'react-router-dom';
 import chatSocket from "../../../chatData/chatSocket";
+import {makeRequest} from "../../../global/requests";
 
 import'./groupChatInfo.scss';
 
@@ -32,21 +33,27 @@ class GroupChatInfo extends Component{
 
         const loadChatInfoI = async() =>{
 
-            const config = {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json'
+            try {
+                const config = {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                };
+                const response = await makeRequest('/group/' + this.props.gcid + '/', config);
+
+                if (response.ok) {
+
+                    let data = await response.json();
+
+                    this.setState({
+                        data: data
+                    });
                 }
-            };
-            const response = await fetch('/group/' + this.props.gcid + '/',config);
-
-            if(response.ok){
-
-                let data = await response.json();
-
+            }catch (err) {
                 this.setState({
-                    data: data
-                });
+                    error: true
+                })
             }
         };
 

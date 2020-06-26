@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import {tabs} from "../NewChat";
 import UserItem from "./UserItem";
 import Dummy from "../../../utilComp/Dummy";
+import {makeRequest} from "../../../global/requests";
 
 import './chooseUser.scss';
 
@@ -118,7 +119,7 @@ export default class ChooseUser extends Component{
                     start: this.numAlreadyLoaded
                 })
             };
-            const response = await fetch('/user/noChat', config);
+            const response = await makeRequest('/user/noChat', config);
 
             if (response.ok) {
                 //return json

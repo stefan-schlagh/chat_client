@@ -2,6 +2,7 @@ import React,{Component} from "react";
 import {withRouter} from "react-router-dom";
 import SelectUsers from "./SelectUsers";
 import GroupInfoForm from "./GroupInfoForm";
+import {makeRequest} from "../../../global/requests";
 
 const tabs = {
     selectUsers: 0,
@@ -53,7 +54,7 @@ class NewGroup extends Component{
                     users: users
                 })
             };
-            const response = await fetch('/group/', config);
+            const response = await makeRequest('/group/', config);
             /*
                 if ok, modal is closed
              */

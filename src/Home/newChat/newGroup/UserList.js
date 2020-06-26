@@ -2,6 +2,7 @@ import React,{Component} from "react";
 import ReactDOM from 'react-dom';
 import UserItem from "./UserItem";
 import Dummy from "../../../utilComp/Dummy";
+import {makeRequest} from "../../../global/requests";
 
 const errorCode={
     none: 0,
@@ -67,7 +68,7 @@ export default class extends Component {
                     start: this.numAlreadyLoaded
                 })
             };
-            const response = await fetch('/user/', config);
+            const response = await makeRequest('/user/', config);
 
             if (response.ok) {
                 //return json

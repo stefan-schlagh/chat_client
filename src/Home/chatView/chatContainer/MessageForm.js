@@ -5,6 +5,7 @@ import { Picker } from 'emoji-mart';
 import {withRouter} from "react-router-dom";
 import Dummy from "../../../utilComp/Dummy";
 import {globalData} from "../../../global/globalData";
+import {makeRequest} from "../../../global/requests";
 
 import './messageForm.scss';
 
@@ -128,7 +129,7 @@ class MessageForm extends Component{
                 }
             })
         };
-        const response = await fetch('/message', config);
+        const response = await makeRequest('/message', config);
 
         if (response.ok) {
 
