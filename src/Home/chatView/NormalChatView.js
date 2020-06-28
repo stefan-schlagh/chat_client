@@ -64,7 +64,7 @@ export default class NormalChatView extends Component{
                     )
                 }else if(this.state.error === UserErrorCode.tempChat){
                     return(
-                        <TempChatContainer />
+                        <TempChatContainer uid={this.state.uid}/>
                     )
                 }else if(this.state.error === UserErrorCode.blocked){
                     return(

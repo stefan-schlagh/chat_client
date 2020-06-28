@@ -46,8 +46,3 @@
     }
   }
 }
-@media screen and (max-width: 765px){
-  .searchUser-list {
-    @include resultListMobile(90px);
-  }
-}

@@ -105,7 +105,7 @@ export default class SelectUsers extends Component{
                               loadUsers={this.props.loadUsers}
                     />
                     :
-                    <ul className="selectUsers-list only-selected result-list">
+                    <ul className="selectUsers only-selected">
                         {this.state.selectedUsers.map((item,index) => (
                             <UserItem
                                 key={index}

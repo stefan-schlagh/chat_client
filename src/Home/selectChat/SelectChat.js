@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import Dummy from "../../utilComp/Dummy";
 import UserItem from "./UserItem";
 
+import './selectChat.scss';
+
 const errorCode={
     none: 0,
     error: 1
@@ -163,14 +165,26 @@ export default class SelectChat extends Component{
             )
         }
         if(this.state.searchResult.length > 0) {
-            /*
-                TODO: searchBox
-             */
             return (
                 <Dummy>
-                    <h5>Ergebnisse:</h5>
+                    {/*
+                        if showSearchBar is true, it gets shown
+                         */
+                        this.props.showSearchBar ?
+                            <div className="user-top">
+                                <div className="searchUser">
+                                    <input type="text"
+                                           name="newChat-searchUser"
+                                           className="form-control"
+                                           placeholder="Benutzer suchen"
+                                           onChange={this.searchChanged}
+                                    />
+                                </div>
+                            </div>
+                            : null
+                    }
                     <ul
-                        className="searchUser-list result-list"
+                        className="selectChat"
                         ref={this.assignListRef}>
                         {this.state.searchResult.map((item, index) => (
                             <UserItem

@@ -23,7 +23,8 @@ export default class TempChatContainer extends Component{
         chatSocket.temporaryChat.show();
     }
     componentDidUpdate(prevProps, prevState, snapshot) {
-        chatSocket.temporaryChat.update();
+        if(prevProps.uid !== this.props.uid)
+            chatSocket.temporaryChat.update();
     }
     componentWillUnmount() {
         chatSocket.temporaryChat.hide();

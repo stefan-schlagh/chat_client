@@ -145,7 +145,7 @@ export default class extends Component {
                            onChange={this.searchChanged}
                     />
                 </form>
-                <ul className="selectUsers-list result-list"
+                <ul className="selectUsers"
                     ref={this.assignListRef}
                 >
                     {this.state.searchResult.length > 0 ?

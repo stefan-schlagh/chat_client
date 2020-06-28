@@ -28,9 +28,30 @@ $cUnderlineGrey: #888;
   }
 }
 
-.selectUsers-list {
+ul.selectUsers {
+
+  @extend .v-list;
+
+  padding: 1rem 1rem 0;
+  max-width: 800px;
+  overflow-y: auto;
 
   li {
+    @extend .v-list-item;
+
+    padding: 0 8px;
+    box-sizing: content-box;
+    display: block;
+    height: 40px;
+    cursor: pointer;
+    position: relative;
+
+    a {
+      padding: 8px 0;
+      display: inline-block;
+      width: 100%;
+      height: 100%;
+    }
 
     &:hover .user-select,.user-select.selected{
       background-color: $cNotificationBlue;
@@ -62,11 +83,19 @@ $cUnderlineGrey: #888;
     }
   }
 }
+@media screen and (min-width: 765px){
+  ul.selectUsers {
+    width: 80%;
+    margin-top: 20px;
+    height: 400px;
+    overflow-y: auto;
+  }
+}
 @media screen and (max-width: 765px){
-  .selectUsers-list {
+  ul.selectUsers {
     @include resultListMobile(110px);
   }
-  .selectUsers-list.only-selected {
+  ul.selectUsers.only-selected {
     @include resultListMobile(45px);
   }
 }
