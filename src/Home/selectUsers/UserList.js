@@ -1,8 +1,8 @@
 import React,{Component} from "react";
 import ReactDOM from 'react-dom';
 import UserItem from "./UserItem";
-import Dummy from "../../../utilComp/Dummy";
-import {makeRequest} from "../../../global/requests";
+import Dummy from "../../utilComp/Dummy";
+import {makeRequest} from "../../global/requests";
 
 const errorCode={
     none: 0,
@@ -56,19 +56,11 @@ export default class extends Component {
      */
     loadUsers = async () => {
         try {
-            const config = {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    search: this.state.searchValue,
-                    limit: 10,
-                    start: this.numAlreadyLoaded
-                })
-            };
-            const response = await makeRequest('/user/', config);
+
+            const response = await this.props.loadUsers(
+                this.state.searchValue,
+                this.numAlreadyLoaded
+            );
 
             if (response.ok) {
                 //return json
@@ -108,6 +100,7 @@ export default class extends Component {
                     error: errorCode.error
                 });
             }
+
         } catch (error) {
             this.setState({
                 error: errorCode.error

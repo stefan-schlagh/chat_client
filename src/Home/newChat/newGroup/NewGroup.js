@@ -1,6 +1,6 @@
 import React,{Component} from "react";
 import {withRouter} from "react-router-dom";
-import SelectUsers from "./SelectUsers";
+import SelectUsers from "../../selectUsers/SelectUsers";
 import GroupInfoForm from "./GroupInfoForm";
 import {makeRequest} from "../../../global/requests";
 
@@ -66,6 +66,29 @@ class NewGroup extends Component{
         }
     };
 
+    loadUsers = async (
+        searchValue,
+        numAlreadyLoaded
+    ) => {
+
+        const config = {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                search: searchValue,
+                limit: 10,
+                start: numAlreadyLoaded
+            })
+        };
+        /*
+            response is returned
+         */
+        return await makeRequest('/user/', config);
+    };
+
     render() {
 
         switch(this.state.currentTab){
@@ -74,7 +97,9 @@ class NewGroup extends Component{
                 return (
                     <SelectUsers
                         onNext={this.showEnterChatInfo}
-                    />);
+                        loadUsers={this.loadUsers}
+                    />
+                );
 
             case tabs.enterChatInfo:
                 return(

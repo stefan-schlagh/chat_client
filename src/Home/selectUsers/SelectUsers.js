@@ -1,7 +1,7 @@
 import React,{Component} from "react";
 import UserList from "./UserList";
 import UserItem from "./UserItem";
-import Dummy from "../../../utilComp/Dummy";
+import Dummy from "../../utilComp/Dummy";
 
 import './selectUsers.scss';
 
@@ -102,8 +102,9 @@ export default class SelectUsers extends Component{
                     <UserList selectUser={this.selectUser}
                               deselectUser={this.deselectUser}
                               isUserSelected={this.isUserSelected}
+                              loadUsers={this.props.loadUsers}
                     />
-                :
+                    :
                     <ul className="selectUsers-list only-selected result-list">
                         {this.state.selectedUsers.map((item,index) => (
                             <UserItem
