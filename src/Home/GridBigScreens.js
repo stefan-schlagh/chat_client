@@ -12,8 +12,7 @@ import ModalRouterBigScreens from "./ModalRouterBigScreens";
 
 export default function GridBigScreens(props){
 
-    let { path, url } = useRouteMatch();
-    let params = useParams();
+    const { path } = useRouteMatch();
 
     return(
         <div className="row justify-content-end main-container">

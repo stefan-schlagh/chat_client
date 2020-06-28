@@ -3,6 +3,7 @@ import {
     BrowserRouter as Router,
     Switch,
     Route,
+    Redirect,
     useLocation
 } from "react-router-dom";
 import Login from "./Auth/Login";
@@ -37,7 +38,9 @@ export default function App() {
                 <Route path={"/about"}>
                     <h1>about</h1>
                 </Route>
-                <PrivateRoute exact path="/" component={Chat}/>
+                <Route exact path="/">
+                    <Redirect to={"/chat"}/>
+                </Route>
                 <Route path="*">
                     <NoMatch/>
                 </Route>
