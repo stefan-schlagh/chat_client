@@ -28,74 +28,82 @@ $cUnderlineGrey: #888;
   }
 }
 
-ul.selectUsers {
+div.selectUsers {
 
-  @extend .v-list;
-
-  padding: 1rem 1rem 0;
-  max-width: 800px;
   overflow-y: auto;
 
-  li {
-    @extend .v-list-item;
+  ul.selectUsers {
 
-    padding: 0 8px;
-    box-sizing: content-box;
-    display: block;
-    height: 40px;
-    cursor: pointer;
-    position: relative;
+    @extend .v-list;
 
-    a {
-      padding: 8px 0;
-      display: inline-block;
-      width: 100%;
-      height: 100%;
-    }
+    padding: 1rem 1rem 0;
+    max-width: 800px;
+    overflow-y: auto;
 
-    &:hover .user-select,.user-select.selected{
-      background-color: $cNotificationBlue;
-      border: none;
-      transition: 0.3s;
-    }
-    .username {
-      padding: 0.5rem !important;
-    }
-    .user-select {
-      position: absolute;
-      height: 30px;
-      width: 30px;
-      top: 5px;
-      right: 15px;
-      border: 1px solid $cLightGrey;
-      border-radius: 15px;
+    li {
+      @extend .v-list-item;
 
-      i {
-        position: absolute;
-        top: 5px;
-        left: 4px;
-        display: none;
-      }
-    }
-    &:hover i,.user-select.selected i {
+      padding: 0 8px;
+      box-sizing: content-box;
       display: block;
-      color: white;
+      height: 40px;
+      cursor: pointer;
+      position: relative;
+
+      a {
+        padding: 8px 0;
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+      }
+
+      &:hover .user-select, .user-select.selected {
+        background-color: $cNotificationBlue;
+        border: none;
+        transition: 0.3s;
+      }
+
+      .username {
+        padding: 0.5rem !important;
+      }
+
+      .user-select {
+        position: absolute;
+        height: 30px;
+        width: 30px;
+        top: 5px;
+        right: 15px;
+        border: 1px solid $cLightGrey;
+        border-radius: 15px;
+
+        i {
+          position: absolute;
+          top: 5px;
+          left: 4px;
+          display: none;
+        }
+      }
+
+      &:hover i, .user-select.selected i {
+        display: block;
+        color: white;
+      }
     }
   }
 }
+
 @media screen and (min-width: 765px){
-  ul.selectUsers {
+  div.selectUsers {
     width: 80%;
     margin-top: 20px;
     height: 400px;
-    overflow-y: auto;
   }
 }
 @media screen and (max-width: 765px){
-  ul.selectUsers {
+  div.selectUsers {
     @include resultListMobile(110px);
   }
-  ul.selectUsers.only-selected {
+  div.selectUsers.only-selected {
     @include resultListMobile(45px);
   }
 }

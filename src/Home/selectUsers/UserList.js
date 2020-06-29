@@ -2,7 +2,7 @@ import React,{Component} from "react";
 import ReactDOM from 'react-dom';
 import UserItem from "./UserItem";
 import Dummy from "../../utilComp/Dummy";
-import {makeRequest} from "../../global/requests";
+import InfiniteScroll from 'react-infinite-scroller';
 
 const errorCode={
     none: 0,
@@ -11,13 +11,7 @@ const errorCode={
 
 export default class extends Component {
 
-    /*
-        the number of results already loaded
-     */
-    _numAlreadyLoaded = 0;
-    _reachedBottom = false;
-    _listRef;
-    _listNode;
+    scrollParentRef
 
     constructor(props) {
         super(props);
@@ -30,26 +24,20 @@ export default class extends Component {
                 the last search result received from the server
              */
             searchResult: [],
+            error: errorCode.none,
             /*
-                should loader at the bottom be shown?
+                are there items left?
              */
-            showLoaderBottom: false,
-            error: errorCode.none
+            hasMore: true
         }
     }
-    /*
-        search gets refreshed
-     */
-    refreshSearch = () => {
-        this.numAlreadyLoaded = 0;
-        this.loadUsers().then(r => {});
-    };
 
     searchChanged = event => {
         this.setState({
-            searchValue: event.target.value
+            searchValue: event.target.value,
+            searchResult: [],
+            hasMore: true
         });
-        this.refreshSearch();
     };
     /*
         more users are loaded
@@ -59,38 +47,21 @@ export default class extends Component {
 
             const response = await this.props.loadUsers(
                 this.state.searchValue,
-                this.numAlreadyLoaded
+                this.state.searchResult.length
             );
 
             if (response.ok) {
                 //return json
                 let data = await response.json();
 
-                if(data.length === 0 && this.numAlreadyLoaded === 0){
+                if(data.length === 0){
                     this.setState({
-                        searchResult: []
-                    });
-                }else if(data.length === 0){
-                    this.reachedBottom = true;
+                        hasMore: false
+                    })
                 } else {
-
-                    let scrollToBottomBuffer = this.getScrollToBottom();
-
-                    if(this.numAlreadyLoaded === 0)
-                        this.setState({
-                            searchResult: data
-                        });
-                    else
-                        this.setState(state => ({
-                            searchResult: state.searchResult.concat(data)
-                        }));
-                    this.numAlreadyLoaded += data.length;
-                    /*
-                        if scrollToBottom is 0, the next result is requested
-                     */
-                    if(scrollToBottomBuffer === 0){
-                        this.loadUsers(this.props.searchValue);
-                    }
+                    this.setState(state => ({
+                        searchResult: state.searchResult.concat(data)
+                    }));
                 }
                 this.setState({
                     error: errorCode.none
@@ -120,20 +91,6 @@ export default class extends Component {
         this.props.deselectUser(user.uid);
     };
 
-    assignListRef = target => {
-        this.listRef = target;
-    };
-
-    setScrollToBottom = val => {
-        this.listNode.scrollTop = this.listNode.scrollHeight - this.listNode.offsetHeight - val;
-    };
-
-    getScrollToBottom  = () => {
-        if(this.listNode !== null)
-            return this.listNode.scrollHeight - this.listNode.offsetHeight - this.listNode.scrollTop;
-        return 0;
-    };
-
     render() {
         return(
             <Dummy>
@@ -145,79 +102,51 @@ export default class extends Component {
                            onChange={this.searchChanged}
                     />
                 </form>
-                <ul className="selectUsers"
-                    ref={this.assignListRef}
+                <div
+                    className="selectUsers"
+                    ref={ref => this.scrollParentRef = ref}
                 >
-                    {this.state.searchResult.length > 0 ?
-
-                        this.state.searchResult.map((item, index) => (
-                            <UserItem
-                                key={index}
-                                index={index}
-                                uid={item.uid}
-                                username={item.username}
-                                selectUser={this.selectUser}
-                                deselectUser={this.deselectUser}
-                                isSelected={this.props.isUserSelected(item.uid)}
-                            />
-                        ))
-
-                        :
-
-                        <div className="alert alert-warning" role="alert">
-                            Nichts gefunden!
-                        </div>
-
-                    }
-                </ul>
+                    <InfiniteScroll
+                        pageStart={0}
+                        loadMore={this.loadUsers}
+                        hasMore={this.state.hasMore}
+                        loader={
+                            <div
+                                className="spinner-border text-secondary"
+                                role="status"
+                                key={0}
+                            >
+                                <span className="sr-only">
+                                    Loading...
+                                </span>
+                            </div>
+                        }
+                        useWindow={false}
+                        getScrollParent={() => this.scrollParentRef}
+                    >
+                        <ul className="selectUsers">
+                            {this.state.searchResult.map((item, index) => (
+                                <UserItem
+                                    key={index}
+                                    index={index}
+                                    uid={item.uid}
+                                    username={item.username}
+                                    selectUser={this.selectUser}
+                                    deselectUser={this.deselectUser}
+                                    isSelected={this.props.isUserSelected(item.uid)}
+                                />
+                            ))}
+                            {this.state.searchResult.length === 0 ?
+                                <div key={1}>
+                                    Nichts gefunden!
+                                </div>
+                                :
+                                null
+                            }
+                        </ul>
+                    </InfiniteScroll>
+                </div>
             </Dummy>
         )
-    }
-
-    componentDidMount() {
-        this.listNode = ReactDOM.findDOMNode(this.listRef);
-        this.refreshSearch();
-    }
-
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        this.listNode = ReactDOM.findDOMNode(this.listRef);
-        if(this.props.searchValue !== prevProps.searchValue)
-            this.refreshSearch();
-    }
-
-    componentWillUnmount() {
-
-    }
-
-    get numAlreadyLoaded() {
-        return this._numAlreadyLoaded;
-    }
-
-    set numAlreadyLoaded(value) {
-        this._numAlreadyLoaded = value;
-    }
-
-    get reachedBottom() {
-        return this._reachedBottom;
-    }
-
-    set reachedBottom(value) {
-        this._reachedBottom = value;
-    }
-
-    get listRef() {
-        return this._listRef;
-    }
-
-    set listRef(value) {
-        this._listRef = value;
-    }
-
-    get listNode() {
-        return this._listNode;
-    }
-
-    set listNode(value) {
-        this._listNode = value;
     }
 }

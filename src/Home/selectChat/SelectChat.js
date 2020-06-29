@@ -1,7 +1,7 @@
 import React,{Component} from "react";
-import ReactDOM from 'react-dom';
 import Dummy from "../../utilComp/Dummy";
 import UserItem from "./UserItem";
+import InfiniteScroll from 'react-infinite-scroller';
 
 import './selectChat.scss';
 
@@ -17,13 +17,8 @@ const errorCode={
         loadChats: function(searchValue,numAlreadyLoaded)
  */
 export default class SelectChat extends Component{
-    /*
-        the number of results already loaded
-     */
-    _numAlreadyLoaded = 0;
-    _reachedBottom;
-    _listRef;
-    _listNode;
+
+    scrollParentRef;
 
     constructor(props) {
         super(props);
@@ -39,9 +34,9 @@ export default class SelectChat extends Component{
              */
             searchResult: [],
             /*
-                should loader at the bottom be shown?
+                are there items left?
              */
-            showLoaderBottom: false
+            hasMore: true
         };
     }
     /*
@@ -50,22 +45,10 @@ export default class SelectChat extends Component{
     searchChanged = (searchValue) => {
 
         this.setState({
-            searchValue: searchValue
+            searchValue: searchValue,
+            searchResult: [],
+            hasMore: true
         });
-        /*
-            new search result gets requested
-         */
-        this.numAlreadyLoaded = 0;
-        this.reachedBottom = false;
-
-        this.refreshSearch()
-    };
-    /*
-        search gets refreshed
-     */
-    refreshSearch = () => {
-        this.numAlreadyLoaded = 0;
-        this.loadChats().then(r => {});
     };
     /*
         more chats are loaded
@@ -75,38 +58,21 @@ export default class SelectChat extends Component{
 
             const response = await this.props.loadChats(
                 this.state.searchValue,
-                this.numAlreadyLoaded
+                this.state.searchResult.length
             );
 
             if (response.ok) {
                 //return json
                 let data = await response.json();
 
-                if(data.length === 0 && this.numAlreadyLoaded === 0){
+                if(data.length === 0){
                     this.setState({
-                        searchResult: []
-                    });
-                }else if(data.length === 0){
-                    this.reachedBottom = true;
+                        hasMore: false
+                    })
                 } else {
-
-                    let scrollToBottomBuffer = this.getScrollToBottom();
-
-                    if(this.numAlreadyLoaded === 0)
-                        this.setState({
-                            searchResult: data
-                        });
-                    else
-                        this.setState(state => ({
-                            searchResult: state.searchResult.concat(data)
-                        }));
-                    this.numAlreadyLoaded += data.length;
-                    /*
-                        if scrollToBottom is 0, the next result is requested
-                     */
-                    if(scrollToBottomBuffer === 0){
-                        this.loadChats();
-                    }
+                    this.setState(state => ({
+                        searchResult: state.searchResult.concat(data)
+                    }));
                 }
                 this.setState({
                     error: errorCode.none
@@ -123,34 +89,14 @@ export default class SelectChat extends Component{
         }
     };
 
-    assignListRef = target => {
-        this.listRef = target;
-    };
-
-    setScrollToBottom = val => {
-        this.listNode.scrollTop = this.listNode.scrollHeight - this.listNode.offsetHeight - val;
-    };
-
-    getScrollToBottom  = () => {
-        if(this.listNode !== null)
-            return this.listNode.scrollHeight - this.listNode.offsetHeight - this.listNode.scrollTop;
-        return 0;
-    };
-
-    componentDidMount() {
-        this.listNode = ReactDOM.findDOMNode(this.listRef);
-        this.refreshSearch();
-    }
-
     componentDidUpdate(prevProps, prevState, snapshot) {
-        this.listNode = ReactDOM.findDOMNode(this.listRef);
         /*
             is searchBar is not shown,
                 it is checked if searchValue has changed
          */
         if(!this.props.showSearchBar){
             if(this.props.searchValue !== prevProps.searchValue){
-                this.refreshSearch();
+                this.searchChanged(this.props.searchValue);
             }
         }
     }
@@ -159,12 +105,11 @@ export default class SelectChat extends Component{
 
         if(this.state.error === errorCode.error){
             return(
-                <div className="alert alert-danger" role="alert">
+                <div className="alert alert-danger" role="alert" key={0}>
                     Ein Fehler ist aufgetreten!
                 </div>
             )
         }
-        if(this.state.searchResult.length > 0) {
             return (
                 <Dummy>
                     {/*
@@ -177,66 +122,57 @@ export default class SelectChat extends Component{
                                            name="newChat-searchUser"
                                            className="form-control"
                                            placeholder="Benutzer suchen"
-                                           onChange={this.searchChanged}
+                                           onChange={(event) => {
+                                               this.searchChanged()
+                                           }}
                                     />
                                 </div>
                             </div>
                             : null
                     }
-                    <ul
+                    <div
                         className="selectChat"
-                        ref={this.assignListRef}>
-                        {this.state.searchResult.map((item, index) => (
-                            <UserItem
-                                key={index}
-                                uid={item.uid}
-                                username={item.username}
-                                hide={this.props.hide}
-                            />
-                        ))}
-                    </ul>
+                        ref={ref => this.scrollParentRef = ref}
+                    >
+                        <InfiniteScroll
+                            pageStart={0}
+                            loadMore={this.loadChats}
+                            hasMore={this.state.hasMore}
+                            loader={
+                                <div
+                                    className="spinner-border text-secondary"
+                                    role="status"
+                                    key={0}
+                                >
+                                    <span className="sr-only">
+                                        Loading...
+                                    </span>
+                                </div>
+                            }
+                            useWindow={false}
+                            getScrollParent={() => this.scrollParentRef}
+                            >
+                            <ul
+                                className="selectChat">
+                                {this.state.searchResult.map((item, index) => (
+                                    <UserItem
+                                        key={index}
+                                        uid={item.uid}
+                                        username={item.username}
+                                        hide={this.props.hide}
+                                    />
+                                ))}
+                                {this.state.searchResult.length === 0 ?
+                                    <div key={1}>
+                                        Nichts gefunden!
+                                    </div>
+                                    :
+                                    null
+                                }
+                            </ul>
+                        </InfiniteScroll>
+                    </div>
                 </Dummy>
             );
-        }else{
-            return(
-                <ul className="result-list">
-                    <div className="alert alert-warning" role="alert">
-                        Nichts gefunden!
-                    </div>
-                </ul>
-            )
-        }
-    }
-
-    get numAlreadyLoaded() {
-        return this._numAlreadyLoaded;
-    }
-
-    set numAlreadyLoaded(value) {
-        this._numAlreadyLoaded = value;
-    }
-
-    get reachedBottom() {
-        return this._reachedBottom;
-    }
-
-    set reachedBottom(value) {
-        this._reachedBottom = value;
-    }
-
-    get listRef() {
-        return this._listRef;
-    }
-
-    set listRef(value) {
-        this._listRef = value;
-    }
-
-    get listNode() {
-        return this._listNode;
-    }
-
-    set listNode(value) {
-        this._listNode = value;
     }
 }
