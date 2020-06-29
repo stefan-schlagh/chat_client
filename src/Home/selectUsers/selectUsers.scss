@@ -32,6 +32,10 @@ div.selectUsers {
 
   overflow-y: auto;
 
+  .loader, .nothingFound {
+    margin: auto;
+  }
+
   ul.selectUsers {
 
     @extend .v-list;

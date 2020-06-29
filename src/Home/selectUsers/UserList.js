@@ -111,14 +111,16 @@ export default class extends Component {
                         loadMore={this.loadUsers}
                         hasMore={this.state.hasMore}
                         loader={
-                            <div
-                                className="spinner-border text-secondary"
-                                role="status"
-                                key={0}
-                            >
-                                <span className="sr-only">
-                                    Loading...
-                                </span>
+                            <div className="loader">
+                                <div
+                                    className="spinner-border text-secondary"
+                                    role="status"
+                                    key={0}
+                                >
+                                    <span className="sr-only">
+                                        Loading...
+                                    </span>
+                                </div>
                             </div>
                         }
                         useWindow={false}
@@ -137,7 +139,7 @@ export default class extends Component {
                                 />
                             ))}
                             {this.state.searchResult.length === 0 ?
-                                <div key={1}>
+                                <div key={1} className="nothingFound">
                                     Nichts gefunden!
                                 </div>
                                 :
