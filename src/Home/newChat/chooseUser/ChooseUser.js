@@ -3,6 +3,9 @@ import {tabs} from "../NewChat";
 import Dummy from "../../../utilComp/Dummy";
 import {makeRequest} from "../../../global/requests";
 import SelectChat from "../../selectChat/SelectChat";
+import Dropdown from 'rc-dropdown';
+
+import 'rc-dropdown/assets/index.css';
 
 import './chooseUser.scss';
 
@@ -13,13 +16,10 @@ const errorCode={
 
 export default class ChooseUser extends Component{
 
-    _clickedOutsideTimer;
-
     constructor(props) {
         super(props);
         this.state = {
             error: errorCode.none,
-            showOptions: false,
             /*
                 the value of the search input
              */
@@ -27,37 +27,17 @@ export default class ChooseUser extends Component{
         };
     }
     /*
-        options get shown
-     */
-    showOptions = event => {
-        clearTimeout(this.clickedOutsideTimer);
-        this.setState({
-            showOptions: true
-        });
-    };
-    /*
-        options get hidden
-     */
-    clickedOutsideOptions = () => {
-        this.clickedOutsideTimer = setTimeout(this.hideOptions,100);
-    };
-    hideOptions = () => {
-        this.setState({
-            showOptions: false
-        });
-    };
-    /*
         when new group gets clicked
      */
     newGroupClick = event => {
-        clearTimeout(this.clickedOutsideTimer);
+        event.stopPropagation();
         this.props.setCurrentTab(tabs.newGroup);
     };
     /*
         when join group is clicked
      */
     joinGroupClick = event => {
-        clearTimeout(this.clickedOutsideTimer);
+        event.stopPropagation();
         this.props.setCurrentTab(tabs.chooseGroup);
     };
     /*
@@ -99,6 +79,19 @@ export default class ChooseUser extends Component{
 
     render() {
 
+        const options = (
+            <div className="options">
+                <ul>
+                    <li onClick={this.newGroupClick}>
+                        neue Gruppe
+                    </li>
+                    <li onClick={this.joinGroupClick}>
+                        einer Gruppe beitreten
+                    </li>
+                </ul>
+            </div>
+        );
+
         return(
             <Dummy>
                 <div className="user-top">
@@ -111,22 +104,16 @@ export default class ChooseUser extends Component{
                         />
                     </div>
                     <div className="user-more">
-                        <i className="fas fa-ellipsis-h fa-2x"
-                           onClick={this.showOptions}
-                        />
-                        {this.state.showOptions ?
-                            <div className="options">
-                                <ul>
-                                    <li onClick={this.newGroupClick}>
-                                        neue Gruppe
-                                    </li>
-                                    <li onClick={this.joinGroupClick}>
-                                        einer Gruppe beitreten
-                                    </li>
-                                </ul>
-                            </div>
-                            : null
-                        }
+                        <Dropdown
+                            trigger={['click']}
+                            overlay={options}
+                            animation="slide-up"
+                            alignPoint
+                        >
+                            <i className="fas fa-ellipsis-h fa-2x"
+                               role="button"
+                            />
+                        </Dropdown>
                     </div>
                 </div>
                 <SelectChat
@@ -136,24 +123,5 @@ export default class ChooseUser extends Component{
                 />
             </Dummy>
         );
-    }
-    componentDidMount() {
-        document.body.addEventListener('click',this.clickedOutsideOptions);
-    }
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        //this.listNode = ReactDOM.findDOMNode(this.listRef);
-    }
-
-    componentWillUnmount() {
-        clearTimeout(this.clickedOutsideTimer);
-        document.body.removeEventListener('click',this.clickedOutsideOptions);
-    }
-
-    get clickedOutsideTimer() {
-        return this._clickedOutsideTimer;
-    }
-
-    set clickedOutsideTimer(value) {
-        this._clickedOutsideTimer = value;
     }
 }
