@@ -1,4 +1,5 @@
 @import '../../../sass/colors';
+@import '../../../sass/list';
 
 .groupChatInfo {
   padding: 20px;
@@ -14,14 +15,32 @@
       padding-right: 14px;
       border-top: 1px solid $cLightGrey;
 
-      &:hover{
-        background-color: $cLightGrey;
+      .right {
+
+        float: right;
+        width: 70px;
+        position: relative;
+
+        i {
+          position: relative;
+          top: 3px;
+          float: right;
+          color: $cBlack2HoverNo;
+
+          &:hover {
+            color: $cBlack2HoverYes;
+          }
+        }
+        .user-admin {
+          color: $cNotificationBlue;
+          font-weight: bold;
+        }
       }
     }
     &:last-child {
       border-bottom: 1px solid $cLightGrey;
     }
-    a {
+    .userItem {
       color: inherit;
       display: inline-block;
       width: 100%;
@@ -33,10 +52,48 @@
         text-decoration: none;
       }
     }
-    .user-admin{
-      color: $cNotificationBlue;
-      font-weight: bold;
-      float: right;
+  }
+}
+.rc-dropdown ul.userOptions {
+
+  @extend .v-list;
+
+  position: absolute;
+  right: 0;
+  z-index: 10;
+  width: 300px;
+  background-color: white;
+
+  li {
+    @extend .v-list-item;
+
+    &.noLink {
+      padding: 6px;
+    }
+
+    a {
+      color: $cBlack2HoverNo;
+      width: 100%;
+      padding: 6px;
+      display: inline-block;
+
+      &:hover {
+        text-decoration: none;
+        color: $cBlack2HoverYes;
+      }
+    }
+  }
+}
+@media screen and (min-width: 765px){
+  .groupChatInfo .userList  li .right {
+    i {
+      visibility: hidden;
+      transition:visibility 0.3s linear,opacity 0.3s linear;
+    }
+  }
+  .groupChatInfo .userList  li:hover .right {
+    i {
+      visibility: visible;
     }
   }
 }

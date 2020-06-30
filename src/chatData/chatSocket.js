@@ -11,7 +11,10 @@ import {makeRequest} from "../global/requests";
 class ChatSocket{
 
     _socket;
-    _userSelf;
+    _userSelf = {
+        uid: 0,
+        username: ""
+    };
     _users = new BinSearchArray();
     _chats = {
         normal: new BinSearchArray(),

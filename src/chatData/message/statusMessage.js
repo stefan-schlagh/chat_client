@@ -6,5 +6,5 @@ export const statusMessages =
         "beigetreten",
         "den chat verlassen",
         "zum Admin gemacht",
-        "Admin niedergelegt"
+        "Admin entzogen"
     ];

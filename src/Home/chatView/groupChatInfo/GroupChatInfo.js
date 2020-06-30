@@ -1,8 +1,10 @@
 import React,{Component} from "react";
 import ChatViewLoader from "../ChatViewLoader";
-import {Link,withRouter} from 'react-router-dom';
+import {withRouter} from 'react-router-dom';
 import chatSocket from "../../../chatData/chatSocket";
 import {makeRequest} from "../../../global/requests";
+import Dropdown from "rc-dropdown/es";
+import UserOptions from "./UserOptions";
 
 import'./groupChatInfo.scss';
 
@@ -74,8 +76,6 @@ class GroupChatInfo extends Component{
 
     render() {
 
-        const {pathname} = this.props.location;
-
         if(this.state.error)
             return(
                 <div className="alert alert-danger" role="alert">
@@ -87,25 +87,54 @@ class GroupChatInfo extends Component{
                 <ChatViewLoader msg = "info wird geladen"/>
             );
         const uidSelf = chatSocket.userSelf.uid;
+
         return(
             <div className="groupChatInfo">
-                <h1>{this.state.data.name}</h1>
-                <h4>{this.state.data.users.length} Mitglieder:</h4>
+                <h1>
+                    {this.state.data.chatName}
+                    {this.state.data.memberSelf.isAdmin ?
+                        <i className="fas fa-edit"/>
+                        : null
+                    }
+                </h1>
+                <h4>
+                    {this.state.data.members.length}
+                    &nbsp;Mitglieder:
+                </h4>
                 <ul className="userList">
-                    {this.state.data.users.map((item,index) => (
+                    {this.state.data.members.map((item,index) => (
                         <li key={index}>
-                            <Link to={pathname + "/userInfo/" + item.uid}>
-                                {uidSelf === item.uid ?
-                                    <span>Du</span>
-                                :
-                                    item.username
-                                }
-                                {item.isAdmin === 1 ?
-                                    <div className="user-admin">
-                                        Admin
-                                    </div>
+                            <div className="userItem">
+                            {uidSelf === item.uid ?
+                                <span>Du</span>
+                            :
+                                item.username
+                            }
+                            <div className="right">
+                                {item.isAdmin ?
+                                    <span className="user-admin">
+                                        Admin&nbsp;&nbsp;
+                                    </span>
                                 : null}
-                            </Link>
+                                <Dropdown
+                                    trigger={['click']}
+                                    overlay={
+                                        <UserOptions
+                                            gcid={this.props.gcid}
+                                            memberSelf={this.state.data.memberSelf}
+                                            member={item}
+                                        />
+                                    }
+                                    animation="slide-up"
+                                    alignPoint
+                                >
+                                    <i
+                                        className="fas fa-ellipsis-v fa-lg"
+                                        role="button"
+                                    />
+                                </Dropdown>
+                            </div>
+                            </div>
                         </li>
                     ))}
                 </ul>

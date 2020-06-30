@@ -127,7 +127,11 @@ export default class ChatItem extends Component{
         /*
             event listener werden angelegt
          */
+        //if(chat)
         chat.event.on("typeState changed",this.typeStateChanged);
+        /*else{
+            console.log('error',chatSocket.chats.group,this.props.type,this.props.id)
+        }*/
     }
     componentDidUpdate(prevProps, prevState, snapshot) {
         /*
