@@ -5,6 +5,8 @@ import chatSocket from "../../../chatData/chatSocket";
 import {makeRequest} from "../../../global/requests";
 import Dropdown from "rc-dropdown/es";
 import UserOptions from "./UserOptions";
+import ChatOptions from "./ChatOptions";
+import AddUsersModal from "./AddUsersModal";
 
 import'./groupChatInfo.scss';
 
@@ -90,13 +92,29 @@ class GroupChatInfo extends Component{
 
         return(
             <div className="groupChatInfo">
-                <h1>
-                    {this.state.data.chatName}
+                <div>
+                    <h1>
+                        {this.state.data.chatName}
+                    </h1>
                     {this.state.data.memberSelf.isAdmin ?
-                        <i className="fas fa-edit"/>
+                        <i className="fas fa-edit fa-lg edit-chatName"/>
                         : null
                     }
-                </h1>
+                    <Dropdown
+                        trigger={['click']}
+                        overlay={
+                            <ChatOptions
+                                gcid={this.props.gcid}
+                                memberSelf={this.state.data.memberSelf}
+                            />
+                        }
+                        >
+                        <i
+                            className="fas fa-ellipsis-v fa-lg chat-options-btn fa-2x"
+                            role="button"
+                        />
+                    </Dropdown>
+                </div>
                 <h4>
                     {this.state.data.members.length}
                     &nbsp;Mitglieder:
@@ -138,6 +156,9 @@ class GroupChatInfo extends Component{
                         </li>
                     ))}
                 </ul>
+                <AddUsersModal
+                    gcid={this.props.gcid}
+                />
             </div>
         );
     }

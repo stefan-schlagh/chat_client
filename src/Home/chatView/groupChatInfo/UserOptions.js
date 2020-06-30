@@ -70,12 +70,12 @@ class UserOptions extends Component {
 
         return (
             <ul className="userOptions">
-                <li>
+                <li key={0}>
                     <Link to={pathname + "/userInfo/" + this.props.member.uid}>
                         zeige {this.props.member.username} an
                     </Link>
                 </li>
-                <li>
+                <li key={1}>
                     <Link to={"/chat/user/" + this.props.member.uid}>
                         Nachricht an {this.props.member.username}
                     </Link>
@@ -86,6 +86,7 @@ class UserOptions extends Component {
                     this.isSelfAdmin() ?
                         <Dummy>
                             <li
+                                key={2}
                                 className="noLink"
                                 onClick={this.removeMemberFromChat}
                             >
@@ -93,6 +94,7 @@ class UserOptions extends Component {
                             </li>
                             {this.props.member.isAdmin ?
                                 <li
+                                    key={3}
                                     className="noLink"
                                     onClick={this.removeMemberAdmin}
                                 >
@@ -100,6 +102,7 @@ class UserOptions extends Component {
                                 </li>
                                 :
                                 <li
+                                    key={4}
                                     className="noLink"
                                     onClick={this.makeMemberAdmin}
                                 >

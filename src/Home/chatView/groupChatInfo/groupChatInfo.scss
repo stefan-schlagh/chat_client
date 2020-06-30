@@ -3,10 +3,35 @@
 
 .groupChatInfo {
   padding: 20px;
+  max-width: 800px;
 
+  h1 {
+    display: inline-block;
+    margin-right: 10px;
+  }
+  .edit-chatName {
+    display: inline-block;
+    position: relative;
+    bottom: 5px;
+    color: $cBlack2HoverNo;
+    cursor: pointer;
+
+    &:hover {
+      color: $cBlack2HoverYes;
+    }
+  }
+  .chat-options-btn {
+    float: right;
+    margin: 25px;
+    color: $cBlack2HoverNo;
+    cursor: pointer;
+
+    &:hover {
+      color: $cBlack2HoverYes;
+    }
+  }
   .userList {
     list-style-type: none;
-    max-width: 800px;
     cursor: pointer;
     padding-left: 0;
 
@@ -54,13 +79,12 @@
     }
   }
 }
-.rc-dropdown ul.userOptions {
+.rc-dropdown ul.userOptions,ul.chatOptions {
 
   @extend .v-list;
 
   position: absolute;
   right: 0;
-  z-index: 10;
   width: 300px;
   background-color: white;
 
@@ -83,6 +107,13 @@
       }
     }
   }
+}
+.addUsers {
+  min-height: 200px;
+  max-width: 900px;
+  margin: auto;
+  padding-top: 20px;
+  position: relative;
 }
 @media screen and (min-width: 765px){
   .groupChatInfo .userList  li .right {
