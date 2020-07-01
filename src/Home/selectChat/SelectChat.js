@@ -139,11 +139,10 @@ export default class SelectChat extends Component{
                             loadMore={this.loadChats}
                             hasMore={this.state.hasMore}
                             loader={
-                                <div className="loader">
+                                <div className="loader" key={-1}>
                                     <div
                                         className="spinner-border text-secondary"
                                         role="status"
-                                        key={0}
                                     >
                                         <span className="sr-only">
                                             Loading...
@@ -165,7 +164,7 @@ export default class SelectChat extends Component{
                                     />
                                 ))}
                                 {this.state.searchResult.length === 0 ?
-                                    <div key={1} className="nothingFound">
+                                    <div key={-1} className="nothingFound">
                                         Nichts gefunden!
                                     </div>
                                     :

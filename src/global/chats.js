@@ -202,9 +202,14 @@ export function initChatReducers(){
         const chatsClone = global.chats.splice(0);
         const chatObject = chat.getChatObject();
 
-        for(let i=0;i<chatsClone.length;i++){
-            if(isDateBefore(chatsClone[i],chatObject)){
-                chatsClone.splice(i,0,chatObject);
+        if(chatsClone.length === 0)
+            return {
+                chats: [chatObject]
+            };
+
+        for (let i = 0; i < chatsClone.length; i++) {
+            if (isDateBefore(chatsClone[i], chatObject)) {
+                chatsClone.splice(i, 0, chatObject);
                 break;
             }
         }
