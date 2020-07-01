@@ -1,5 +1,4 @@
 import React,{Component} from "react";
-import ReactDOM from 'react-dom';
 import UserItem from "./UserItem";
 import Dummy from "../../utilComp/Dummy";
 import InfiniteScroll from 'react-infinite-scroller';
@@ -11,7 +10,7 @@ const errorCode={
 
 export default class extends Component {
 
-    scrollParentRef
+    scrollParentRef;
 
     constructor(props) {
         super(props);

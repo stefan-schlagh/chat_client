@@ -8,6 +8,9 @@ import AddUsersModal from "./AddUsersModal";
 
 import'./groupChatInfo.scss';
 
+/*
+    TODO groupchatinfo change socket events
+ */
 class GroupChatInfo extends Component{
 
     constructor(props) {
@@ -26,10 +29,6 @@ class GroupChatInfo extends Component{
                     Ein Fehler ist aufgetreten!
                 </div>
             );
-        /*else if(!this.state.loaded)
-            return (
-                <ChatViewLoader msg = "info wird geladen"/>
-            );*/
         const uidSelf = chatSocket.userSelf.uid;
 
         return(

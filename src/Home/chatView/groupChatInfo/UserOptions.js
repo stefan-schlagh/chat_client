@@ -1,4 +1,4 @@
-import React,{Component} from "react";
+import React,{Component} from "reactn";
 import {Link, withRouter} from "react-router-dom";
 import Dummy from "../../../utilComp/Dummy";
 import {makeRequest} from "../../../global/requests";
@@ -7,6 +7,10 @@ class UserOptions extends Component {
 
     isSelfAdmin = () => {
         return this.props.memberSelf.isAdmin;
+    };
+
+    isMemberSelf(){
+        return this.props.member.uid === this.global.userSelf.uid;
     };
 
     removeMemberFromChat = async () => {
@@ -83,7 +87,7 @@ class UserOptions extends Component {
                 {/*
                     if the member is admin, he has more options
                     */
-                    this.isSelfAdmin() ?
+                    this.isSelfAdmin() && ! this.isMemberSelf() ?
                         <Dummy>
                             <li
                                 key={2}
