@@ -128,3 +128,9 @@
     }
   }
 }
+@media screen and (max-width: 765px){
+  .groupChatInfo {
+    overflow-y: auto;
+    height: 100%;
+  }
+}

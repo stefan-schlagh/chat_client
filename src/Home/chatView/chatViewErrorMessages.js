@@ -49,3 +49,10 @@ export function ChatNotExisting(){
         </div>
     );
 }
+export function GeneralError(){
+    return (
+        <div>
+            <h2>Fehler</h2>
+        </div>
+    );
+}

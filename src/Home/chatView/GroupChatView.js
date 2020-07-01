@@ -8,15 +8,18 @@ import {
     AddressNotValid,
     ChatNotExisting,
     NoAuthorization,
-    NoMemberInPublicChat
+    NoMemberInPublicChat,
+    GeneralError
 } from "./chatViewErrorMessages";
+import {makeRequest} from "../../global/requests";
 
 export const groupChatErrorCode = {
     none: 0,
     nan: 1,
     chatNotExisting: 2,
     notPartOfChat: 3,
-    private: 4
+    private: 4,
+    general: 5
 };
 
 export const groupChatTabs = {
@@ -31,18 +34,54 @@ export default class GroupChatView extends Component{
         this.state = {
             gcid: 0,
             loaded: false,
+            chatData: null,
             error: groupChatErrorCode.none
         }
     }
 
-    groupChatExists = async(gcid) => {
-        /*
-            does the chat already exist in the client
-         */
-        if(chatSocket.chats.group.getIndex(gcid) !== -1){
-            return groupChatErrorCode.none;
-        }else{
-            return groupChatErrorCode.chatNotExisting;
+    loadGroupChatInfo = async(gcid) => {
+
+        try {
+            const config = {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json'
+                }
+            };
+            const response = await makeRequest('/group/' + this.props.gcid + '/', config);
+
+            if(response.status === 403)
+                return groupChatErrorCode.private;
+
+            else if(response.status === 404)
+                return groupChatErrorCode.chatNotExisting;
+
+            else if (response.ok) {
+
+                let data = await response.json();
+
+                this.setState({
+                    chatData: data
+                });
+
+                if(data.error) {
+
+                    if (data.error === 'not part of chat')
+                        return groupChatErrorCode.notPartOfChat;
+
+                    else
+                        return groupChatErrorCode.general
+
+                }else if(chatSocket.chats.group.getIndex(gcid) !== -1){
+
+                    return groupChatErrorCode.none;
+                }
+            }
+            else {
+                return groupChatErrorCode.general
+            }
+        } catch (err) {
+            return groupChatErrorCode.general
         }
     };
     /*
@@ -63,7 +102,7 @@ export default class GroupChatView extends Component{
 
                 const gcid = parseInt(this.props.gcid);
 
-                this.groupChatExists(gcid)
+                this.loadGroupChatInfo(gcid)
                     .then(r => {
                         if (r === groupChatErrorCode.none) {
 
@@ -182,6 +221,7 @@ export default class GroupChatView extends Component{
                                 return(
                                     <GroupChatInfo
                                         gcid={this.state.gcid}
+                                        data={this.state.chatData}
                                     />
                                 );
 
@@ -202,6 +242,11 @@ export default class GroupChatView extends Component{
                     case groupChatErrorCode.chatNotExisting:
                         return (
                             <ChatNotExisting/>
+                        );
+
+                    case groupChatErrorCode.general:
+                        return(
+                            <GeneralError/>
                         );
 
                     default:

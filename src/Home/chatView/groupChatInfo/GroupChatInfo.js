@@ -1,8 +1,6 @@
 import React,{Component} from "react";
-import ChatViewLoader from "../ChatViewLoader";
 import {withRouter} from 'react-router-dom';
 import chatSocket from "../../../chatData/chatSocket";
-import {makeRequest} from "../../../global/requests";
 import Dropdown from "rc-dropdown/es";
 import UserOptions from "./UserOptions";
 import ChatOptions from "./ChatOptions";
@@ -16,65 +14,9 @@ class GroupChatInfo extends Component{
         super(props);
         this.state = {
             error: false,
-            loaded: false,
             data: null
         }
     }
-
-    componentDidMount() {
-        this.loadChatInfo();
-    }
-
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        /*
-            did gcid change?
-         */
-        if(prevProps.gcid !== this.props.gcid)
-            this.loadChatInfo();
-    }
-
-    loadChatInfo = () => {
-
-        const loadChatInfoI = async() =>{
-
-            try {
-                const config = {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json'
-                    }
-                };
-                const response = await makeRequest('/group/' + this.props.gcid + '/', config);
-
-                if (response.ok) {
-
-                    let data = await response.json();
-
-                    this.setState({
-                        data: data
-                    });
-                }
-            }catch (err) {
-                this.setState({
-                    error: true
-                })
-            }
-        };
-
-        loadChatInfoI()
-            .then(r => {
-                this.setState({
-                    loaded: true,
-                    error: false
-                })
-            })
-            .catch(err => {
-                this.setState({
-                    loaded: true,
-                    error: true
-                })
-            });
-    };
 
     render() {
 
@@ -84,19 +26,19 @@ class GroupChatInfo extends Component{
                     Ein Fehler ist aufgetreten!
                 </div>
             );
-        else if(!this.state.loaded)
+        /*else if(!this.state.loaded)
             return (
                 <ChatViewLoader msg = "info wird geladen"/>
-            );
+            );*/
         const uidSelf = chatSocket.userSelf.uid;
 
         return(
             <div className="groupChatInfo">
                 <div>
                     <h1>
-                        {this.state.data.chatName}
+                        {this.props.data.chatName}
                     </h1>
-                    {this.state.data.memberSelf.isAdmin ?
+                    {this.props.data.memberSelf.isAdmin ?
                         <i className="fas fa-edit fa-lg edit-chatName"/>
                         : null
                     }
@@ -105,7 +47,7 @@ class GroupChatInfo extends Component{
                         overlay={
                             <ChatOptions
                                 gcid={this.props.gcid}
-                                memberSelf={this.state.data.memberSelf}
+                                memberSelf={this.props.data.memberSelf}
                             />
                         }
                         >
@@ -116,11 +58,11 @@ class GroupChatInfo extends Component{
                     </Dropdown>
                 </div>
                 <h4>
-                    {this.state.data.members.length}
+                    {this.props.data.members.length}
                     &nbsp;Mitglieder:
                 </h4>
                 <ul className="userList">
-                    {this.state.data.members.map((item,index) => (
+                    {this.props.data.members.map((item,index) => (
                         <li key={index}>
                             <div className="userItem">
                             {uidSelf === item.uid ?
@@ -139,7 +81,7 @@ class GroupChatInfo extends Component{
                                     overlay={
                                         <UserOptions
                                             gcid={this.props.gcid}
-                                            memberSelf={this.state.data.memberSelf}
+                                            memberSelf={this.props.data.memberSelf}
                                             member={item}
                                         />
                                     }
