@@ -1,10 +1,16 @@
 import React, {Component} from "reactn";
 import chatSocket from "../../chatData/chatSocket";
 import ChatViewLoader from "./ChatViewLoader";
-import ChatContainer from "./ChatContainer";
+import ChatContainer from "./chatContainer/ChatContainer";
 import TempChatContainer from "./TempChatContainer";
 import {infoHeaderCenter} from "../Header/HeaderLeft";
 import {UserErrorCode,getUserNormalChat} from "../../chatData/User";
+import {
+    AddressNotValid,
+    BlockedByThisUser,
+    CannotWriteYourself,
+    UserNotExisting
+} from "./chatViewErrorMessages";
 
 export default class NormalChatView extends Component{
 
@@ -35,16 +41,12 @@ export default class NormalChatView extends Component{
              */
             if(this.state.error === UserErrorCode.nan){
                 return(
-                    <div>
-                        <h2>ungültige Addresse</h2>
-                    </div>
+                    <AddressNotValid/>
                 );
             }
             else if(this.state.error === UserErrorCode.isSelf){
                 return(
-                    <div>
-                        <h2>Du kannst dir selbst nicht schreiben</h2>
-                    </div>
+                    <CannotWriteYourself/>
                 );
             }
             /*
@@ -62,19 +64,15 @@ export default class NormalChatView extends Component{
                     )
                 }else if(this.state.error === UserErrorCode.tempChat){
                     return(
-                        <TempChatContainer />
+                        <TempChatContainer uid={this.state.uid}/>
                     )
                 }else if(this.state.error === UserErrorCode.blocked){
                     return(
-                        <div>
-                            <h2>Dieser User hat dich blockiert</h2>
-                        </div>
+                        <BlockedByThisUser/>
                     )
                 }else{
                     return(
-                        <div>
-                            <h2>Dieser User existiert nicht</h2>
-                        </div>
+                        <UserNotExisting/>
                     )
                 }
             }

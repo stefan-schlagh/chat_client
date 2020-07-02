@@ -1,7 +1,7 @@
 import React,{Component} from "react";
 import UserList from "./UserList";
 import UserItem from "./UserItem";
-import Dummy from "../../../utilComp/Dummy";
+import Dummy from "../../utilComp/Dummy";
 
 import './selectUsers.scss';
 
@@ -98,26 +98,29 @@ export default class SelectUsers extends Component{
                 <div className="select-users">
                     {renderSelectedUsers()}
                 </div>
-                {!this.state.showOnlySelected ?
-                    <UserList selectUser={this.selectUser}
-                              deselectUser={this.deselectUser}
-                              isUserSelected={this.isUserSelected}
-                    />
-                :
-                    <ul className="selectUsers-list only-selected result-list">
-                        {this.state.selectedUsers.map((item,index) => (
-                            <UserItem
-                                key={index}
-                                index={index}
-                                uid={item.uid}
-                                username={item.username}
-                                selectUser={() => {}}
-                                deselectUser={this.deselectIndex}
-                                isSelected={true}
-                            />
-                        ))}
-                    </ul>
-                }
+                    {!this.state.showOnlySelected ?
+                        <UserList selectUser={this.selectUser}
+                                  deselectUser={this.deselectUser}
+                                  isUserSelected={this.isUserSelected}
+                                  loadUsers={this.props.loadUsers}
+                        />
+                        :
+                        <div className="selectUsers">
+                            <ul className="selectUsers only-selected">
+                                {this.state.selectedUsers.map((item,index) => (
+                                    <UserItem
+                                        key={index}
+                                        index={index}
+                                        uid={item.uid}
+                                        username={item.username}
+                                        selectUser={() => {}}
+                                        deselectUser={this.deselectIndex}
+                                        isSelected={true}
+                                    />
+                                ))}
+                            </ul>
+                        </div>
+                    }
             </Dummy>
         )
     }

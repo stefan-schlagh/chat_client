@@ -1,5 +1,5 @@
 import React,{Component} from "react";
-import MessageForm from "./MessageForm";
+import MessageForm from "./chatContainer/MessageForm";
 import chatSocket from "../../chatData/chatSocket";
 
 export default class TempChatContainer extends Component{
@@ -23,7 +23,8 @@ export default class TempChatContainer extends Component{
         chatSocket.temporaryChat.show();
     }
     componentDidUpdate(prevProps, prevState, snapshot) {
-        chatSocket.temporaryChat.update();
+        if(prevProps.uid !== this.props.uid)
+            chatSocket.temporaryChat.update();
     }
     componentWillUnmount() {
         chatSocket.temporaryChat.hide();

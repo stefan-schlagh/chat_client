@@ -1,0 +1,50 @@
+@import '../newChat/newChatMixins';
+
+div.selectChat {
+
+  overflow-y: auto;
+
+  .loader, .nothingFound {
+    margin: auto;
+  }
+
+  ul.selectChat {
+    @extend .v-list;
+
+    padding: 1rem 1rem 0;
+
+    max-width: 800px;
+    height: 100%;
+
+    li {
+      @extend .v-list-item;
+
+      padding: 0 8px;
+      box-sizing: content-box;
+      display: block;
+      height: 40px;
+      cursor: pointer;
+      position: relative;
+    }
+
+    a {
+      padding: 8px 0;
+      display: inline-block;
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+
+@media screen and (min-width: 765px){
+  div.selectChat {
+    width: 80%;
+    margin-top: 20px;
+    height: 400px;
+  }
+}
+@media screen and (max-width: 765px){
+  div.selectChat {
+    @include resultListMobile(40px);
+  }
+}

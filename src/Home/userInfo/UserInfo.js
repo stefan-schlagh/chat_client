@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom';
 import chatSocket from "../../chatData/chatSocket";
 import {ModalHeader,ModalMain} from "../../utilComp/Modal";
 import Dummy from "../../utilComp/Dummy";
+import {makeRequest} from "../../global/requests";
 
 const errorCode = {
     none: 0,
@@ -94,7 +95,7 @@ export default class UserInfo extends Component{
                 'Accept': 'application/json'
             }
         };
-        const response = await fetch('/user/' + uid, config);
+        const response = await makeRequest('/user/' + uid, config);
         //const json = await response.json()
         if (response.ok) {
             //return json

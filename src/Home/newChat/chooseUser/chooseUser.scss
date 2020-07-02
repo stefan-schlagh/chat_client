@@ -27,27 +27,21 @@
     &:hover {
       color: $cBlack2HoverYes;
     }
-    .options {
-      position: absolute;
-      top: 0;
-      right: 0;
-      z-index: 10;
-      width: 300px;
-      background-color: white;
-
-      ul {
-        @extend .v-list;
-
-        li {
-          @extend .v-list-item;
-          padding: 5px;
-        }
-      }
-    }
   }
 }
-@media screen and (max-width: 765px){
-  .searchUser-list {
-    @include resultListMobile(90px);
+.rc-dropdown .options {
+  position: absolute;
+  right: 0;
+  z-index: 10;
+  width: 300px;
+  background-color: white;
+
+  ul {
+    @extend .v-list;
+
+    li {
+      @extend .v-list-item;
+      padding: 6px;
+    }
   }
 }

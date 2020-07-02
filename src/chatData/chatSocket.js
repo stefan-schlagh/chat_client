@@ -1,16 +1,20 @@
 import io from 'socket.io-client';
 import User from "./User";
 import BinSearchArray from "../util/BinSearch";
-import {GroupChat, NormalChat} from "./Chat";
-import Message from "./Message";
+import {NormalChat} from './chat/normalChat';
+import {GroupChat} from "./chat/groupChat";
 import EventHandler from "../util/Event";
 import TempChatLoader from "./tempChatLoader";
 import {getGlobal,getDispatch} from 'reactn';
+import {makeRequest} from "../global/requests";
 
 class ChatSocket{
 
     _socket;
-    _userSelf;
+    _userSelf = {
+        uid: 0,
+        username: ""
+    };
     _users = new BinSearchArray();
     _chats = {
         normal: new BinSearchArray(),
@@ -59,7 +63,7 @@ class ChatSocket{
         /*
             userInfo wird an client gesendet
          */
-        this.socket.emit('auth', uid, username);
+        this.socket.emit('auth', getGlobal().authTokens);
         /*
             is called when user is initialized
          */
@@ -75,10 +79,21 @@ class ChatSocket{
                 gets chat of msg
                 adds this message to chat
             */
-            const chat = this.getChat(data.type,data.id);
+            const chat = this.getChat(
+                data.chat.type,
+                data.chat.id
+            );
             if(chat !== null) {
-                const isCurrentChat = this.isCurrentChat(chat.type, chat.id);
-                chat.addMessage(data.uid, data.content, data.mid);
+                const isCurrentChat = this.isCurrentChat(
+                    chat.type,
+                    chat.id
+                );
+                chat.addMessage(
+                    data.uid,
+                    data.mid,
+                    data.type,
+                    data.content
+                );
                 /*
                     hasNewMsg gets updated
                     if current chat --> false
@@ -91,21 +106,37 @@ class ChatSocket{
                 /*
                     new message event is triggered
                  */
-                this.event.trigger('new message', data.type, data.id);
+                this.event.trigger(
+                    'new message',
+                    data.chat.type,
+                    data.chat.id
+                );
             }
         });
         /*
             started typing
          */
         this.socket.on('started typing',data => {
-            const chat = this.getChat(data.type,data.id);
+            /*
+                chat is searched
+             */
+            const chat = this.getChat(
+                data.chat.type,
+                data.chat.id
+            );
             chat.startedTyping(data.uid);
         });
         /*
             stopped typing
          */
         this.socket.on('stopped typing',data => {
-            const chat = this.getChat(data.type,data.id);
+            /*
+                chat is searched
+             */
+            const chat = this.getChat(
+                data.chat.type,
+                data.chat.id
+            );
             chat.stoppedTyping(data.uid);
         });
         /*
@@ -126,9 +157,6 @@ class ChatSocket{
         this.socket.on('disconnect',() => {
             setTimeout(function() {
 
-                getDispatch().deleteUserSelf();
-                getDispatch().resetGlobal();
-                resetChatSocket();
                 alert('Verbindung verloren! Seite wird neu geladen');
                 // eslint-disable-next-line no-restricted-globals
                 location.reload();
@@ -147,7 +175,7 @@ class ChatSocket{
         /*
             chats are requested
          */
-        const response = await fetch('/chats', config);
+        const response = await makeRequest('/chats', config);
 
         if(response.status === 200) {
 
@@ -316,7 +344,8 @@ class ChatSocket{
         const newChat = new NormalChat(
             data.id,
             data.chatName,
-            otherUser.uid
+            otherUser.uid,
+            data.unreadMessages
         );
         /*
             normalChat is set at other user
@@ -325,21 +354,7 @@ class ChatSocket{
         /*
             first message is initialized
          */
-        const message = data.firstMessage;
-        /*
-            if message exists it gets added to the chat
-         */
-        if(!message.empty)
-            newChat.messages.add(
-                message.mid,
-                new Message(
-                    message.mid,
-                    message.content,
-                    message.uid,
-                    newChat,
-                    new Date(message.date)
-                )
-            );
+        newChat.initFirstMessage(data.firstMessage);
         /*
             new chat gets added to binSearchArray
          */
@@ -384,25 +399,17 @@ class ChatSocket{
         /*
             new chat gets created
          */
-        const newChat = new GroupChat(data.id,data.chatName,members);
+        const newChat =
+            new GroupChat(
+                data.id,
+                data.chatName,
+                members,
+                data.unreadMessages
+            );
         /*
             first message is initialized
          */
-        const message = data.firstMessage;
-        /*
-            if message exists it gets added to the chat
-         */
-        if(!message.empty)
-            newChat.messages.add(
-                message.mid,
-                new Message(
-                    message.mid,
-                    message.content,
-                    message.uid,
-                    newChat,
-                    new Date(message.date)
-                )
-            );
+        newChat.initFirstMessage(data.firstMessage);
         /*
             new chat gets added to binSearchArray
          */

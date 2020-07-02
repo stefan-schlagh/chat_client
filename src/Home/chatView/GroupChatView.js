@@ -1,16 +1,25 @@
 import React,{Component} from "reactn";
 import ChatViewLoader from "./ChatViewLoader";
-import ChatContainer from "./ChatContainer";
+import ChatContainer from "./chatContainer/ChatContainer";
 import chatSocket from "../../chatData/chatSocket";
 import {infoHeaderCenter} from "../Header/HeaderLeft";
 import GroupChatInfo from "./groupChatInfo/GroupChatInfo";
+import {
+    AddressNotValid,
+    ChatNotExisting,
+    NoAuthorization,
+    NoMemberInPublicChat,
+    GeneralError
+} from "./chatViewErrorMessages";
+import {makeRequest} from "../../global/requests";
 
 export const groupChatErrorCode = {
     none: 0,
     nan: 1,
     chatNotExisting: 2,
     notPartOfChat: 3,
-    private: 4
+    private: 4,
+    general: 5
 };
 
 export const groupChatTabs = {
@@ -25,18 +34,54 @@ export default class GroupChatView extends Component{
         this.state = {
             gcid: 0,
             loaded: false,
+            chatData: null,
             error: groupChatErrorCode.none
         }
     }
 
-    groupChatExists = async(gcid) => {
-        /*
-            does the chat already exist in the client
-         */
-        if(chatSocket.chats.group.getIndex(gcid) !== -1){
-            return groupChatErrorCode.none;
-        }else{
-            return groupChatErrorCode.chatNotExisting;
+    loadGroupChatInfo = async(gcid) => {
+
+        try {
+            const config = {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json'
+                }
+            };
+            const response = await makeRequest('/group/' + this.props.gcid + '/', config);
+
+            if(response.status === 403)
+                return groupChatErrorCode.private;
+
+            else if(response.status === 404)
+                return groupChatErrorCode.chatNotExisting;
+
+            else if (response.ok) {
+
+                let data = await response.json();
+
+                this.setState({
+                    chatData: data
+                });
+
+                if(data.error) {
+
+                    if (data.error === 'not part of chat')
+                        return groupChatErrorCode.notPartOfChat;
+
+                    else
+                        return groupChatErrorCode.general
+
+                }else if(chatSocket.chats.group.getIndex(gcid) !== -1){
+
+                    return groupChatErrorCode.none;
+                }
+            }
+            else {
+                return groupChatErrorCode.general
+            }
+        } catch (err) {
+            return groupChatErrorCode.general
         }
     };
     /*
@@ -57,7 +102,7 @@ export default class GroupChatView extends Component{
 
                 const gcid = parseInt(this.props.gcid);
 
-                this.groupChatExists(gcid)
+                this.loadGroupChatInfo(gcid)
                     .then(r => {
                         if (r === groupChatErrorCode.none) {
 
@@ -151,9 +196,7 @@ export default class GroupChatView extends Component{
              */
             if (this.state.error === groupChatErrorCode.nan) {
                 return (
-                    <div>
-                        <h2>ungültige Addresse</h2>
-                    </div>
+                    <AddressNotValid/>
                 );
             }
             /*
@@ -178,6 +221,7 @@ export default class GroupChatView extends Component{
                                 return(
                                     <GroupChatInfo
                                         gcid={this.state.gcid}
+                                        data={this.state.chatData}
                                     />
                                 );
 
@@ -187,23 +231,22 @@ export default class GroupChatView extends Component{
 
                     case groupChatErrorCode.notPartOfChat:
                         return (
-                            <div>
-                                <h2>Du bist nicht Mitglied in diesem chat jetzt beitreten</h2>
-                            </div>
+                            <NoMemberInPublicChat/>
                         );
 
                     case groupChatErrorCode.private:
                         return (
-                            <div>
-                                <h2>Du bist nicht dazu berechtigt diesen chat anzusehen</h2>
-                            </div>
+                            <NoAuthorization/>
                         );
 
                     case groupChatErrorCode.chatNotExisting:
                         return (
-                            <div>
-                                <h2>Dieser Chat existiert nicht</h2>
-                            </div>
+                            <ChatNotExisting/>
+                        );
+
+                    case groupChatErrorCode.general:
+                        return(
+                            <GeneralError/>
                         );
 
                     default:

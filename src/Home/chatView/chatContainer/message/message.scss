@@ -1,0 +1,43 @@
+@import '../../../../sass/colors';
+
+.messageLoader-top{
+  box-sizing: content-box;
+  margin:auto;
+  width: 40px;
+  height: 40px;
+  padding-top: 20px;
+}
+.msg-container {
+
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+  margin: 0.5rem;
+  width: 80%;
+  max-width: 800px;
+  border: 1px solid $cBorder;
+
+  &.self {
+    float: right;
+  }
+  &.other {
+    float: left;
+  }
+  .header{
+    font-size: 14pt;
+    font-family: Arial, sans-serif;
+  }
+  .content{
+    display: inline-block;
+
+    p{
+      margin-bottom: 0;
+    }
+  }
+  .date-outer{
+    width: 100%;
+  }
+  .date{
+    float: right;
+    font-size: 10pt;
+  }
+}
