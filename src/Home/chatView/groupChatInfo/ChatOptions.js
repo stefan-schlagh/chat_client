@@ -26,7 +26,7 @@ class ChatOptions extends Component {
 
         if(response.ok) {
 
-            const data = response.json();
+            const data = await response.json();
 
             if(data.error){
                 console.log(data.error);
@@ -51,7 +51,7 @@ class ChatOptions extends Component {
 
         if(response.ok) {
 
-            const data = response.json();
+            const data = await response.json();
 
             if(data.error){
                 console.log(data.error);
