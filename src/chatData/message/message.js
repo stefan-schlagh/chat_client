@@ -109,6 +109,7 @@ export default class Message {
 
     getChatViewMsgString(){
 
+        // eslint-disable-next-line default-case
         switch(this.type) {
 
             case globalData.messageTypes.normalMessage: {

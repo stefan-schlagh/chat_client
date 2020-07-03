@@ -2,8 +2,7 @@ import React from "react";
 import {
     Switch,
     Route,
-    useRouteMatch,
-    useParams
+    useRouteMatch
 } from "react-router-dom";
 import ChatList from "./allChats/ChatList";
 import NormalChatView from "./chatView/NormalChatView";
