@@ -1,6 +1,6 @@
 import chatSocket from "../chatSocket";
 import {globalData} from "../../global/globalData";
-import {statusMessages} from "./statusMessage";
+import {getStatusMessageString} from "./statusMessage";
 
 export function isDifferentDay(date1,date2){
     return date1.getDay() !== date2.getDay()
@@ -109,16 +109,7 @@ export default class Message {
 
     getChatViewMsgString(){
 
-        const getStatusMsgString = (s2) => {
-
-            return this.getUserTop().username +
-            (this.isBySelf() ? " hast " : " hat ") +
-            (this.content.passiveUsers.length > 0
-                ? (this.content.passiveUsers.length + " Benutzer ")
-                : ""
-            ) + s2;
-        };
-
+        // eslint-disable-next-line default-case
         switch(this.type) {
 
             case globalData.messageTypes.normalMessage: {
@@ -143,8 +134,9 @@ export default class Message {
             }
             case globalData.messageTypes.statusMessage: {
 
-                return getStatusMsgString(
-                    statusMessages[this.content.type]
+                return getStatusMessageString(
+                    this.getMessageObject(true),
+                    false
                 );
             }
         }

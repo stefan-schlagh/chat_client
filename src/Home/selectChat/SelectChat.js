@@ -19,6 +19,7 @@ const errorCode={
 export default class SelectChat extends Component{
 
     scrollParentRef;
+    lastRequest = {};
 
     constructor(props) {
         super(props);
@@ -54,38 +55,53 @@ export default class SelectChat extends Component{
         more chats are loaded
      */
     loadChats = async () => {
-        try {
 
-            const response = await this.props.loadChats(
-                this.state.searchValue,
-                this.state.searchResult.length
-            );
+        const searchValue = this.state.searchValue;
+        const length = this.state.searchResult.length;
 
-            if (response.ok) {
-                //return json
-                let data = await response.json();
+        if(
+            this.lastRequest.searchValue !== searchValue
+            || this.lastRequest.length !== length
+        ) {
 
-                if(data.length === 0){
+            this.lastRequest = {
+                searchValue: searchValue,
+                length: length
+            };
+
+            try {
+
+                const response = await this.props.loadChats(
+                    searchValue,
+                    length
+                );
+
+                if (response.ok) {
+                    //return json
+                    let data = await response.json();
+
+                    if (data.length === 0) {
+                        this.setState({
+                            hasMore: false
+                        })
+                    } else {
+                        this.setState(state => ({
+                            searchResult: state.searchResult.concat(data)
+                        }));
+                    }
                     this.setState({
-                        hasMore: false
-                    })
+                        error: errorCode.none
+                    });
                 } else {
-                    this.setState(state => ({
-                        searchResult: state.searchResult.concat(data)
-                    }));
+                    this.setState({
+                        error: errorCode.error
+                    });
                 }
-                this.setState({
-                    error: errorCode.none
-                });
-            } else {
+            } catch (error) {
                 this.setState({
                     error: errorCode.error
                 });
             }
-        } catch (error) {
-            this.setState({
-                error: errorCode.error
-            });
         }
     };
 
