@@ -3,22 +3,22 @@ import {globalData} from "../../global/globalData";
 import React from "react";
 import chatSocket from "../chatSocket";
 
-export function getStatusMessageString(msg){
+export const middleStringD = {
+    hatHast: 0,
+    ist: 1
+};
 
-    const middleStringD = {
-        hatHast: 0,
-        ist: 1
-    };
+export const statusMessagesD = [
+    "den chat erstellt",
+    "hinzugefügt",
+    "entfernt",
+    "dem chat beigetreten",
+    "den chat verlassen",
+    "zum Admin gemacht",
+    "nicht mehr Admin"
+];
 
-    const statusMessagesD = [
-        "den chat erstellt",
-        "hinzugefügt",
-        "entfernt",
-        "dem chat beigetreten",
-        "den chat verlassen",
-        "zum Admin gemacht",
-        "nicht mehr Admin"
-    ];
+export function getStatusMessageString(msg,useReact){
 
     return getStatusMessageStringD();
 
@@ -94,6 +94,7 @@ export function getStatusMessageString(msg){
 
         function getMiddleString(){
 
+            // eslint-disable-next-line default-case
             switch (middle) {
 
                 case middleStringD.hatHast:
@@ -113,9 +114,12 @@ export function getStatusMessageString(msg){
                 const user = chatSocket.users.get(passiveUsers[0]);
 
                 if(user)
-                    return(
-                        <UsernameSpan user={user}/>
-                    );
+                    if(useReact)
+                        return(
+                            <UsernameSpan user={user}/>
+                        );
+                    else
+                        return user.username;
                 else
                     return "1 Benutzer";
 
@@ -124,24 +128,21 @@ export function getStatusMessageString(msg){
             }
         }
 
-        return(
-            <span>
-                <UsernameSpan user={msg.userTop}/>
-                {getMiddleString()}
-                {getPassiveUsers()}
-                {" " + statusMessagesD[statusMessage]}
-            </span>
-        )
+        function getTString(){
+            return " " + statusMessagesD[statusMessage];
+        }
+
+        if(useReact)
+            return(
+                <span>
+                    <UsernameSpan user={msg.userTop}/>
+                    {getMiddleString()}
+                    {getPassiveUsers()}
+                    {getTString()}
+                </span>
+            );
+        else
+            return msg.userTop.username + getMiddleString() + getPassiveUsers() + getTString();
     }
 
 }
-export const statusMessages =
-    [
-        "den chat erstellt",
-        "hinzugefügt",
-        "entfernt",
-        "beigetreten",
-        "den chat verlassen",
-        "zum Admin gemacht",
-        "Admin entzogen"
-    ];

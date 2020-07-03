@@ -26,7 +26,7 @@ function StatusMsgContent(props) {
 
     return(
         <Dummy>
-            {getStatusMessageString(msg)}
+            {getStatusMessageString(msg,true)}
         </Dummy>
     );
 }
