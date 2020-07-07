@@ -4,24 +4,45 @@
 .groupChatInfo {
   padding: 20px;
   max-width: 800px;
+  position: relative;
 
-  h1 {
-    display: inline-block;
-    margin-right: 10px;
+  .chatName {
+    h1 {
+      display: inline-block;
+      margin-right: 10px;
+    }
+
+    .edit {
+      display: inline-block;
+      position: relative;
+      bottom: 5px;
+      color: $cBlack2HoverNo;
+      cursor: pointer;
+
+      &:hover {
+        color: $cBlack2HoverYes;
+      }
+    }
   }
-  .edit-chatName {
-    display: inline-block;
-    position: relative;
-    bottom: 5px;
-    color: $cBlack2HoverNo;
-    cursor: pointer;
+  .description {
+    font-size: 14pt;
+    padding-left: 20px;
 
-    &:hover {
-      color: $cBlack2HoverYes;
+    .edit {
+      display: inline-block;
+      padding-left: 10px;
+      color: $cBlack2HoverNo;
+      cursor: pointer;
+
+      &:hover {
+        color: $cBlack2HoverYes;
+      }
     }
   }
   .chat-options-btn {
-    float: right;
+    position: absolute;
+    top: 10px;
+    right: 10px;
     margin: 25px;
     color: $cBlack2HoverNo;
     cursor: pointer;
@@ -87,6 +108,7 @@
   right: 0;
   width: 300px;
   background-color: white;
+  font-size: 14px;
 
   li {
     @extend .v-list-item;

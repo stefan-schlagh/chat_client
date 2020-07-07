@@ -33,29 +33,37 @@ class GroupChatInfo extends Component{
 
         return(
             <div className="groupChatInfo">
-                <div>
+                <div className="chatName">
                     <h1>
                         {this.props.data.chatName}
                     </h1>
                     {this.props.data.memberSelf.isAdmin ?
-                        <i className="fas fa-edit fa-lg edit-chatName"/>
+                        <i className="fas fa-edit fa-lg edit"/>
                         : null
                     }
-                    <Dropdown
-                        trigger={['click']}
-                        overlay={
-                            <ChatOptions
-                                gcid={this.props.gcid}
-                                memberSelf={this.props.data.memberSelf}
-                            />
-                        }
-                        >
-                        <i
-                            className="fas fa-ellipsis-v fa-lg chat-options-btn fa-2x"
-                            role="button"
-                        />
-                    </Dropdown>
                 </div>
+                <div className="description">
+                    {this.props.data.description}
+                    {this.props.data.memberSelf.isAdmin ?
+                        <i className="fas fa-edit edit"/>
+                        : null
+                    }
+                </div>
+                <Dropdown
+                    trigger={['click']}
+                    overlay={
+                        <ChatOptions
+                            gcid={this.props.gcid}
+                            memberSelf={this.props.data.memberSelf}
+                        />
+                    }
+                    >
+                    <i
+                        className="fas fa-ellipsis-v fa-lg chat-options-btn fa-2x"
+                        role="button"
+                    />
+                </Dropdown>
+
                 <h4>
                     {this.props.data.members.length}
                     &nbsp;Mitglieder:
