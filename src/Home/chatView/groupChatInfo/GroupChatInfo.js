@@ -4,7 +4,6 @@ import chatSocket from "../../../chatData/chatSocket";
 import Dropdown from "rc-dropdown/es";
 import UserOptions from "./UserOptions";
 import ChatOptions from "./ChatOptions";
-import AddUsersModal from "./AddUsersModal";
 
 import'./groupChatInfo.scss';
 
@@ -105,9 +104,6 @@ class GroupChatInfo extends Component{
                         </li>
                     ))}
                 </ul>
-                <AddUsersModal
-                    gcid={this.props.gcid}
-                />
             </div>
         );
     }
