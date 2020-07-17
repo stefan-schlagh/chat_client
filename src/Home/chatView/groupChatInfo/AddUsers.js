@@ -1,12 +1,12 @@
 import React from "react";
-import {Route, Switch, useRouteMatch,useHistory} from "react-router-dom";
-import Modal, {ModalHeader, ModalMain} from "../../../utilComp/Modal";
+import {useHistory} from "react-router-dom";
 import {makeRequest} from "../../../global/requests";
 import SelectUsers from "../../selectUsers/SelectUsers";
+import {ModalHeader, ModalMain} from "../../../utilComp/Modal";
+import Dummy from "../../../utilComp/Dummy";
 
-export default function AddUsersModal(props){
+export default function AddUsers(props){
 
-    let { path } = useRouteMatch();
     let history = useHistory();
 
     const submitUsers = async (selectedUsers) => {
@@ -62,24 +62,18 @@ export default function AddUsersModal(props){
     };
 
     return(
-        <Switch>
-            <Route path={`${path}/addUsers`}>
-                <Modal>
-                    <ModalHeader>
-                        <h1>
-                            Benutzer hinzufügen
-                        </h1>
-                    </ModalHeader>
-                    <ModalMain>
-                        <div className="addUsers">
-                            <SelectUsers
-                                onNext={submitUsers}
-                                loadUsers={loadUsers}
-                            />
-                        </div>
-                    </ModalMain>
-                </Modal>
-            </Route>
-        </Switch>
+        <Dummy>
+            <ModalHeader>
+                <h2>
+                    Benutzer hinzufügen
+                </h2>
+            </ModalHeader>
+            <ModalMain>
+                <SelectUsers
+                    onNext={submitUsers}
+                    loadUsers={loadUsers}
+                />
+            </ModalMain>
+        </Dummy>
     )
 }

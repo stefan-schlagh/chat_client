@@ -3,7 +3,7 @@ import ChatViewLoader from "./ChatViewLoader";
 import ChatContainer from "./chatContainer/ChatContainer";
 import chatSocket from "../../chatData/chatSocket";
 import {infoHeaderCenter} from "../Header/HeaderLeft";
-import GroupChatInfo from "./groupChatInfo/GroupChatInfo";
+import ModalRouterGroupChatInfo from "./groupChatInfo/ModalRouterGroupChatInfo";
 import {
     AddressNotValid,
     ChatNotExisting,
@@ -219,7 +219,7 @@ export default class GroupChatView extends Component{
 
                             case(groupChatTabs.info):
                                 return(
-                                    <GroupChatInfo
+                                    <ModalRouterGroupChatInfo
                                         gcid={this.state.gcid}
                                         data={this.state.chatData}
                                     />
