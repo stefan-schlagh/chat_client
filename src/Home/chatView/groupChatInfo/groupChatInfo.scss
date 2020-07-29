@@ -7,17 +7,26 @@
   position: relative;
 
   .chatName {
+
     h1 {
       display: inline-block;
       margin-right: 10px;
     }
+    .input {
+      display: inline-block;
 
+      div {
+        display: inline-block;
+      }
+    }
     .edit {
       display: inline-block;
       position: relative;
       bottom: 5px;
       color: $cBlack2HoverNo;
       cursor: pointer;
+      font-size: 25px;
+      margin-left: 10px;
 
       &:hover {
         color: $cBlack2HoverYes;
@@ -27,6 +36,14 @@
   .description {
     font-size: 14pt;
     padding-left: 20px;
+
+    .input {
+      display: inline-block;
+
+      div {
+        display: inline-block;
+      }
+    }
 
     .edit {
       display: inline-block;
