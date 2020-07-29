@@ -26,11 +26,21 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v1
-      with:
-        node-version: '14'
-    - run: npm install
-    - run: npm run build
-      env:
-        CI: ""
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '14'
+      - run: npm install
+      - run: npm run build
+        
+      - name: Checkout server repo
+        uses: actions/checkout@v2
+        with:
+          repository: stefan-schlagh/chat_server
+          path: chat-server
+          
+      - run: cp ./build ./chat_server/build
+        
+        env:
+          CI: ""
