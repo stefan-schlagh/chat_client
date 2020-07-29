@@ -41,11 +41,13 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '14'
+      - run: dir
       # install dependencies
       - name: npm install
         run: |
           cd ./chat_client
           npm install
+      - run: dir 
       # build project
       - name: npm run build
         run: npm run build
