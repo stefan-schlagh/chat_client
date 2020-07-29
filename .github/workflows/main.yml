@@ -28,19 +28,19 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: '14'
-      - run: npm install
-      - run: npm run build
-        
       - name: Checkout server repo
         uses: actions/checkout@v2
         with:
           repository: stefan-schlagh/chat_server
           path: chat-server
-          
-      - run: cp ./build ./chat_server/build
-        
+      - run: dir 
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '14'
+      - run: npm install
+      - name: npm run build
+        run: npm run build
+        # set env CI to false -> ignore warnings
         env:
           CI: ""
+      - run: cp ./build ./chat_server/build
