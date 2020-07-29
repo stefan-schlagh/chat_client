@@ -44,4 +44,4 @@ jobs:
         env:
           CI: ""
       - run: dir 
-      - run: cp ./build ./chat_server/build
+      - run: cp -r ./build ./chat_server/build
