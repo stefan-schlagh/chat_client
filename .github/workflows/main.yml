@@ -41,16 +41,16 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '14'
-      - run: dir
       # install dependencies
       - name: npm install
         run: |
           cd ./chat_client
           npm install
-      - run: dir 
       # build project
       - name: npm run build
-        run: npm run build
+        run: |
+          cd ./chat_client
+          npm run build
         # set env CI to false -> ignore warnings
         env:
           CI: ""
@@ -58,7 +58,6 @@ jobs:
       # build is copied to server
       - name: copy build to server
         run: |
-          cd ../
           cp -r ./chat_client/build ./chat_server/build
       - name: check
         run: |
