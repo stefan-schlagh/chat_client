@@ -32,7 +32,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: stefan-schlagh/chat_server
-          path: chat-server
+          path: chat_server
       - run: dir 
       - uses: actions/setup-node@v1
         with:
@@ -43,4 +43,5 @@ jobs:
         # set env CI to false -> ignore warnings
         env:
           CI: ""
+      - run: dir 
       - run: cp ./build ./chat_server/build
