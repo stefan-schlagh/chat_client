@@ -59,6 +59,15 @@ jobs:
       - name: copy build to server
         run: |
           cp -r ./chat_client/build ./chat_server/build
+      # commit chat_server changes
+      - name: commit chat_server changes
+        run: |
+          cd ./chat_server
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m "generated"
+          git push
       - name: check
         run: |
           cd ./chat_server
