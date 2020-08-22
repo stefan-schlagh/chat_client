@@ -44,6 +44,11 @@ jobs:
           npm install
           cd ../chat_server
           npm install
+      # setup mysql DB
+      - name: setup mysql DB
+        run: |
+          mysql -u root
+          exit;
       # install dependencies
       - name: npm test
         run: |
