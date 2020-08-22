@@ -1,0 +1,27 @@
+
+name: test
+
+on:
+  pull_request:
+  
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'     
+        required: true
+        default: 'warning'
+      tags:
+        description: 'Test scenario tags' 
+
+jobs:
+  test:
+    name: test App
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    
+    steps:
+      # chat client repository is checked out
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          path: chat_client
