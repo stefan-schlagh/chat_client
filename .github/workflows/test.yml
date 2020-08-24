@@ -47,8 +47,15 @@ jobs:
       # setup mysql DB
       - name: setup mysql DB
         run: |
-          mysql -h 127.0.0.1 -P 3306 -u root -p
-          exit;
+          sudo systemctl start mysql.service
+          mysql -h 127.0.0.1 -P 3306 -u root -p  -e "CREATE DATABASE chat;"
+          mysql -h 127.0.0.1 -P 3306 -u root -p  "chat" < "./chat_server/sql/chat.sql"
+      # install forever, start server
+      - name: start Server
+        run: |
+          sudo npm install forever -g
+          cd ./chat_server
+          forever start app.js
       # install dependencies
       - name: npm test
         run: |
