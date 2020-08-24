@@ -48,8 +48,8 @@ jobs:
       - name: setup mysql DB
         run: |
           sudo systemctl start mysql.service
-          mysql -h 127.0.0.1 -P 3306 -u root -p  -e "CREATE DATABASE chat;"
-          mysql -h 127.0.0.1 -P 3306 -u root -p  "chat" < "./chat_server/sql/chat.sql"
+          mysql -h 127.0.0.1 -P 3306 -u root "-proot" -e "CREATE DATABASE chat;"
+          mysql -h 127.0.0.1 -P 3306 -u root "-proot" "chat" < "./chat_server/sql/chat.sql"
       # install forever, start server
       - name: start Server
         run: |
