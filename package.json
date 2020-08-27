@@ -28,9 +28,10 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --testURL=https://localhost a",
     "eject": "react-scripts eject"
   },
+  "type": "module",
   "eslintConfig": {
     "extends": "react-app"
   },
