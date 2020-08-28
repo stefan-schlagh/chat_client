@@ -28,7 +28,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --testURL=https://localhost a",
+    "test": "react-scripts test --testURL=http://localhost a",
     "eject": "react-scripts eject"
   },
   "type": "module",
