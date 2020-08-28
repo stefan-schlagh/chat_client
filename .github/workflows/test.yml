@@ -50,6 +50,15 @@ jobs:
           sudo systemctl start mysql.service
           mysql -h 127.0.0.1 -P 3306 -u root "-proot" -e "CREATE DATABASE chat;"
           mysql -h 127.0.0.1 -P 3306 -u root "-proot" "chat" < "./chat_server/sql/chat.sql"
+      # create certs, .env
+      - name: create certs
+        run: |
+          cd ./chat_server
+          mkdir cert
+          cd ./cert
+          openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365
+          cd ..
+          cp ./test_templates/test.env ./.env
       # install forever, start server
       - name: start Server
         run: |
