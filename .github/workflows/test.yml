@@ -56,7 +56,8 @@ jobs:
           cd ./chat_server
           mkdir cert
           cd ./cert
-          openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365
+          openssl req  -nodes -new -x509  -keyout key.pem -out cert.pem
+          openssl genrsa -out jwtPrivate.pem 1024
           cd ..
           cp ./test_templates/test.env ./.env
       # install forever, start server
