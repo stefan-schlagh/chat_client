@@ -54,6 +54,7 @@ jobs:
       - name: create jwt private key
         run: |
           dir
+          pwd
           cd ./chat_server
           mkdir cert
           cd ./cert
