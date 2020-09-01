@@ -63,9 +63,14 @@ jobs:
       - name: create certificate
         uses: kofemann/action-create-certificate@v0.0.2
         with:
-          hostcert: ../../../home/runner/work/chat_client/chat_client/chat_server/cert/cert.pem
-          hostkey: ../../../home/runner/work/chat_client/chat_client/chat_server/cert/key.pem
-          cachain: ../../../home/runner/work/chat_client/chat_client/chat_server/cert/keytmp.pem
+          hostcert: cert.pem
+          hostkey: key.pem
+          cachain: keytmp.pem
+      # move certificate
+      - name: move certificate
+        run: |
+          cd /opt/acc/out
+          dir
       # install forever, start server
       - name: start Server
         run: |
