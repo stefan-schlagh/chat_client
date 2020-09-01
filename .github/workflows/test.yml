@@ -50,16 +50,22 @@ jobs:
           sudo systemctl start mysql.service
           mysql -h 127.0.0.1 -P 3306 -u root "-proot" -e "CREATE DATABASE chat;"
           mysql -h 127.0.0.1 -P 3306 -u root "-proot" "chat" < "./chat_server/sql/chat.sql"
-      # create certs, .env
-      - name: create certs
+      # create private key, .env
+      - name: create jwt private key
         run: |
           cd ./chat_server
           mkdir cert
           cd ./cert
-          openssl req  -nodes -new -x509  -keyout key.pem -out cert.pem
           openssl genrsa -out jwtPrivate.pem 1024
           cd ..
           cp ./test_templates/test.env ./.env
+      # create certificate
+      - name: create certificate
+        uses: kofemann/action-create-certificate@v0.0.2
+        with:
+          hostcert: ./chat_server/cert/cert.pem
+          hostkey: ./chat_server/cert/key.pem
+          cachain: ./chat_server/cert/keytmp.pem
       # install forever, start server
       - name: start Server
         run: |
