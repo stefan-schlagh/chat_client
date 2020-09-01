@@ -53,6 +53,7 @@ jobs:
       # create private key, .env
       - name: create jwt private key
         run: |
+          dir
           cd ./chat_server
           mkdir cert
           cd ./cert
@@ -63,9 +64,9 @@ jobs:
       - name: create certificate
         uses: kofemann/action-create-certificate@v0.0.2
         with:
-          hostcert: /chat_server/cert/cert.pem
-          hostkey: /chat_server/cert/key.pem
-          cachain: /chat_server/cert/keytmp.pem
+          hostcert: ../../../chat_server/cert/cert.pem
+          hostkey: ../../../chat_server/cert/key.pem
+          cachain: ../../../chat_server/cert/keytmp.pem
       # install forever, start server
       - name: start Server
         run: |
