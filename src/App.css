@@ -11,12 +11,8 @@
 .h-100{
   height: 100%;
 }
-.main-container {
+.w-100 {
   width: 100%;
-  height: calc(100% - 50px);
-  overflow: hidden;
-  margin-left: 0 !important;
-  position: relative;
 }
 body {
   margin: 0;

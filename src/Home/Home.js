@@ -5,6 +5,8 @@ import GridBigScreens from "./GridBigScreens";
 import RouterSmallScreens from "./RouterSmallScreens";
 import chatSocket from "../chatData/chatSocket";
 
+import './Grid.scss';
+
 export default class Chat extends Component{
 
     constructor(props) {

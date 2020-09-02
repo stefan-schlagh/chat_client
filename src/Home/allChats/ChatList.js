@@ -1,6 +1,7 @@
 import React,{Component} from "reactn";
 import ChatSearchBox from "./ChatSearchBox";
 import ChatItem from "./ChatItem";
+import Dummy from "../../utilComp/Dummy";
 
 import './chatList.scss';
 
@@ -16,7 +17,6 @@ export default class ChatList extends Component{
 
     render() {
 
-        const paddingTop = this.props.paddingTop || '1rem';
         let found = 0;
 
         const showNothingFoundMsg = () => {
@@ -49,11 +49,7 @@ export default class ChatList extends Component{
         };
 
         return(
-            <div style={{
-                paddingTop: paddingTop,
-                height: '100%'
-            }}>
-                <div className="chat-c-list">
+                <Dummy>
                     <ChatSearchBox
                         onSearch={searchValue => {
                             this.setState({
@@ -82,8 +78,7 @@ export default class ChatList extends Component{
                         })}
                     </ul>
                     {showNothingFoundMsg()}
-                </div>
-            </div>
+                </Dummy>
         )
     }
 }
