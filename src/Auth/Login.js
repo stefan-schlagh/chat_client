@@ -5,8 +5,7 @@ import {
 } from "react-router-dom";
 import validate from "validate.js";
 import {ErrorMsg} from "./MsgBox";
-import $ from 'jquery';
-import {extendJQuery} from './authUI';
+import TogglePassword from "./TogglePassword";
 
 class Login extends Component{
 
@@ -20,7 +19,6 @@ class Login extends Component{
             valid: false,
             redirect: false
         };
-        extendJQuery();
     }
     changeHandler = event => {
         let nam = event.target.name;
@@ -185,14 +183,12 @@ class Login extends Component{
                             <div className="form-group">
                                 <label htmlFor="password">Passwort:</label>
                                 {this.pwErr()}
-                                <div id="psw-group">
-                                    <input type="password"
-                                           name="password"
-                                           className="form-control"
-                                           placeholder="Passwort eingeben"
-                                           onChange={this.changeHandler}
-                                    />
-                                </div>
+                                <TogglePassword
+                                       name="password"
+                                       className="form-control"
+                                       placeholder="Passwort eingeben"
+                                       onChange={this.changeHandler}
+                                />
                             </div>
                             <div className="form-group">
                                 haben Sie noch keinen Account? <Link to="/register">Jetzt registrieren</Link>
@@ -207,9 +203,6 @@ class Login extends Component{
                 </div>
             </div>
         )
-    }
-    componentDidMount() {
-        $('#psw-group').pwToggle();
     }
 }
 

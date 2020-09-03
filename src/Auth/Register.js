@@ -1,9 +1,8 @@
 import React,{Component} from "reactn";
 import validate from "validate.js";
 import {ErrorMsg} from "./MsgBox";
-import $ from 'jquery';
-import {extendJQuery} from './authUI';
 import {withRouter} from "react-router-dom";
+import TogglePassword from "./TogglePassword";
 
 class Register extends Component{
 
@@ -18,8 +17,7 @@ class Register extends Component{
             pwRepeat: '',
             valid: false,
             redirect: false
-        };
-        extendJQuery();
+        }
     }
     changeHandler = event => {
         let nam = event.target.name;
@@ -207,26 +205,22 @@ class Register extends Component{
                             <div className="form-group">
                                 <label htmlFor="password">Passwort:</label>
                                 {this.pwErr()}
-                                <div id="psw-group">
-                                    <input type="password"
-                                           name="password"
-                                           className="form-control"
-                                           placeholder="Passwort eingeben"
-                                           onChange={this.changeHandler}
-                                    />
-                                </div>
+                                <TogglePassword
+                                       name="password"
+                                       className="form-control"
+                                       placeholder="Passwort eingeben"
+                                       onChange={this.changeHandler}
+                                />
                             </div>
                             <div className="form-group">
                                 <label htmlFor="password">Passwort wiederholen:</label>
                                 {this.pwRepeatErr()}
-                                <div id="psw-group-repeat">
-                                    <input type="password"
-                                           name="pwRepeat"
-                                           className="form-control"
-                                           placeholder="Passwort eingeben"
-                                           onChange={this.changeHandler}
-                                    />
-                                </div>
+                                <TogglePassword
+                                       name="pwRepeat"
+                                       className="form-control"
+                                       placeholder="Passwort eingeben"
+                                       onChange={this.changeHandler}
+                                />
                             </div>
                             <input type="submit" className="btn btn-primary" value="Registrieren"/>
                         </form>
@@ -234,9 +228,6 @@ class Register extends Component{
                 </div>
             </div>
         )
-    }
-    componentDidMount() {
-        $('#psw-group-repeat, #psw-group').pwToggle();
     }
 }
 
