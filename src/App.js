@@ -10,9 +10,7 @@ import Login from "./Auth/Login";
 import Register from "./Auth/Register";
 import PrivateRoute from "./utilComp/PrivateRoute";
 import Chat from "./Home/Home";
-import 'popper.js';
 
-import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
 
