@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 import NewChat from "./newChat/NewChat";
 import UserInfo from "./userInfo/UserInfo";
+import Settings from "./settings/Settings";
 /*
     modals are always at the end of the url
  */
@@ -24,7 +25,7 @@ export default function ModalRouterSmallScreens(props){
                 )
             } />
             <Route path={`${path}/settings`}>
-                <h3>settings</h3>
+                <Settings/>
             </Route>
             <Route path="*">
                 {props.children}

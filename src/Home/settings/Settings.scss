@@ -1,0 +1,15 @@
+.settings{
+
+  .about {
+    padding: 30px;
+
+    a {
+      font-size: 16pt;
+      font-weight: 600;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
