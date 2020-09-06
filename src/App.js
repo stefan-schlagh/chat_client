@@ -10,9 +10,8 @@ import Login from "./Auth/Login";
 import Register from "./Auth/Register";
 import PrivateRoute from "./utilComp/PrivateRoute";
 import Chat from "./Home/Home";
-import 'popper.js';
+import About from "./About/About";
 
-import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
 
@@ -36,7 +35,7 @@ export default function App() {
                 <Route exact path="/login" component={Login}/>
                 <Route exact path="/register" component={Register}/>
                 <Route path={"/about"}>
-                    <h1>about</h1>
+                    <About/>
                 </Route>
                 <Route exact path="/">
                     <Redirect to={"/chat"}/>

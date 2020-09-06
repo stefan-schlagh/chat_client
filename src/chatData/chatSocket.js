@@ -61,7 +61,7 @@ class ChatSocket{
 
         this.socket = io.connect('/', {secure: true});
         /*
-            userInfo wird an client gesendet
+            authTokens are sent to client
          */
         this.socket.emit('auth', getGlobal().authTokens);
         /*

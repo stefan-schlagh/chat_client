@@ -14,14 +14,12 @@ export default function GridBigScreens(props){
     const { path } = useRouteMatch();
 
     return(
-        <div className="row justify-content-end main-container">
-            <div className="col-md-5 col-lg-4 col-xl-3 d-none d-md-block pr-3 pl-0 h-100">
+        <div className="main-container">
+            <div className="mc-left">
 
                 <ChatList />
             </div>
-            <div className="col-md-7 col-lg-8 col-xl-9 col-overflow"
-                 style={{padding:'0'}}
-            >
+            <div className="mc-right">
 
                 <Switch>
                     <Route path={`${path}/user/:uid`} render={

@@ -1,9 +1,12 @@
 @import "../../sass/list";
 
-.chat-c-list {
+.chat-list-outer-small {
+  padding-top: 20px;
   height: 100%;
   margin: 0.5rem;
+  flex-grow: 1;
 }
+
 .chat-list {
   @extend .v-list;
 

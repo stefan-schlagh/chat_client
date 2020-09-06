@@ -1,7 +1,9 @@
 import React,{Component} from "reactn";
-import $ from 'jquery';
 import HeaderLeft from "./HeaderLeft";
 import {Link,withRouter} from "react-router-dom";
+import Tooltip from "rc-tooltip";
+
+import 'rc-tooltip/assets/bootstrap_white.css';
 
 import './header.scss';
 
@@ -73,28 +75,27 @@ class Header extends Component{
                             <div className="d-only-when-big top-2right">
 
                                 <Link to={pathname + "/userInfo/" + this.global.userSelf.uid}>
-                                    <h4 id="username"
-                                        className="p-2 username"
-                                        data-toggle="tooltip"
-                                        title="Benutzer-Info"
-                                    >
-                                            {this.global.userSelf.username}
-                                    </h4>
+                                    <BottomToolTip text="Benutzer-Info">
+                                        <h4 id="username"
+                                            className="p-2 username"
+                                        >
+                                                {this.global.userSelf.username}
+                                        </h4>
+                                    </BottomToolTip>
                                 </Link>
                                 <div className="float-right">
                                     <Link to={pathname + "/settings"}>
-                                        <i className="fas fa-user-cog fa-2x"
-                                           data-toggle="tooltip"
-                                           title="Einstellungen"
-                                        />
+                                        <BottomToolTip text="Einstellungen">
+                                            <i className="fas fa-user-cog fa-2x"/>
+                                        </BottomToolTip>
                                     </Link>
                                     &nbsp;
-                                    <i id="user-logout"
-                                       className="fas fa-sign-out-alt fa-2x logout"
-                                       data-toggle="tooltip"
-                                       title="logout"
-                                       onClick={this.logout}
-                                    />
+                                    <BottomToolTip text="logout">
+                                        <i id="user-logout"
+                                           className="fas fa-sign-out-alt fa-2x logout"
+                                           onClick={this.logout}
+                                        />
+                                    </BottomToolTip>
                                 </div>
 
                             </div>
@@ -105,12 +106,22 @@ class Header extends Component{
         )
     }
     componentDidMount() {
-        $('[data-toggle="tooltip"]').tooltip();
         document.addEventListener('click',this.clickDocument,false);
     }
     componentWillUnmount() {
         document.removeEventListener('click',this.clickDocument,false);
     }
+}
 
+function BottomToolTip(props){
+    return(
+        <Tooltip placement="bottom"
+                 trigger={['hover']}
+                 overlay={
+                     <span>{props.text}</span>
+                 }>
+            {props.children}
+        </Tooltip>
+    )
 }
 export default withRouter(Header);

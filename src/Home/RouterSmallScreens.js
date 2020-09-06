@@ -64,9 +64,9 @@ export default function RouterSmallScreens(props){
                 } />
                 <Route path={path}>
                     <ModalRouterSmallScreens>
-                        <ChatList
-                            paddingTop="20px"
-                        />
+                        <div className="chat-list-outer-small">
+                            <ChatList/>
+                        </div>
                     </ModalRouterSmallScreens>
                 </Route>
                 <Route path = "*">

@@ -8,6 +8,7 @@ import Modal from "../utilComp/Modal";
 import NewChat from "./newChat/NewChat";
 import Dummy from "../utilComp/Dummy";
 import UserInfo from "./userInfo/UserInfo";
+import Settings from "./settings/Settings";
 /*
     modals are always at the end of the url
  */
@@ -36,7 +37,7 @@ export default function ModalRouterBigScreens(props){
             <Route path={`${path}/settings`}>
                 {props.children}
                 <Modal>
-                    <h3>settings</h3>
+                    <Settings/>
                 </Modal>
             </Route>
             <Route path="*">
