@@ -46,7 +46,7 @@ jobs:
       - name: npm install
         run: |
           cd ./chat_client
-          npm install
+          npm ci
       # build project
       - name: npm run build
         run: |
