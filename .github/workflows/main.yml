@@ -60,7 +60,7 @@ jobs:
       - name: copy build to server
         run: |
           rm -r ./chat_server/build/*
-          cp -r ./chat_client/build ./chat_server/build
+          cp -r ./chat_client/build/* ./chat_server/build/
       # commit chat_server changes
       - name: commit chat_server changes
         run: |
