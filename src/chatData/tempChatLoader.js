@@ -4,7 +4,7 @@ import User from "./User";
 import Message from "./message/message";
 import {getDispatch} from 'reactn';
 import {globalData} from "../global/globalData";
-import {makeRequest} from "../global/requests";
+import {createNormalChat} from "./apiCalls";
 
 export default class TempChatLoader{
 
@@ -52,27 +52,18 @@ export default class TempChatLoader{
         const otherUid = this.chatNow.otherUser;
         const otherUsername = this.chatNow.chatName;
 
-        const config = {
-            method: 'PUT',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                uid: otherUid,
-                username: otherUsername,
-                message: {
-                    type: globalData.messageTypes.normalMessage,
-                    content: {
-                        text: msg,
-                        mentions: [],
-                        media: []
-                    }
+        const response = await createNormalChat({
+            uid: otherUid,
+            username: otherUsername,
+            message: {
+                type: globalData.messageTypes.normalMessage,
+                content: {
+                    text: msg,
+                    mentions: [],
+                    media: []
                 }
-            })
-        };
-
-        const response = await makeRequest('/user/chat', config);
+            }
+        });
 
         if(response.ok){
 

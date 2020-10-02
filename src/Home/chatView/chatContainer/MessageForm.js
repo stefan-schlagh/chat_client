@@ -5,7 +5,7 @@ import { Picker } from 'emoji-mart';
 import {withRouter} from "react-router-dom";
 import Dummy from "../../../utilComp/Dummy";
 import {globalData} from "../../../global/globalData";
-import {makeRequest} from "../../../global/requests";
+import {sendMessage} from "../apiCalls";
 
 import './messageForm.scss';
 
@@ -114,22 +114,14 @@ class MessageForm extends Component{
         /*
             message is sent to server
          */
-        const config = {
-            method: 'PUT',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                type: globalData.messageTypes.normalMessage,
-                content: {
-                    text: msg,
-                    mentions: [],
-                    media: []
-                }
-            })
-        };
-        const response = await makeRequest('/message', config);
+        const response = await sendMessage({
+            type: globalData.messageTypes.normalMessage,
+            content: {
+                text: msg,
+                mentions: [],
+                media: []
+            }
+        });
 
         if (response.ok) {
 

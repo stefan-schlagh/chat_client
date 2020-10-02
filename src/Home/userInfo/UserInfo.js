@@ -4,6 +4,7 @@ import chatSocket from "../../chatData/chatSocket";
 import {ModalHeader,ModalMain} from "../../utilComp/Modal";
 import Dummy from "../../utilComp/Dummy";
 import {makeRequest} from "../../global/requests";
+import {requestUserInfo} from "./apiCalls";
 
 const errorCode = {
     none: 0,
@@ -79,7 +80,7 @@ export default class UserInfo extends Component{
                 error: errorCode.none,
                 loaded: false
             });
-            this.fetchUser(uid)
+            this.requestUserInfo(uid)
                 .then()
                 .catch();
         }
@@ -87,15 +88,9 @@ export default class UserInfo extends Component{
     /*
         userInfo gets fetched from server
      */
-    async fetchUser (uid) {
+    async requestUserInfo (uid) {
 
-        const config = {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json'
-            }
-        };
-        const response = await makeRequest('/user/' + uid, config);
+        const response = await requestUserInfo(uid);
         //const json = await response.json()
         if (response.ok) {
             //return json

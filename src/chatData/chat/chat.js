@@ -2,7 +2,7 @@ import BinSearchArray from "../../util/BinSearch";
 import Message from "../message/message";
 import EventHandler from "../../util/Event";
 import {getDispatch} from 'reactn';
-import {makeRequest} from "../../global/requests";
+import {loadMessages} from "../apiCalls";
 
 export class Chat {
 
@@ -58,20 +58,12 @@ export class Chat {
             /*
                 messages are loaded from server
              */
-            const config = {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    chatType: this.type,
-                    chatId: this.id,
-                    lastMsgId: getLastMsgId(),
-                    num: num
-                })
-            };
-            const response = await makeRequest('/message/load', config);
+            const response = await loadMessages({
+                chatType: this.type,
+                chatId: this.id,
+                lastMsgId: getLastMsgId(),
+                num: num
+            });
 
             if (response.ok) {
 

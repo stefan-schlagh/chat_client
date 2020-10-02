@@ -2,7 +2,7 @@ import React,{Component} from "react";
 import {withRouter} from "react-router-dom";
 import SelectUsers from "../../selectUsers/SelectUsers";
 import GroupInfoForm from "./GroupInfoForm";
-import {makeRequest} from "../../../global/requests";
+import {createGroupChat, requestUsers} from "../apiCalls";
 
 const tabs = {
     selectUsers: 0,
@@ -43,18 +43,10 @@ class NewGroup extends Component{
 
     createGroupChat = async (data,users) => {
         try {
-            const config = {
-                method: 'PUT',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    data: data,
-                    users: users
-                })
-            };
-            const response = await makeRequest('/group/', config);
+            const response = await createGroupChat({
+                data: data,
+                users: users
+            });
             /*
                 if ok, modal is closed
              */
@@ -70,23 +62,14 @@ class NewGroup extends Component{
         searchValue,
         numAlreadyLoaded
     ) => {
-
-        const config = {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                search: searchValue,
-                limit: 10,
-                start: numAlreadyLoaded
-            })
-        };
         /*
             response is returned
          */
-        return await makeRequest('/user/', config);
+        return await requestUsers({
+            search: searchValue,
+            limit: 10,
+            start: numAlreadyLoaded
+        })
     };
 
     render() {

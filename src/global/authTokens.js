@@ -1,7 +1,7 @@
 import {addReducer} from 'reactn';
 import {fetchData} from "./globalData";
-import {makeRequest} from "./requests";
 import {resetChatSocket} from "../chatData/chatSocket";
+import {reqUserSelf} from "./apiCalls";
 
 export function authTokens(){
 
@@ -31,17 +31,7 @@ export function authTokens(){
              */
             await fetchData();
 
-            const config = {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json'
-                }
-            };
-            const response = await makeRequest(
-                '/user/self',
-                config,
-                existingTokens
-            );
+            const response = await reqUserSelf(existingTokens);
             /*
                 not authenticated
                     --> token is deleted

@@ -6,7 +6,7 @@ import {GroupChat} from "./chat/groupChat";
 import EventHandler from "../util/Event";
 import TempChatLoader from "./tempChatLoader";
 import {getGlobal,getDispatch} from 'reactn';
-import {makeRequest} from "../global/requests";
+import {selectChats} from "./apiCalls";
 
 class ChatSocket{
 
@@ -166,16 +166,7 @@ class ChatSocket{
 
     async initChats(){
 
-        const config = {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json'
-            }
-        };
-        /*
-            chats are requested
-         */
-        const response = await makeRequest('/chats', config);
+        const response = await selectChats();
 
         if(response.status === 200) {
 
