@@ -1,7 +1,7 @@
 import React from 'react';
 import { render,getNodeText } from '@testing-library/react';
-import App from './App';
-import LocalStorageMock from './test/localStorageMock';
+import App from '../App';
+import LocalStorageMock from '../test/localStorageMock';
 
 test('test chat app', async () => {
 

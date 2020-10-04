@@ -1,11 +1,17 @@
 import {makeRequest} from "../../global/requests";
 
-export async function requestUserInfo(uid){
+export const fetchUserInfo = async (uid) => {
     const config = {
         method: 'GET',
         headers: {
             'Accept': 'application/json'
         }
     };
-    return  await makeRequest('/user/' + uid, config);
+    const response = await makeRequest('/user/' + uid, config);
+
+    if(response.ok){
+        return await response.json();
+    }else{
+        throw new Error("Error fetching UserInfo");
+    }
 }
