@@ -2,7 +2,7 @@ import React,{Component} from "react";
 import {withRouter} from "react-router-dom";
 import SelectUsers from "../../selectUsers/SelectUsers";
 import GroupInfoForm from "./GroupInfoForm";
-import {createGroupChat, requestUsers} from "../apiCalls";
+import {createGroupChat, fetchUsers} from "../apiCalls";
 
 const tabs = {
     selectUsers: 0,
@@ -65,7 +65,7 @@ class NewGroup extends Component{
         /*
             response is returned
          */
-        return await requestUsers({
+        return await fetchUsers({
             search: searchValue,
             limit: 10,
             start: numAlreadyLoaded

@@ -1,38 +1,30 @@
 import React from "react";
 import {useHistory} from "react-router-dom";
-import {makeRequest} from "../../../global/requests";
 import SelectUsers from "../../selectUsers/SelectUsers";
 import {ModalHeader, ModalMain} from "../../../utilComp/Modal";
 import Dummy from "../../../utilComp/Dummy";
-
+import {addMembers, fetchUsersNotInGroup} from "./apiCalls";
+/*
+    props:
+        gcid: id of the groupChat
+ */
 export default function AddUsers(props){
 
     let history = useHistory();
 
     const submitUsers = async (selectedUsers) => {
-
-        const config = {
-            method: 'PUT',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                users: selectedUsers
-            })
-        };
-
-        const response =
-            await makeRequest(
-                '/group/' + props.gcid + '/members',
-                config
-            );
         /*
-            if ok, modal is closed
+            addMembers call returns nothing
          */
-        if(response.ok)
+        try{
+            await addMembers(props.gcid,selectedUsers);
+            /*
+                if ok, modal is closed
+             */
             history.goBack();
-
+        }catch (e){
+            //TODO: error message
+        }
     };
 
     const loadUsers = async (
@@ -40,25 +32,13 @@ export default function AddUsers(props){
         numAlreadyLoaded
     ) => {
 
-        const config = {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
+        return await fetchUsersNotInGroup(
+            props.gcid,{
                 search: searchValue,
                 limit: 10,
                 start: numAlreadyLoaded
-            })
-        };
-        /*
-            response is returned
-         */
-        return await makeRequest(
-            '/user/notInGroup/' + props.gcid,
-            config
-        );
+            }
+        )
     };
 
     return(
@@ -69,10 +49,12 @@ export default function AddUsers(props){
                 </h2>
             </ModalHeader>
             <ModalMain>
-                <SelectUsers
-                    onNext={submitUsers}
-                    loadUsers={loadUsers}
-                />
+                <div className={"addMembers"}>
+                    <SelectUsers
+                        onNext={submitUsers}
+                        loadUsers={loadUsers}
+                    />
+                </div>
             </ModalMain>
         </Dummy>
     )

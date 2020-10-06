@@ -25,7 +25,7 @@ export async function createGroupChat(body){
     };
     return await makeRequest('/group/', config);
 }
-export async function requestUsers(body){
+export async function fetchUsers(body){
     const config = {
         method: 'POST',
         headers: {
@@ -34,8 +34,11 @@ export async function requestUsers(body){
         },
         body: JSON.stringify(body)
     };
-    /*
-        response is returned
-     */
-    return await makeRequest('/user/', config);
+    const response = await makeRequest('/user/', config);
+
+    if(response.ok){
+        return await response.json();
+    }else{
+        throw new Error("Error fetching users");
+    }
 }

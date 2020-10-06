@@ -59,31 +59,21 @@ export default class extends Component {
 
             try {
 
-                const response = await this.props.loadUsers(
+                const data = await this.props.loadUsers(
                     searchValue,
                     length
                 );
 
-                if (response.ok) {
-                    //return json
-                    let data = await response.json();
-
-                    if (data.length === 0) {
-                        this.setState({
-                            hasMore: false
-                        })
-                    } else {
-                        this.setState(state => ({
-                            searchResult: state.searchResult.concat(data)
-                        }));
-                    }
+                if (data.length === 0) {
                     this.setState({
+                        hasMore: false,
                         error: errorCode.none
-                    });
+                    })
                 } else {
-                    this.setState({
-                        error: errorCode.error
-                    });
+                    this.setState(state => ({
+                        searchResult: state.searchResult.concat(data),
+                        error: errorCode.none
+                    }));
                 }
 
             } catch (error) {
