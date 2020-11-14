@@ -27,7 +27,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "cross-env INLINE_RUNTIME_CHUNK=false react-scripts build",
-    "test": "react-scripts test --testURL=http://localhost a",
+    "test": "react-scripts test a",
     "eject": "react-scripts eject"
   },
   "type": "module",
