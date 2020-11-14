@@ -1,96 +1,49 @@
-import React,{Component} from "react";
-import {Link,withRouter} from "react-router-dom";
+import React from "react";
+import {Link,useLocation} from "react-router-dom";
 import Dummy from "../../../utilComp/Dummy";
-import {makeRequest} from "../../../global/requests";
+import {leaveChat, removeSelfAdmin} from "./apiCalls";
 
-class ChatOptions extends Component {
+export default function ChatOptions(props) {
 
-    isSelfAdmin = () => {
-        return this.props.memberSelf.isAdmin;
+    const {pathname} = useLocation();
+
+    const isSelfAdmin = () => {
+        return props.memberSelf.isAdmin;
     };
 
-    leaveChat = async () => {
-
-        const config = {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json'
-            }
-        };
-
-        const response =
-            await makeRequest(
-                '/group/' + this.props.gcid + '/leave',
-                config
-            );
-
-        if(response.ok) {
-
-            const data = await response.json();
-
-            if(data.error){
-                console.log(data.error);
-            }
-        }
-    };
-
-    removeSelfAdmin = async () => {
-
-        const config = {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json'
-            }
-        };
-
-        const response =
-            await makeRequest(
-                '/group/' + this.props.gcid + '/removeAdmin',
-                config
-            );
-
-        if(response.ok) {
-
-            const data = await response.json();
-
-            if(data.error){
-                console.log(data.error);
-            }
-        }
-    };
-
-    render() {
-
-        const {pathname} = this.props.location;
-
-        return(
-            <ul className="chatOptions">
-                {this.isSelfAdmin() ?
-                    <Dummy>
-                        <li key={0}>
-                            <Link to={pathname + "/addUsers"}>
-                                Benutzer hinzufügen
-                            </Link>
-                        </li>
-                        <li
-                            key={1}
-                            className="noLink"
-                            onClick={this.removeSelfAdmin}
-                        >
-                            admin status entfernen
-                        </li>
-                    </Dummy>
-                    : null}
-                <li
-                    key={2}
-                    className="noLink"
-                    onClick={this.leaveChat}
-                >
-                    Chat verlassen
-                </li>
-            </ul>
-        )
-    }
+    return(
+        <ul className="chatOptions">
+            {isSelfAdmin() ?
+                <Dummy>
+                    <li key={0} className="addUsers">
+                        <Link to={pathname + "/addUsers"}>
+                            Benutzer hinzufügen
+                        </Link>
+                    </li>
+                    <li
+                        key={1}
+                        className="removeSelfAdmin noLink"
+                        onClick={() => {
+                            removeSelfAdmin(props.gcid)
+                                .then(() => {})
+                                .catch(err => {console.log(err)})
+                        }}
+                    >
+                        admin status entfernen
+                    </li>
+                </Dummy>
+                : null}
+            <li
+                key={2}
+                className="leaveChat noLink"
+                onClick={() => {
+                    leaveChat(props.gcid)
+                        .then(() => {})
+                        .catch(err => {console.log(err)})
+                }}
+            >
+                Chat verlassen
+            </li>
+        </ul>
+    )
 }
-
-export default withRouter(ChatOptions);

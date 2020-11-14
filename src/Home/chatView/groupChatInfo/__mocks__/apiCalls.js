@@ -1,6 +1,6 @@
 export const addMembers = jest.fn()
     .mockImplementation((gcid,users) => ({
-        a:1
+
     }))
 
 export const fetchUsersNotInGroup = jest.fn()
@@ -22,3 +22,14 @@ export const fetchUsersNotInGroup = jest.fn()
             username: 'ddd'
         }
     ]))
+export const leaveChat = jest.fn()
+    .mockImplementation(() => {
+        console.log("leaveChat clicked")
+        return {}
+    })
+
+export const removeSelfAdmin = jest.fn()
+    .mockImplementation(() => {
+        console.log("removeSelfAdmin clicked")
+        return {}
+    })
