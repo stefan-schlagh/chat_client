@@ -26,13 +26,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           path: chat_client
-      # chat server repository is checked out
-      - name: Checkout server repo
-        uses: actions/checkout@v2
-        with:
-          repository: stefan-schlagh/chat_server
-          token: ${{ secrets.CHATSERVER_ACCESS }}
-          path: chat_server
       # node.js setup
       - uses: actions/setup-node@v1
         with:
@@ -41,38 +34,14 @@ jobs:
       - name: npm install
         run: |
           cd ./chat_client
-          npm install
-          cd ../chat_server
-          npm install
-      # setup mysql DB
-      - name: setup mysql DB
-        run: |
-          sudo systemctl start mysql.service
-          mysql -h 127.0.0.1 -P 3306 -u root "-proot" -e "CREATE DATABASE chat;"
-          mysql -h 127.0.0.1 -P 3306 -u root "-proot" "chat" < "./chat_server/sql/chat.sql"
-      # create private key, .env
-      - name: create jwt private key
-        run: |
-          cd ./chat_server
-          mkdir cert
-          cd ./cert
-          openssl genrsa -out jwtPrivate.pem 1024
-          cd ..
-          cp ./test_templates/test.env ./.env
-      # create certificate
-      - name: create certificate
-        run: |
-          cd ./chat_server/cert
-          openssl req  -nodes -new -x509  -keyout key.pem -out cert.pem -subj "/C=AT/ST=Vienna/L=Vienna/O=/CN="
-          dir
-      # install forever, start server
-      - name: start Server
-        run: |
-          sudo npm install forever -g
-          cd ./chat_server
-          forever start index.js
-      # install dependencies
+          npm ci
+      # test
       - name: npm test
         run: |
           cd ./chat_client
           npm test
+      # test build
+      - name: npm test build
+          run: |
+            cd ./chat_client
+            npm run build
