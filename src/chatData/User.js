@@ -1,7 +1,7 @@
 import Colors from "../util/Color";
 import BinSearchArray from "../util/BinSearch";
 import chatSocket from "./chatSocket";
-import {makeRequest} from "../global/requests";
+import {selectUser} from "./apiCalls";
 
 export const UserErrorCode = {
     none: 0,
@@ -48,13 +48,7 @@ export async function getUserNormalChat(uid){
             request user from server
          */
         try {
-            const config = {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json'
-                }
-            };
-            const response = await makeRequest('/user/' + uid, config);
+            const response = await selectUser(uid);
             /*
                 if ok, modal is closed
              */

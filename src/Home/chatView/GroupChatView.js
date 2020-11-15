@@ -11,7 +11,7 @@ import {
     NoMemberInPublicChat,
     GeneralError
 } from "./chatViewErrorMessages";
-import {makeRequest} from "../../global/requests";
+import {loadGroupChat} from "./apiCalls";
 
 export const groupChatErrorCode = {
     none: 0,
@@ -42,13 +42,7 @@ export default class GroupChatView extends Component{
     loadGroupChatInfo = async(gcid) => {
 
         try {
-            const config = {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json'
-                }
-            };
-            const response = await makeRequest('/group/' + this.props.gcid + '/', config);
+            const response = await loadGroupChat(this.props.gcid);
 
             if(response.status === 403)
                 return groupChatErrorCode.private;

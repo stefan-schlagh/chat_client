@@ -6,6 +6,7 @@ import {
 import validate from "validate.js";
 import {ErrorMsg} from "./MsgBox";
 import TogglePassword from "./TogglePassword";
+import {login} from "./apiCalls";
 
 class Login extends Component{
 
@@ -92,8 +93,10 @@ class Login extends Component{
            /*
                 request to server
             */
-           this.login(this.state.username,this.state.password).then(data => {
-               if(!data.success){
+           login(this.state.username,this.state.password).then(data => {
+               if(data.success) {
+                   this.props.history.push('/chat');
+               }else{
 
                    if(data.username !== undefined)
                        this.setState({
@@ -125,41 +128,6 @@ class Login extends Component{
                     {this.state.pwErr}
                 </ErrorMsg>
             )
-    };
-
-    login = async (username,password) => {
-        try {
-            const config = {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    username: username,
-                    password: password
-                })
-            };
-            const response = await fetch('/auth/login', config);
-            //const json = await response.json()
-            if (response.ok) {
-                //return json
-                let data = await response.json();
-
-                if(data.success) {
-                    this.dispatch.setUserSelf(data.uid,username);
-
-                    this.dispatch.setAuthTokens(data.tokens);
-
-                    this.props.history.push('/chat');
-                }
-                return data;
-            } else {
-                return null;
-            }
-        } catch (error) {
-            return null;
-        }
     };
 
     render(){

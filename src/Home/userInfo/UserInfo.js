@@ -1,15 +1,17 @@
-import React,{Component} from "react";
+import React, {Component} from "react";
 import {Link} from 'react-router-dom';
-import chatSocket from "../../chatData/chatSocket";
-import {ModalHeader,ModalMain} from "../../utilComp/Modal";
+import {ModalHeader, ModalMain} from "../../utilComp/Modal";
 import Dummy from "../../utilComp/Dummy";
-import {makeRequest} from "../../global/requests";
+import {fetchUserInfo} from "./userInfoApiCalls";
 
-const errorCode = {
+export const errorCode = {
     none: 0,
     isSelf: 1,
     //not a number
-    nan: 2
+    nan: 2,
+    notExisting: 3,
+    blocked: 4,
+    defaultError: 5
 };
 
 export default class UserInfo extends Component{
@@ -41,6 +43,10 @@ export default class UserInfo extends Component{
                     </ModalMain>
                 </Dummy>
             )
+        }else if(!this.state.error.none){
+            return(
+                <div>Error!</div>
+            )
         }else{
             return(
                 <Dummy>
@@ -61,16 +67,11 @@ export default class UserInfo extends Component{
         }
     }
 
-    setUser = () => {
+    setUser = async() => {
 
         if(isNaN(this.props.uid)){
             this.setState({
                 error: errorCode.nan
-            });
-        }else if(chatSocket.userSelf.uid === parseInt(this.props.uid)){
-            this.setState({
-                error: errorCode.isSelf,
-                loaded: true
             });
         }else{
             const uid = parseInt(this.props.uid);
@@ -79,55 +80,63 @@ export default class UserInfo extends Component{
                 error: errorCode.none,
                 loaded: false
             });
-            this.fetchUser(uid)
-                .then()
-                .catch();
+            try {
+                const data = await fetchUserInfo(uid)
+
+                if (data.uidSelf === uid) {
+                    this.setState({
+                        error: errorCode.isSelf,
+                        loaded: true
+                    });
+                }else if(!data.userExists){
+                    this.setState({
+                        error: errorCode.notExisting,
+                        loaded: true
+                    });
+                }else if(data.blocked){
+                    this.setState({
+                        error: errorCode.blocked,
+                        loaded: true
+                    });
+                }else {
+                    this.setState({
+                        userInfo: data,
+                        loaded: true
+                    });
+                }
+            }catch(err){
+                this.setState({
+                    error: errorCode.defaultError,
+                    loaded: true
+                });
+            }
         }
     };
-    /*
-        userInfo gets fetched from server
-     */
-    async fetchUser (uid) {
 
-        const config = {
-            method: 'GET',
-            headers: {
-                'Accept': 'application/json'
-            }
-        };
-        const response = await makeRequest('/user/' + uid, config);
-        //const json = await response.json()
-        if (response.ok) {
-            //return json
-            let data = await response.json();
-
+    async componentDidMount() {
+        try {
+            await this.setUser();
+        }catch(err){
             this.setState({
-                userInfo: data,
+                error: 4,
                 loaded: true
             });
-
-            return data;
-        } else {
-            return null;
         }
     }
 
-    componentDidMount() {
-        this.setUser();
-    }
-
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        /*
-            check if uid changed
-         */
-        if(prevProps.uid !== this.props.uid){
-            this.setUser();
+    async componentDidUpdate(prevProps, prevState, snapshot) {
+        try{
+            /*
+                check if uid changed
+             */
+            if(prevProps.uid !== this.props.uid){
+                await this.setUser();
+            }
+        }catch(err){
+            this.setState({
+                error: 4,
+                loaded: true
+            });
         }
     }
-
-    componentWillUnmount() {
-
-    }
-
-
 }

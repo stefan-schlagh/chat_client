@@ -3,6 +3,7 @@ import validate from "validate.js";
 import {ErrorMsg} from "./MsgBox";
 import {withRouter} from "react-router-dom";
 import TogglePassword from "./TogglePassword";
+import {register} from "./apiCalls";
 
 class Register extends Component{
 
@@ -113,9 +114,10 @@ class Register extends Component{
             /*
                 request to server
              */
-            this.register(this.state.username,this.state.password).then(data => {
-                if(!data.success){
-
+            register(this.state.username,this.state.password).then(data => {
+                if(data.success) {
+                    this.props.history.push('/chat');
+                }else{
                     if (data.username !== undefined)
                         this.setState({
                             valid: false,
@@ -148,40 +150,6 @@ class Register extends Component{
                     {this.state.pwRepeatErr}
                 </ErrorMsg>
             )
-    };
-
-    register = async(username,password) => {
-        try {
-            const config = {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    username: username,
-                    password: password
-                })
-            };
-            const response = await fetch('/auth/register', config);
-            //const json = await response.json()
-            if (response.ok) {
-                //return json
-                let data = await response.json();
-
-                if(data.success) {
-                    this.dispatch.setUserSelf(data.uid,username);
-
-                    this.dispatch.setAuthTokens(data.tokens);
-
-                    this.props.history.push('/chat');
-                }
-                return data;
-            }else
-                return null;
-        } catch (error) {
-            return null;
-        }
     };
 
     render(){

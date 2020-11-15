@@ -1,13 +1,13 @@
 import React,{Component} from "react";
 import {tabs} from "../NewChat";
 import Dummy from "../../../utilComp/Dummy";
-import {makeRequest} from "../../../global/requests";
 import SelectChat from "../../selectChat/SelectChat";
 import Dropdown from 'rc-dropdown';
 
 import 'rc-dropdown/assets/index.css';
 
 import './chooseUser.scss';
+import {requestUsersNoChat} from "../apiCalls";
 
 const errorCode={
     none: 0,
@@ -59,22 +59,14 @@ export default class ChooseUser extends Component{
         numAlreadyLoaded
     ) => {
 
-        const config = {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                search: searchValue,
-                limit: 10,
-                start: numAlreadyLoaded
-            })
-        };
         /*
             response is returned
          */
-        return await makeRequest('/user/noChat', config);
+        return await requestUsersNoChat({
+            search: searchValue,
+            limit: 10,
+            start: numAlreadyLoaded
+        });
     };
 
     render() {

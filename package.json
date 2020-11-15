@@ -18,7 +18,7 @@
     "react-ions": "^5.3.8",
     "react-router": "latest",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "4.0.0",
+    "react-scripts": "3.4.3",
     "reactn": "^2.2.7",
     "socket.io-client": "^2.3.1",
     "styled-components": "^5.2.1",
@@ -26,8 +26,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "test": "react-scripts test a",
     "build": "cross-env INLINE_RUNTIME_CHUNK=false CI=false react-scripts build",
-    "test": "react-scripts test --testURL=http://localhost a",
     "eject": "react-scripts eject"
   },
   "type": "module",
@@ -47,6 +47,8 @@
     ]
   },
   "devDependencies": {
-    "cross-env": "^7.0.2"
+    "cross-env": "^7.0.2",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.5"
   }
 }
