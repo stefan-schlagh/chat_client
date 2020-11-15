@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import UserInfo, {errorCode} from "../Home/userInfo/UserInfo";
 import { shallow } from 'enzyme';
 
-jest.mock('../Home/userInfo/apiCalls');
+jest.mock('../Home/userInfo/userInfoApiCalls');
 
 describe('UserInfo', () => {
     describe('componentDidMount', () => {

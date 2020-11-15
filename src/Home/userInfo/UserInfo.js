@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {Link} from 'react-router-dom';
 import {ModalHeader, ModalMain} from "../../utilComp/Modal";
 import Dummy from "../../utilComp/Dummy";
-import {fetchUserInfo} from "./apiCalls";
+import {fetchUserInfo} from "./userInfoApiCalls";
 
 export const errorCode = {
     none: 0,
