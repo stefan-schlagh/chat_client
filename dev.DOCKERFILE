@@ -25,12 +25,6 @@ COPY . .
 
 RUN sed -i -e 's/localhost/chat-server/g' package.json
 
-
-#    wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
-#    apt-get install ./google-chrome-stable_current_amd64.deb -y && \
-#    apt-get install xvfb -y && \
-#    npm install -g --unsafe-perm chromedriver
-
 EXPOSE 3000
 
 CMD [ "npm", "start" ]
