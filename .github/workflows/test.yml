@@ -12,7 +12,8 @@ on:
         required: true
         default: 'warning'
       tags:
-        description: 'Test scenario tags' 
+        description: 'Test scenario tags'
+        required: false
 
 jobs:
   test:
@@ -45,3 +46,33 @@ jobs:
         run: |
           cd ./chat_client
           npm run build
+  e2eTest:
+    name: e2eTest
+    runs-on: ubuntu-latest
+
+    steps:
+      # chat client repository is checked out
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          path: chat_client
+      # chat server repository is checked out
+      - name: Checkout server repo
+        uses: actions/checkout@v2
+        with:
+          repository: stefan-schlagh/chat_server
+          path: chat_server
+      - name: Create .env file
+        env:
+          DOCKER_ENV: ${{ secrets.DOCKER_ENV}}
+        run: |
+          cd ./chat_server/test_templates
+          touch docker.env
+          printenv DOCKER_ENV > docker.env
+      - name: run tests
+        run: |
+          cd ./chat-client/src/webdriver
+          docker-compose up -d --build
+          sleep 10s
+          docker exec -t -i webdriver_chat-client_1 npm run webdriver
+          docker-compose down
