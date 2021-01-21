@@ -74,5 +74,5 @@ jobs:
           cd ./chat_client/webdriver
           docker-compose up -d --build
           sleep 10s
-          docker-compose exec chat-client npm run webdriver
+          docker-compose exec -T chat-client npm run webdriver
           docker-compose down
