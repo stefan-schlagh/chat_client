@@ -71,7 +71,7 @@ jobs:
           printenv DOCKER_ENV > docker.env
       - name: run tests
         run: |
-          cd ./chat-client/src/webdriver
+          cd ./chat-client/webdriver
           docker-compose up -d --build
           sleep 10s
           docker exec -t -i webdriver_chat-client_1 npm run webdriver

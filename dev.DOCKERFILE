@@ -7,7 +7,7 @@ WORKDIR /usr/src/app
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 # where available (npm@5+)
 COPY package*.json ./
-COPY src/webdriver/package*.json src/webdriver/
+COPY webdriver/package*.json webdriver/
 
 USER root
 
@@ -17,7 +17,7 @@ RUN apt-get update --fix-missing && \
     apt-get install -y nodejs
 
 RUN npm ci && \
-    cd src/webdriver && \
+    cd webdriver && \
     npm ci
 
 # Bundle app source

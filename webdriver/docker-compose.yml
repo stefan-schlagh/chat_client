@@ -12,7 +12,7 @@ services:
   chat-server:
     build:
       dockerfile: .DOCKERFILE
-      context: ../../../chat_server/
+      context: ../../chat_server/
     restart: unless-stopped
     depends_on:
       - database
@@ -22,7 +22,7 @@ services:
   chat-client:
     build:
       dockerfile: dev.DOCKERFILE
-      context: ../../
+      context: ../
     restart: unless-stopped
     stdin_open: true
     depends_on:
