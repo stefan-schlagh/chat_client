@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.test.js",
   "scripts": {
-    "test": "xvfb-run jest --maxWorkers=1"
+    "test": "xvfb-run jest",
+    "testWithHead": "jest"
   },
   "keywords": [],
   "author": "",

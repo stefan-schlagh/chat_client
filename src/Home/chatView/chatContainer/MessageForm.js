@@ -156,6 +156,7 @@ class MessageForm extends Component{
                     <div className="message-input">
                         <input autoComplete="off"
                                placeholder="Nachricht:"
+                               name="message-input-text"
                                value={this.state.message}
                                onChange={this.onTyping}
                         />
