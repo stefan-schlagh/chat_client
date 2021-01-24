@@ -1,4 +1,9 @@
-export const fetchUserInfo = jest.fn()
+export const fetchUserInfo = jest.fn(() => ({
+            uidSelf: 2,
+            username: "test123",
+            blocked: false,
+            userExists: true
+        }))
     //success
     .mockImplementationOnce(() => ({
         uidSelf: 2,
@@ -8,7 +13,7 @@ export const fetchUserInfo = jest.fn()
     }))
     //error while fetching
     .mockImplementationOnce(() => {
-        throw new Error('Error fetching userInfo')
+        throw new Error('Error fetching userInfo');
     })
     //user does not exist
     .mockImplementationOnce(() => ({
@@ -21,4 +26,4 @@ export const fetchUserInfo = jest.fn()
         username: "test321",
         blocked: true,
         userExists: true
-    }))
+    }));
