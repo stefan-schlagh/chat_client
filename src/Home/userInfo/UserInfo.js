@@ -27,10 +27,16 @@ export default class UserInfo extends Component{
     }
 
     render() {
+        /*
+            if not already loaded, show nothing
+         */
         if(!this.state.loaded){
             return null;
-
-        }else if(this.state.error === errorCode.isSelf){
+        }
+        /*
+            if the user self is requested
+         */
+        else if(this.state.error === errorCode.isSelf){
             return(
                 <Dummy>
                     <ModalHeader>
@@ -43,10 +49,16 @@ export default class UserInfo extends Component{
                     </ModalMain>
                 </Dummy>
             )
-        }else if(!this.state.error.none){
+        /*
+            if there is a error, show a generic error message
+         */
+        }else if(this.state.error !== errorCode.none){
             return(
                 <div>Error!</div>
             )
+        /*
+            no error, show the userInfo
+         */
         }else{
             return(
                 <Dummy>
