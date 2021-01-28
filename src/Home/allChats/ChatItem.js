@@ -108,7 +108,7 @@ export default class ChatItem extends Component{
         };
 
         return(
-            <li className={"chat-item" + (this.isSelected() ? "selected " : "")}>
+            <li className={"chat-item" + (this.isSelected() ? " selected " : "")}>
                 <Link to={getLink()}>
                     <div className="w-100">
                         <strong className="chatItem-username">
