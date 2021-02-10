@@ -62,6 +62,25 @@ jobs:
         with:
           repository: stefan-schlagh/chat_server
           path: chat_server
+      # install dependencies
+      - name: npm ci
+        run: |
+          cd ./chat_client
+          npm ci
+      # build project
+      - name: npm run build
+        run: |
+          cd ./chat_client
+          npm run build
+        # set env CI to false -> ignore warnings
+        env:
+          CI: ""
+      - run: dir
+      # build is copied to server
+      - name: copy build to server
+        run: |
+          rm -r ./chat_server/build/*
+          cp -r ./chat_client/build/* ./chat_server/build/
       - name: Create .env file
         env:
           DOCKER_ENV: ${{ secrets.DOCKER_ENV}}
@@ -71,8 +90,8 @@ jobs:
           printenv DOCKER_ENV > docker.env
       - name: run tests
         run: |
-          cd ./chat_client/webdriver
+          cd ./chat_server/webdriver
           docker-compose up -d --build
           sleep 10s
-          docker-compose exec -T chat-client npm run webdriver
+          docker-compose exec -T chat-server npm run webdriver
           docker-compose down

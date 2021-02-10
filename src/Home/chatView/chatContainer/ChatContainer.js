@@ -6,6 +6,7 @@ import Message from "./message/Message";
 import {isDifferentDay} from '../../../chatData/message/message'
 
 import './chatContainer.scss';
+import Dummy from "../../../utilComp/Dummy";
 
 export default class ChatContainer extends Component{
 
@@ -216,12 +217,12 @@ export default class ChatContainer extends Component{
                     {showLoaderTop()}
                     {this.global.currentChat.messages.map((msg,i) => {
                         return (
-                            <div key={i}>
+                            <Dummy key={i}>
                                 {renderDateContainer(msg)}
                                 <Message
                                     msg={msg}
                                 />
-                            </div>
+                            </Dummy>
                         );
                     })}
                     {renderAlertNoMessages()}
