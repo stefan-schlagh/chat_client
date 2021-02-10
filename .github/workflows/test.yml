@@ -62,6 +62,11 @@ jobs:
         with:
           repository: stefan-schlagh/chat_server
           path: chat_server
+      # install dependencies
+      - name: npm ci
+        run: |
+          cd ./chat_client
+          npm ci
       # build project
       - name: npm run build
         run: |
