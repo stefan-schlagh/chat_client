@@ -28,14 +28,15 @@ export default function RouterSmallScreens(props){
     };
 
     return(
-        <div className="main-container">
             <Switch>
                 <Route path={`${path}/user/:uid`} render={
                     routeProps => (
                         <ModalRouterSmallScreens>
-                            <NormalChatView
-                                uid={routeProps.match.params.uid}
-                            />
+                            <div className="main-container">
+                                <NormalChatView
+                                    uid={routeProps.match.params.uid}
+                                />
+                            </div>
                             {renderTypeMsgContainer()}
                         </ModalRouterSmallScreens>
                     )
@@ -44,10 +45,12 @@ export default function RouterSmallScreens(props){
                 <Route path={`${path}/group/:gcid`} render={
                     routeProps => (
                         <ModalRouterSmallScreens>
-                            <GroupChatView
-                                gcid={routeProps.match.params.gcid}
-                                tab={groupChatTabs.chat}
-                            />
+                            <div className="main-container">
+                                <GroupChatView
+                                    gcid={routeProps.match.params.gcid}
+                                    tab={groupChatTabs.chat}
+                                />
+                            </div>
                             {renderTypeMsgContainer()}
                         </ModalRouterSmallScreens>
                     )
@@ -73,7 +76,6 @@ export default function RouterSmallScreens(props){
                     <h3>Not found!</h3>
                 </Route>
             </Switch>
-        </div>
     )
 
 }
