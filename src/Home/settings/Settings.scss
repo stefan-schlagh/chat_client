@@ -1,6 +1,33 @@
+@import "../../sass/colors";
+
 .settings{
 
-  .about {
+  .settings-header {
+    font-size: 20px;
+  }
+
+  .settings-body {
+    padding: 5px;
+  }
+
+  .email form {
+    padding-left: 5px;
+  }
+
+  i {
+    color: $cBlack2HoverNo;
+    cursor: pointer;
+
+    &:hover {
+      color: $cBlack2HoverYes;
+    }
+  }
+
+  .emailChanged {
+    color: #00cc00;
+  }
+
+  .settings-about {
     padding: 30px;
 
     a {
