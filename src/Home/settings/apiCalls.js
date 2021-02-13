@@ -32,14 +32,10 @@ export const setEmail = async (body) => {
         body: JSON.stringify(body)
     };
 
-    const response =
-        await makeRequest(
-            '/user/setEmail',
-            config
-        );
-    if(response.ok) {
-        return response;
-    }else{
-        throw new Error("Error requesting user info!");
-    }
+    const response =  await makeRequest(
+        '/user/setEmail',
+        config
+    );
+    console.log(response);
+    return response;
 }

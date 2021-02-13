@@ -16,7 +16,8 @@ export default class Settings extends Component{
             loaded: false,
             error: false,
             isEditing: false,
-            emailChangeRequested: false
+            emailChangeRequested: false,
+            setEmailError: false
         }
     }
 
@@ -28,6 +29,10 @@ export default class Settings extends Component{
                 this.setState({
                     emailChangeRequested: true
                 })
+            }else {
+                this.setState({
+                    setEmailError: true
+                })
             }
         }).catch(err => {
             console.log(err);
@@ -35,9 +40,6 @@ export default class Settings extends Component{
     }
 
     render() {
-        console.log('render');
-        if(this.state.loaded)
-            console.log(this.state.userDataSelf.email);
         return(
             <Dummy>
                 <ModalHeader>
@@ -52,9 +54,7 @@ export default class Settings extends Component{
                             <EditableLabel
                                 className = "email"
                                 value = {this.state.userDataSelf.email}
-                                onChange = {value => {
-                                    this.changeEmail(value);
-                                }}
+                                onChange = {this.changeEmail}
                             >
                                 {this.state.userDataSelf.email === '' ?
                                     <Dummy>
@@ -70,6 +70,14 @@ export default class Settings extends Component{
                                 <Dummy>
                                     &nbsp;
                                     <span className="emailChanged">Mail mit Verifizierungslink wurde versendet!</span>
+                                </Dummy>
+                                :
+                                null
+                            }
+                            {this.state.setEmailError ?
+                                <Dummy>
+                                    &nbsp;
+                                    <span className="set-email-error">Fehler beim Versenden der Mail!</span>
                                 </Dummy>
                                 :
                                 null

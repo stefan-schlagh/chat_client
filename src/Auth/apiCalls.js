@@ -64,3 +64,13 @@ export const register = async(username,password) => {
         return null;
     }
 };
+
+export const verifyEmail = async(verificationCode) => {
+    const config = {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json',
+        }
+    };
+    return await fetch('/user/verifyEmail/' + verificationCode, config);
+};

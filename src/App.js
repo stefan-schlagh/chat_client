@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import Login from "./Auth/Login";
 import Register from "./Auth/Register";
+import VerifyEmail from "./Auth/VerifyEmail";
 import PrivateRoute from "./utilComp/PrivateRoute";
 import Chat from "./Home/Home";
 import About from "./About/About";
@@ -34,6 +35,11 @@ export default function App() {
                 <PrivateRoute path="/chat" component={Chat}/>
                 <Route exact path="/login" component={Login}/>
                 <Route exact path="/register" component={Register}/>
+                <Route path={"/verifyEmail/:code"} render={
+                    routeProps => (
+                        <VerifyEmail verificationCode={routeProps.match.params.code}/>
+                    )
+                } />
                 <Route path={"/about"}>
                     <About/>
                 </Route>
