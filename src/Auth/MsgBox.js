@@ -9,5 +9,14 @@ class ErrorMsg extends Component{
         )
     }
 }
+class SuccessMsg extends Component{
+    render() {
+        return(
+            <small className="alert alert-success p-1 message d-block">
+                {this.props.children}
+            </small>
+        )
+    }
+}
 
-export {ErrorMsg};
+export {ErrorMsg,SuccessMsg};

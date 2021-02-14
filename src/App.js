@@ -9,6 +9,7 @@ import {
 import Login from "./Auth/Login";
 import Register from "./Auth/Register";
 import VerifyEmail from "./Auth/VerifyEmail";
+import ForgotPassword from "./Auth/ForgotPassword";
 import PrivateRoute from "./utilComp/PrivateRoute";
 import Chat from "./Home/Home";
 import About from "./About/About";
@@ -17,6 +18,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
 
 import {initGlobal} from "./global/global";
+import ResetPassword from "./Auth/ResetPassword";
 
 initGlobal();
 
@@ -38,6 +40,12 @@ export default function App() {
                 <Route path={"/verifyEmail/:code"} render={
                     routeProps => (
                         <VerifyEmail verificationCode={routeProps.match.params.code}/>
+                    )
+                } />
+                <Route exact path="/forgotPassword" component={ForgotPassword}/>
+                <Route path={"/resetPassword/:code"} render={
+                    routeProps => (
+                        <ResetPassword verificationCode={routeProps.match.params.code}/>
                     )
                 } />
                 <Route path={"/about"}>

@@ -1,12 +1,8 @@
 import React,{Component} from "reactn";
-import {
-    Link,
-    withRouter
-} from "react-router-dom";
 import {verifyEmail} from "./apiCalls";
 import "./VerifyEmail.scss";
 
-class VerifyEmail extends Component{
+export default class VerifyEmail extends Component{
 
     constructor(props) {
         super(props);
@@ -63,4 +59,3 @@ class VerifyEmail extends Component{
             });
     }
 }
-export default withRouter(VerifyEmail);

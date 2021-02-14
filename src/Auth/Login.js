@@ -56,7 +56,7 @@ class Login extends Component{
             }
         };
         /*
-            es wird validiert
+            validate
          */
         const valResult = validate({
             username: this.state.username,
@@ -160,6 +160,9 @@ class Login extends Component{
                             </div>
                             <div className="form-group">
                                 haben Sie noch keinen Account? <Link to="/register">Jetzt registrieren</Link>
+                            </div>
+                            <div className="form-group">
+                                Passwort vergessen? <Link to="/forgotPassword">Jetzt zurücksetzen</Link>
                             </div>
                             <input
                                 type="submit"
