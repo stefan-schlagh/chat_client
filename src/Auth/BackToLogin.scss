@@ -1,0 +1,16 @@
+@import "../sass/colors";
+
+.back-to-login {
+
+  a {
+    color: black;
+  }
+  i {
+    color: $cBlack2HoverNo;
+    cursor: pointer;
+
+    &:hover {
+      color: $cBlack2HoverYes;
+    }
+  }
+}

@@ -2,6 +2,7 @@ import React,{Component} from "reactn";
 import {requestPasswordResetLink} from "./apiCalls";
 import {ErrorMsg, SuccessMsg} from "./MsgBox";
 import validate from "validate.js";
+import BackToLogin from "./BackToLogin";
 
 export default class ForgotPassword extends Component {
 
@@ -108,6 +109,7 @@ export default class ForgotPassword extends Component {
             <div className="h-100" style={{display: "flex"}}>
                 <div className="col-sm-12 my-auto">
                     <div className="container border rounded p-3" style={{maxWidth: "800px"}}>
+                        <BackToLogin/>
                         <h1>Passwort zurücksetzen</h1>
                         {this.errorMessage()}
                         <form onSubmit={this.submitHandler}>

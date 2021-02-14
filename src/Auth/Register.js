@@ -4,6 +4,7 @@ import {ErrorMsg} from "./MsgBox";
 import {withRouter} from "react-router-dom";
 import TogglePassword from "./TogglePassword";
 import {register} from "./apiCalls";
+import BackToLogin from "./BackToLogin";
 
 class Register extends Component{
 
@@ -158,6 +159,7 @@ class Register extends Component{
             <div className="h-100" style={{display: "flex"}}>
                 <div className="col-sm-12 my-auto">
                     <div className="container border rounded p-3" style={{maxWidth: "800px"}}>
+                        <BackToLogin/>
                         <h1>Registrieren</h1>
                         <form onSubmit={this.submitHandler}>
                             <div className="form-group">

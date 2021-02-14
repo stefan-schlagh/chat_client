@@ -3,6 +3,7 @@ import validate from "validate.js";
 import {isVerificationCodeValid, setPassword} from "./apiCalls";
 import {ErrorMsg, SuccessMsg} from "./MsgBox";
 import TogglePassword from "./TogglePassword";
+import BackToLogin from "./BackToLogin";
 
 export default class ResetPassword extends Component {
 
@@ -135,6 +136,7 @@ export default class ResetPassword extends Component {
                 <div className="h-100" style={{display: "flex"}}>
                     <div className="col-sm-12 my-auto">
                         <div className="container border rounded p-3" style={{maxWidth: "800px"}}>
+                            <BackToLogin/>
                             <h1>neues Passwort eingeben</h1>
                             {this.errorMessage()}
                             <form onSubmit={this.submitHandler}>
