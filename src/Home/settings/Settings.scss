@@ -1,6 +1,21 @@
 .settings{
 
-  .about {
+  .settings-header {
+    font-size: 20px;
+  }
+
+  .settings-body {
+    padding: 5px;
+  }
+
+  .set-email-error {
+    color: #e83e8c;
+  }
+  .emailChanged {
+    color: #00cc00;
+  }
+
+  .settings-about {
     padding: 30px;
 
     a {
