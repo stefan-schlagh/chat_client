@@ -178,7 +178,10 @@ class MessageForm extends Component{
                         width: '350px',
                         height: '425px'
                     }}>
-                        <Picker onSelect={this.onEmojiInput}/>
+                        <Picker
+                            onSelect={this.onEmojiInput}
+                            native={true}
+                        />
                     </div>
                 : null}
             </Dummy>
