@@ -36,6 +36,5 @@ export const setEmail = async (body) => {
         '/user/setEmail',
         config
     );
-    console.log(response);
     return response;
 }

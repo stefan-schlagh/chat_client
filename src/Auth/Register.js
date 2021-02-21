@@ -11,13 +11,11 @@ class Register extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            uNameErr: '',
+            error: false,
+            errorMessage: '',
             username: '',
-            pwErr: '',
             password: '',
-            pwRepeatErr: '',
-            pwRepeat: '',
-            valid: false,
+            passwordRepeat: '',
             redirect: false
         }
     }
@@ -36,22 +34,22 @@ class Register extends Component{
                 presence: true,
                 length: {
                     minimum: 3,
-                    tooShort: 'has to be at least 3 characters long',
+                    tooShort: 'Benutzername zu kurz',
                     maximum: 30,
-                    tooLong: 'can only be 30 characters long'
+                    tooLong: 'Benutzername zu lang'
                 },
                 format: {
-                    pattern: new RegExp(/^\w\w*$/),
-                    message: 'not valid'
+                    pattern: new RegExp(/^\w[\w ]*$$/),
+                    message: 'ungültiges Format'
                 }
             },
             password: {
                 presence: true,
                 length: {
                     minimum: 8,
-                    tooShort: 'has to be at least 8 characters long',
-                    maximum: 30,
-                    tooLong: 'can only be 30 characters long'
+                    tooShort: 'Passwort muss mindestens 8 Zeichen lang sein',
+                    maximum: 50,
+                    tooLong: 'Passwort darf höchstens 50 Zeichen lang sein'
                 }
             },
             passwordRepeat: {
@@ -59,96 +57,85 @@ class Register extends Component{
                 equality: "password",
                 length: {
                     minimum: 8,
-                    tooShort: 'has to be at least 8 characters long',
-                    maximum: 30,
-                    tooLong: 'can only be 30 characters long'
+                    tooShort: 'Passwort muss mindestens 8 Zeichen lang sein',
+                    maximum: 50,
+                    tooLong: 'Passwort darf höchstens 50 Zeichen lang sein'
                 }
             }
         };
         /*
-            es wird validiert
+            validate
          */
         const valResult = validate({
             username: this.state.username,
             password: this.state.password,
-            passwordRepeat: this.state.pwRepeat
+            passwordRepeat: this.state.passwordRepeat
         },valConstraints);
 
-        if(typeof(valResult)!="undefined"){
+        if(typeof(valResult) != "undefined"){
 
-            let uNameErr;
-            let pwErr;
-            let pwRepeatErr;
+            let errorMessage;
 
-            if(typeof(valResult.username)!="undefined") {
-                uNameErr = valResult.username[0];
-            }else{
-                uNameErr = '';
+            if(typeof(valResult.username) != "undefined") {
+                errorMessage = valResult.username[0];
+            }else if(typeof(valResult.password) != "undefined") {
+                errorMessage = valResult.password[0];
+            }else if(typeof(valResult.passwordRepeat)!="undefined") {
+                errorMessage = "Passwörter stimmen nicht überein!"
             }
-
-            if(typeof(valResult.password)!="undefined") {
-                pwErr = valResult.password[0];
-            }else{
-                pwErr = '';
-            }
-
-            if(typeof(valResult.passwordRepeat)!="undefined") {
-                pwRepeatErr = valResult.passwordRepeat[0];
-            }else{
-                pwRepeatErr = '';
-            }
+            errorMessage = errorMessage.replace("Username ","").replace("Password ","");
 
             this.setState({
-                valid: false,
-                uNameErr: uNameErr,
-                pwErr: pwErr,
-                pwRepeatErr: pwRepeatErr
+                error: true,
+                errorMessage: errorMessage
             });
 
         }else {
             this.setState({
-                valid: true,
-                uNameErr: '',
-                pwErr: '',
-                pwRepeatErr: ''
+                error: false,
+                errorMessage: ''
             });
             /*
                 request to server
              */
-            register(this.state.username,this.state.password).then(data => {
-                if(data.success) {
-                    this.props.history.push('/chat');
-                }else{
-                    if (data.username !== undefined)
+            register(this.state.username,this.state.password)
+                .then(async response => {
+                    if(response.status === 200){
+
+                        const data = await response.json();
+                        // if username taken --> show error message
+                        if(data.usernameTaken){
+                            this.setState({
+                                error: true,
+                                errorMessage: 'Benutzername bereits vergeben'
+                            });
+                        }else{
+                            this.dispatch.setUserSelf(data.uid,this.state.username);
+                            // set auth tokens
+                            this.dispatch.setAuthTokens(data.tokens);
+                            // go to chat home
+                            this.props.history.push('/chat');
+                        }
+                    }else {
                         this.setState({
-                            valid: false,
-                            uNameErr: data.username
+                            error: true,
+                            errorMessage: 'ein Fehler ist aufgetreten'
                         });
-                }
-            });
+                    }
+                })
+                .catch(err => {
+                    this.setState({
+                        error: true,
+                        errorMessage: 'ein Fehler ist aufgetreten'
+                    });
+                });
         }
     };
-    uNameErr = () => {
-        if(this.state.uNameErr !== '')
+    errorMessage = () => {
+        if(this.state.error)
             return (
                 <ErrorMsg>
-                    {this.state.uNameErr}
-                </ErrorMsg>
-            )
-    };
-    pwErr = () => {
-        if(this.state.pwErr !== '')
-            return(
-                <ErrorMsg>
-                    {this.state.pwErr}
-                </ErrorMsg>
-            )
-    };
-    pwRepeatErr = () => {
-        if(this.state.pwRepeatErr !== '')
-            return(
-                <ErrorMsg>
-                    {this.state.pwRepeatErr}
+                    {this.state.errorMessage}
                 </ErrorMsg>
             )
     };
@@ -161,10 +148,10 @@ class Register extends Component{
                     <div className="container border rounded p-3" style={{maxWidth: "800px"}}>
                         <BackToLogin/>
                         <h1>Registrieren</h1>
+                        {this.errorMessage()}
                         <form onSubmit={this.submitHandler}>
                             <div className="form-group">
                                 <label htmlFor="username">Benutzername:</label>
-                                {this.uNameErr()}
                                 <input type="text"
                                        name="username"
                                        className="form-control"
@@ -174,7 +161,6 @@ class Register extends Component{
                             </div>
                             <div className="form-group">
                                 <label htmlFor="password">Passwort:</label>
-                                {this.pwErr()}
                                 <TogglePassword
                                        name="password"
                                        className="form-control"
@@ -183,13 +169,12 @@ class Register extends Component{
                                 />
                             </div>
                             <div className="form-group">
-                                <label htmlFor="password">Passwort wiederholen:</label>
-                                {this.pwRepeatErr()}
+                                <label htmlFor="passwordRepeat">Passwort wiederholen:</label>
                                 <TogglePassword
-                                       name="pwRepeat"
-                                       className="form-control"
-                                       placeholder="Passwort eingeben"
-                                       onChange={this.changeHandler}
+                                    name="passwordRepeat"
+                                    className="form-control"
+                                    placeholder="Passwort eingeben"
+                                    onChange={this.changeHandler}
                                 />
                             </div>
                             <input type="submit" className="btn btn-primary" value="Registrieren"/>
