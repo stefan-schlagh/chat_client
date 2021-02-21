@@ -4,7 +4,7 @@ import ForgotPassword from "../../Auth/ForgotPassword";
 
 jest.mock("../../Auth/apiCalls")
 
-describe('test login',() => {
+describe('test forgotPassword',() => {
    it('check title',async () => {
       const forgotPassword = await shallow(<ForgotPassword/>);
       expect(forgotPassword.find("h1").text()).toEqual("Passwort zurücksetzen")
