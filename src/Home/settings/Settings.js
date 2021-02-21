@@ -17,26 +17,43 @@ export default class Settings extends Component{
             error: false,
             isEditing: false,
             emailChangeRequested: false,
-            setEmailError: false
+            setEmailError: false,
+            setEmailErrorMessage: ''
         }
     }
 
     changeEmail = value => {
-        setEmail({
-            email: value
-        }).then(response => {
-            if(response.status === 200) {
-                this.setState({
-                    emailChangeRequested: true
-                })
-            }else {
-                this.setState({
-                    setEmailError: true
-                })
-            }
-        }).catch(err => {
-            console.log(err);
-        });
+        //did the mail address change?
+        if(this.state.userDataSelf.email !== value)
+            setEmail({
+                email: value
+            }).then(async response => {
+                if(response.status === 200) {
+                    const data = await response.json();
+                    // check email taken
+                    if(data.emailTaken){
+                        console.log('email taken')
+                        this.setState({
+                            emailChangeRequested: false,
+                            setEmailError: true,
+                            setEmailErrorMessage: 'E-Mail wird bereits verwendet!'
+                        });
+                    }else{
+                        this.setState({
+                            setEmailError: false,
+                            emailChangeRequested: true
+                        });
+                    }
+                }else {
+                    this.setState({
+                        setEmailError: true,
+                        setEmailErrorMessage: 'Fehler beim Versenden der E-Mail!',
+                        emailChangeRequested: false
+                    })
+                }
+            }).catch(err => {
+                console.log(err);
+            });
     }
 
     render() {
@@ -77,7 +94,9 @@ export default class Settings extends Component{
                             {this.state.setEmailError ?
                                 <Dummy>
                                     &nbsp;
-                                    <span className="set-email-error">Fehler beim Versenden der Mail!</span>
+                                    <span className="set-email-error">
+                                        {this.state.setEmailErrorMessage}
+                                    </span>
                                 </Dummy>
                                 :
                                 null
@@ -88,10 +107,10 @@ export default class Settings extends Component{
                         </div>
                     : (!this.state.error ?
                         <span>
-                            loading...
+                            laden...
                         </span>
                     : <span>
-                            error
+                            ein Fehler ist aufgetreten!
                     </span>)}
                 </ModalMain>
             </Dummy>
