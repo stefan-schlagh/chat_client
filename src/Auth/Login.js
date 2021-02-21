@@ -13,11 +13,10 @@ class Login extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            uNameErr: '',
+            error: false,
+            errorMessage: '',
             username: '',
-            pwErr: '',
             password: '',
-            valid: false,
             redirect: false
         };
     }
@@ -36,24 +35,24 @@ class Login extends Component{
                 presence: true,
                 length: {
                     minimum: 3,
-                    tooShort: 'has to be at least 3 characters long',
+                    tooShort: 'Benutzername zu kurz',
                     maximum: 30,
-                    tooLong: 'can only be 30 characters long'
+                    tooLong: 'Benutzername zu lang'
                 },
                 format: {
-                    pattern: new RegExp(/^\w\w*$/),
-                    message: 'not valid'
+                    pattern: new RegExp(/^\w[\w ]*$$/),
+                    message: 'ungültiges Format'
                 }
             },
             password: {
                 presence: true,
                 length: {
                     minimum: 8,
-                    tooShort: 'has to be at least 8 characters long',
-                    maximum: 30,
-                    tooLong: 'can only be 30 characters long'
+                    tooShort: 'Passwort muss mindestens 8 Zeichen lang sein',
+                    maximum: 50,
+                    tooLong: 'Passwort darf höchstens 50 Zeichen lang sein'
                 }
-            }
+            },
         };
         /*
             validate
@@ -63,27 +62,22 @@ class Login extends Component{
             password: this.state.password
         },valConstraints);
 
-        if(typeof(valResult)!="undefined"){
+        if(typeof(valResult) != "undefined"){
 
-            let uNameErr;
-            let pwErr;
+            let errorMessage;
 
-            if(typeof(valResult.username)!="undefined") {
-                uNameErr = valResult.username[0];
-            }else{
-                uNameErr = '';
+            if(typeof(valResult.username) != "undefined") {
+                errorMessage = valResult.username[0];
+            }else if(typeof(valResult.password) != "undefined") {
+                errorMessage = valResult.password[0];
             }
-            if(typeof(valResult.password)!="undefined") {
-                pwErr = valResult.password[0];
-            }else{
-                pwErr = '';
-            }
+            errorMessage = errorMessage.replace("Username ","").replace("Password ","");
 
             this.setState({
-                valid: false,
-                uNameErr: uNameErr,
-                pwErr: pwErr
+                error: true,
+                errorMessage: errorMessage
             });
+
         }else {
             this.setState({
                 valid: true,
@@ -93,39 +87,49 @@ class Login extends Component{
            /*
                 request to server
             */
-           login(this.state.username,this.state.password).then(data => {
-               if(data.success) {
-                   this.props.history.push('/chat');
-               }else{
-
-                   if(data.username !== undefined)
+           login(this.state.username,this.state.password)
+               .then(async response => {
+                   // success
+                   if(response.status === 200){
+                       const data = await response.json();
+                       this.dispatch.setUserSelf(data.uid,this.state.username);
+                       // set auth tokens
+                       this.dispatch.setAuthTokens(data.tokens);
+                       // go to chat home
+                       this.props.history.push('/chat');
+                   // wrong password
+                   }else if(response.status === 403){
                        this.setState({
-                           valid: false,
-                           uNameErr: data.username
+                           error: true,
+                           errorMessage: 'Falsches Passwort!'
                        });
-                   if(data.password !== undefined)
+                   // user does not exit
+                   }else if(response.status === 404){
                        this.setState({
-                           valid: false,
-                           pwErr: data.password
+                           error: true,
+                           errorMessage: 'Falscher Benutzername E-Mail Addresse'
                        });
-               }
-           });
+                   }else {
+                       this.setState({
+                           error: true,
+                           errorMessage: 'ein Fehler ist aufgetreten'
+                       });
+                   }
+               })
+               .catch(err => {
+                   this.setState({
+                       error: true,
+                       errorMessage: 'ein Fehler ist aufgetreten'
+                   });
+               });
         }
 
     };
-    uNameErr = () => {
-        if(this.state.uNameErr !== '')
+    errorMessage = () => {
+        if(this.state.error)
             return (
                 <ErrorMsg>
-                    {this.state.uNameErr}
-                </ErrorMsg>
-            )
-    };
-    pwErr = () => {
-        if(this.state.pwErr !== '')
-            return(
-                <ErrorMsg>
-                    {this.state.pwErr}
+                    {this.state.errorMessage}
                 </ErrorMsg>
             )
     };
@@ -137,10 +141,10 @@ class Login extends Component{
                 <div className="col-sm-12 my-auto">
                     <div className="container border rounded p-3" style={{maxWidth: "800px"}}>
                         <h1>Login</h1>
+                        {this.errorMessage()}
                         <form onSubmit={this.submitHandler}>
                             <div className="form-group">
                                 <label htmlFor="username">Benutzername:</label>
-                                {this.uNameErr()}
                                 <input type="text"
                                        name="username"
                                        className="form-control"
@@ -150,7 +154,6 @@ class Login extends Component{
                             </div>
                             <div className="form-group">
                                 <label htmlFor="password">Passwort:</label>
-                                {this.pwErr()}
                                 <TogglePassword
                                        name="password"
                                        className="form-control"

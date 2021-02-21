@@ -31,14 +31,20 @@ export default class ForgotPassword extends Component {
                 presence: true,
                 length: {
                     minimum: 3,
-                    tooShort: 'Benutzername zu kurz'
+                    tooShort: 'Benutzername zu kurz',
+                    maximum: 30,
+                    tooLong: 'Benutzername zu lang'
+                },
+                format: {
+                    pattern: new RegExp(/^\w[\w ]*$$/),
+                    message: 'ungültiges Format'
                 }
             },
             email: {
                 presence: true,
                 length: {
-                    minimum: 8,
-                    tooShort: 'E-Mail zu kurz'
+                    minimum: 1,
+                    tooShort: 'E-Mail Addresse benötigt'
                 }
             }
         };
@@ -58,6 +64,7 @@ export default class ForgotPassword extends Component {
                 errorMessage = valResult.username[0];
             else if (typeof (valResult.email) != "undefined")
                 errorMessage = valResult.email[0];
+            errorMessage = errorMessage.replace("Username ","").replace("Email ","");
 
             this.setState({
                 error: true,
@@ -74,16 +81,21 @@ export default class ForgotPassword extends Component {
                             error: false,
                             sentMail: true
                         });
+                    else if(response.status === 404)
+                        this.setState({
+                            error: true,
+                            errorMessage: 'Dieser Benutzer scheint nicht zu existieren'
+                        })
                     else
                         this.setState({
                             error: true,
-                            errorMessage: 'Fehler: Dieser Benutzer scheint nicht zu existieren'
-                        })
+                            errorMessage: 'ein Fehler ist aufgetreten'
+                        });
                 })
                 .catch(err => {
                     this.setState({
                         error: true,
-                        errorMessage: 'Fehler!'
+                        errorMessage: 'ein Fehler ist aufgetreten'
                     });
                 });
         }

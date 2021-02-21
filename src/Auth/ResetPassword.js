@@ -33,9 +33,9 @@ export default class ResetPassword extends Component {
                 presence: true,
                 length: {
                     minimum: 8,
-                    tooShort: 'Passwort zu kurz',
-                    maximum: 30,
-                    tooLong: 'Passwort zu lang'
+                    tooShort: 'Passwort muss mindestens 8 Zeichen lang sein',
+                    maximum: 50,
+                    tooLong: 'Passwort darf höchstens 50 Zeichen lang sein'
                 }
             },
             passwordRepeat: {
@@ -43,10 +43,10 @@ export default class ResetPassword extends Component {
                 equality: "password",
                 length: {
                     minimum: 8,
-                    tooShort: 'Passwort zu kurz',
-                    maximum: 30,
-                    tooLong: 'Passwort zu lang'
-                },
+                    tooShort: 'Passwort muss mindestens 8 Zeichen lang sein',
+                    maximum: 50,
+                    tooLong: 'Passwort darf höchstens 50 Zeichen lang sein'
+                }
             }
         };
         /*
@@ -64,7 +64,8 @@ export default class ResetPassword extends Component {
             if (typeof (valResult.password) != "undefined")
                 errorMessage = valResult.password[0];
             else if (typeof (valResult.passwordRepeat) != "undefined")
-                errorMessage = valResult.passwordRepeat[0];
+                errorMessage = "Passwörter stimmen nicht überein!"
+            errorMessage = errorMessage.replace("Username ","").replace("Password ","");
 
             this.setState({
                 error: true,
@@ -89,13 +90,13 @@ export default class ResetPassword extends Component {
                     else
                         this.setState({
                             error: true,
-                            errorMessage: 'Fehler!'
+                            errorMessage: 'ein Fehler ist aufgetreten'
                         });
                 })
                 .catch(err => {
                     this.setState({
                         error: true,
-                        errorMessage: 'Fehler!'
+                        errorMessage: 'ein Fehler ist aufgetreten'
                     });
                 });
         }
