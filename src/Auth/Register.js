@@ -1,10 +1,11 @@
 import React,{Component} from "reactn";
 import validate from "validate.js";
-import {ErrorMsg} from "./MsgBox";
+import {ErrorMsg, SuccessMsg} from "./MsgBox";
 import {withRouter} from "react-router-dom";
 import TogglePassword from "./TogglePassword";
 import {register} from "./apiCalls";
 import BackToLogin from "./BackToLogin";
+import Dummy from "../utilComp/Dummy";
 
 class Register extends Component{
 
@@ -14,9 +15,12 @@ class Register extends Component{
             error: false,
             errorMessage: '',
             username: '',
+            email: '',
             password: '',
             passwordRepeat: '',
-            redirect: false
+            redirect: false,
+            emailSet: false,
+            accountCreated: false
         }
     }
     changeHandler = event => {
@@ -98,7 +102,7 @@ class Register extends Component{
             /*
                 request to server
              */
-            register(this.state.username,this.state.password)
+            register(this.state.username,this.state.password,this.state.email)
                 .then(async response => {
                     if(response.status === 200){
 
@@ -113,8 +117,11 @@ class Register extends Component{
                             this.dispatch.setUserSelf(data.uid,this.state.username);
                             // set auth tokens
                             this.dispatch.setAuthTokens(data.tokens);
-                            // go to chat home
-                            this.props.history.push('/chat');
+                            // account created
+                            this.setState({
+                                accountCreated: true,
+                                emailSet: this.state.email !== ''
+                            })
                         }
                     }else {
                         this.setState({
@@ -131,6 +138,10 @@ class Register extends Component{
                 });
         }
     };
+    goToChatHome = () => {
+        // go to chat home
+        this.props.history.push('/chat');
+    }
     errorMessage = () => {
         if(this.state.error)
             return (
@@ -147,38 +158,70 @@ class Register extends Component{
                 <div className="col-sm-12 my-auto">
                     <div className="container border rounded p-3" style={{maxWidth: "800px"}}>
                         <BackToLogin/>
-                        <h1>Registrieren</h1>
-                        {this.errorMessage()}
-                        <form onSubmit={this.submitHandler}>
-                            <div className="form-group">
-                                <label htmlFor="username">Benutzername:</label>
-                                <input type="text"
-                                       name="username"
-                                       className="form-control"
-                                       placeholder="Benutzernamen eingeben"
-                                       onChange={this.changeHandler}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="password">Passwort:</label>
-                                <TogglePassword
-                                       name="password"
-                                       className="form-control"
-                                       placeholder="Passwort eingeben"
-                                       onChange={this.changeHandler}
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label htmlFor="passwordRepeat">Passwort wiederholen:</label>
-                                <TogglePassword
-                                    name="passwordRepeat"
-                                    className="form-control"
-                                    placeholder="Passwort eingeben"
-                                    onChange={this.changeHandler}
-                                />
-                            </div>
-                            <input type="submit" className="btn btn-primary" value="Registrieren"/>
-                        </form>
+                        {!this.state.accountCreated ?
+                            <Dummy>
+                                <h1>Registrieren</h1>
+                                {this.errorMessage()}
+                                <form onSubmit={this.submitHandler}>
+                                    <div className="form-group">
+                                        <label htmlFor="username">Benutzername: *</label>
+                                        <input type="text"
+                                               name="username"
+                                               className="form-control"
+                                               placeholder="Benutzernamen eingeben"
+                                               onChange={this.changeHandler}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="email">E-Mail Addresse: (nicht verpflichtend)</label>
+                                        <input type="email"
+                                               name="email"
+                                               className="form-control"
+                                               placeholder="E-Mail Addresse eingeben"
+                                               onChange={this.changeHandler}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="password">Passwort: *</label>
+                                        <TogglePassword
+                                               name="password"
+                                               className="form-control"
+                                               placeholder="Passwort eingeben"
+                                               onChange={this.changeHandler}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label htmlFor="passwordRepeat">Passwort wiederholen: *</label>
+                                        <TogglePassword
+                                            name="passwordRepeat"
+                                            className="form-control"
+                                            placeholder="Passwort eingeben"
+                                            onChange={this.changeHandler}
+                                        />
+                                    </div>
+                                    <input type="submit" className="btn btn-primary" value="Registrieren"/>
+                                </form>
+                            </Dummy>
+                            :
+                            <Dummy>
+                                <SuccessMsg>
+                                    Benutzer {this.state.username} wurde erfolgreich angelegt
+                                    {this.state.emailSet ?
+                                        <Dummy>
+                                            <br/>
+                                            E-Mail mit Verifizierungslink wurde versendet!
+                                        </Dummy>
+                                        : null
+                                    }
+                                </SuccessMsg>
+                                <button
+                                    className="btn btn-primary"
+                                    onClick={this.goToChatHome}
+                                >
+                                    weiter
+                                </button>
+                            </Dummy>
+                        }
                     </div>
                 </div>
             </div>
