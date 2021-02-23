@@ -1,6 +1,6 @@
 import React,{Component} from "react";
-import Edit from "./inlineEdit";
 import {makeRequest} from "../../../../global/requests";
+import EditableLabel from "../../../../util/EditableLabel";
 
 export default class DescriptionEdit extends Component{
 
@@ -24,11 +24,10 @@ export default class DescriptionEdit extends Component{
 
     render () {
         return (
-            <Edit
-                class={"description"}
-                name={"editDescription"}
+            <EditableLabel
+                className={"description"}
                 value={this.props.description}
-                onSubmit={this.onSubmit}
+                onChange={this.onSubmit}
             />
         )
     }

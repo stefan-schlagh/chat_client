@@ -35,7 +35,7 @@ class GroupChatInfo extends Component{
         return(
             <div className="groupChatInfo">
                 {this.props.data.memberSelf.isAdmin ?
-                    <h1>
+                    <h1 className="chatName">
                         <ChatNameEdit
                             gcid={this.props.gcid}
                             chatName={this.props.data.chatName}
