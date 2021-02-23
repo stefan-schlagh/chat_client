@@ -29,8 +29,10 @@ export default class EditableLabel extends Component{
         this.setState({
             isEditing: false
         });
-        if(typeof this.props.onChange === "function")
-            this.props.onChange(this.state.value)
+        // did really something change?
+        if(this.props.value !== this.state.value)
+            if(typeof this.props.onChange === "function")
+                this.props.onChange(this.state.value)
     }
 
     render() {
@@ -52,12 +54,12 @@ export default class EditableLabel extends Component{
                         />
                         &nbsp;
                         <i
-                            className="fas fa-check fa-lg"
+                            className="fas fa-check fa-lg edit-submit"
                             onClick={this.submitEdit}
                         />
                         &nbsp;
                         <i
-                            className="fas fa-times fa-lg"
+                            className="fas fa-times fa-lg edit-cancel"
                             onClick={this.cancelEdit}
                         />
                     </form>
@@ -65,11 +67,16 @@ export default class EditableLabel extends Component{
 
                     <span
                         onDoubleClick={this.startEdit}
+                        className={"value-noEdit"}
                     >
-                        {this.props.children}
+                        {this.props.children != null ?
+                            this.props.children
+                            :
+                            this.state.value
+                        }
                         &nbsp;
                         <i
-                            className="fas fa-pen"
+                            className="fas fa-pen edit-start"
                             onClick={this.startEdit}
                         />
                     </span>
