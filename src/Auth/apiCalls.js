@@ -13,17 +13,26 @@ export const login = async (username,password) => {
     return  await fetch('/auth/login', config);
 };
 
-export const register = async(username,password) => {
+export const register = async(username,password,email) => {
+    let body;
+    if(email === '')
+        body = {
+            username: username,
+            password: password
+        };
+    else
+        body = {
+            username: username,
+            password: password,
+            email: email
+        };
     const config = {
         method: 'POST',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-            username: username,
-            password: password
-        })
+        body: JSON.stringify(body)
     };
     return await fetch('/auth/register', config);
 };

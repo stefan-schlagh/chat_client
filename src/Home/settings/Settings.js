@@ -15,7 +15,6 @@ export default class Settings extends Component{
             userDataSelf: null,
             loaded: false,
             error: false,
-            isEditing: false,
             emailChangeRequested: false,
             setEmailError: false,
             setEmailErrorMessage: ''
@@ -32,7 +31,6 @@ export default class Settings extends Component{
                     const data = await response.json();
                     // check email taken
                     if(data.emailTaken){
-                        console.log('email taken')
                         this.setState({
                             emailChangeRequested: false,
                             setEmailError: true,
@@ -52,7 +50,11 @@ export default class Settings extends Component{
                     })
                 }
             }).catch(err => {
-                console.log(err);
+                this.setState({
+                    setEmailError: true,
+                    setEmailErrorMessage: 'Fehler beim Versenden der E-Mail!',
+                    emailChangeRequested: false
+                })
             });
     }
 
@@ -74,19 +76,15 @@ export default class Settings extends Component{
                                 onChange = {this.changeEmail}
                             >
                                 {this.state.userDataSelf.email === '' ?
-                                    <Dummy>
-                                        Noch keine E-Mail Addresse!
-                                    </Dummy>
+                                    "Noch keine E-Mail Addresse!"
                                     :
-                                    <Dummy>
-                                        {this.state.userDataSelf.email}
-                                    </Dummy>
+                                    this.state.userDataSelf.email
                                 }
                             </EditableLabel>
                             {this.state.emailChangeRequested ?
                                 <Dummy>
                                     &nbsp;
-                                    <span className="emailChanged">Mail mit Verifizierungslink wurde versendet!</span>
+                                    <span className="emailChanged">E-Mail mit Verifizierungslink wurde versendet!</span>
                                 </Dummy>
                                 :
                                 null
@@ -106,11 +104,11 @@ export default class Settings extends Component{
                             </div>
                         </div>
                     : (!this.state.error ?
-                        <span>
+                        <span className="loading">
                             laden...
                         </span>
-                    : <span>
-                            ein Fehler ist aufgetreten!
+                    : <span className="error">
+                                ein Fehler ist aufgetreten!
                     </span>)}
                 </ModalMain>
             </Dummy>

@@ -1,6 +1,6 @@
 import React,{Component} from "react";
-import Edit from "./inlineEdit";
 import {makeRequest} from "../../../../global/requests";
+import EditableLabel from "../../../../util/EditableLabel";
 
 export default class ChatNameEdit extends Component{
 
@@ -24,11 +24,10 @@ export default class ChatNameEdit extends Component{
 
     render () {
         return (
-            <Edit
-                class={"chatName"}
-                name={"editChatName"}
+            <EditableLabel
+                className={"chatName"}
                 value={this.props.chatName}
-                onSubmit={this.onSubmit}
+                onChange={this.onSubmit}
             />
         )
     }
