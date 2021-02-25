@@ -32,9 +32,8 @@ export const setEmail = async (body) => {
         body: JSON.stringify(body)
     };
 
-    const response =  await makeRequest(
+    return await makeRequest(
         '/user/setEmail',
         config
     );
-    return response;
 }
