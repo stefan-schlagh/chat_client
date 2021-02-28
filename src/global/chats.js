@@ -101,6 +101,83 @@ export function initChatReducers(){
         }
     });
     /*
+        gets called when chat should be updated
+            toTop: should chat be appended at top?
+     */
+    /*addReducer('updateChat',(global,dispatch,chat,toTop) => {
+        const index = findIndex(global,chat);
+        /*
+            if the index is -1, the chat does not exist
+         *
+        if(index !== -1) {
+            /*
+                    is the chat selected?
+                 *
+            if(isSelected(global,chat)) {
+                /*
+                    chat is selected
+                        latestMessageObject is updated
+                        newMessage counter is set to 0
+                 *
+                const chatsClone = global.chats.splice(0);
+                const chatObject = chatsClone[index];
+                chatObject.latestMessage = chat.getLatestMessageObject();
+                chatObject.unreadMessages = 0;
+                /*
+                    item is deleted from array
+                 *
+                chatsClone.splice(index,1);
+                /*
+                    item is added to start of the array
+                 *
+                chatsClone.unshift(chatObject);
+                /*
+                    message is added to messages in currentChat
+                 *
+                const currentChat = {
+                    ...global.currentChat,
+                    messages: global.currentChat.messages.concat(message),
+                    newMessages: global.currentChat.newMessages + 1
+                };
+                return {
+                    chats: chatsClone,
+                    currentChat: currentChat
+                };
+            }else{
+                /*
+                    chat is not selected
+                        latestMessageObject is updated
+                        newMessage counter gets incremented
+                 *
+                const chatsClone = global.chats.splice(0);
+                const chatObject = chatsClone[index];
+                chatObject.latestMessage = chat.getLatestMessageObject();
+                /*
+                    if the unread messages of the chat have been 0 until now, newMessages is incremented
+                 *
+                let newMessages = global.newMessages;
+                if(chatObject.unreadMessages === 0){
+                    newMessages++;
+                }
+
+                chatObject.unreadMessages = 1;
+                /*
+                    item is deleted from array
+                 *
+                chatsClone.splice(index,1);
+                /*
+                    item is added to start of the array
+                 *
+                chatsClone.unshift(chatObject);
+
+                return {
+                    chats: chatsClone,
+                    newMessages: newMessages
+                };
+            }
+        }
+    });*/
+    /*
         gets called out of changeCurrentChat in chatSocket
      */
     addReducer('selectChat',(global,dispatch,chat) => {
@@ -163,6 +240,7 @@ export function initChatReducers(){
                 type: '',
                 id: 0,
                 messages: [],
+                newMessages: 0,
                 isStillMember: true
             },
         }

@@ -28,6 +28,9 @@ export class Chat {
      */
     initFirstMessage(messageData){
 
+        if(messageData.canBeShown === undefined)
+            messageData.canBeShown = true;
+
         if(!messageData.empty && messageData.canBeShown)
             this.messages.add(
                 messageData.mid,
@@ -43,6 +46,16 @@ export class Chat {
         else if(messageData.date){
             this.latestMsgDate = new Date(messageData.date);
         }
+    }
+    /*
+        reload messages
+     */
+    async reloadMessages(){
+        // override messages with empty array
+        this.messages = new BinSearchArray();
+        this.reachedTopMessages = false;
+        // load messages
+        await this.loadMessages(10);
     }
     /*
         messages are loaded
@@ -177,10 +190,6 @@ export class Chat {
         an object of this chat is returned
      */
     getChatObject(){
-        if(this.id === 81) {
-            console.log(this)
-            console.log(this.getLatestMessageObject())
-        }
         return {
             type: this.type,
             id: this.id,
@@ -205,7 +214,6 @@ export class Chat {
             };
         }
         else if(this.latestMsgDate) {
-            console.log(this.latestMsgDate)
             return {
                 msgString: "",
                 dateString: "",

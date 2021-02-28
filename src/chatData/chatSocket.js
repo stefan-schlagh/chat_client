@@ -142,8 +142,8 @@ class ChatSocket{
         /*
             the user has been added to a new chat
          */
-        this.socket.on('new chat',data => {
-            this.addNewChat(data);
+        this.socket.on('new chat',async data => {
+            await this.addNewChat(data);
         });
         /*
             Bei disconnect wird Seite neu geladen
@@ -285,7 +285,7 @@ class ChatSocket{
     /*
         a new chat gets added
      */
-    addNewChat(data){
+    async addNewChat(data){
 
         let newChat;
 
@@ -296,14 +296,35 @@ class ChatSocket{
             newChat = this.addNewNormalChat(data);
 
         }else if(data.type === 'groupChat'){
-
-            newChat = this.addNewGroupChat((data));
+            /*
+                does group already exist?
+                    --> member has been added again
+             */
+            if(this.chats.group.getIndex(data.id) === -1) {
+                newChat = this.addNewGroupChat((data));
+            }else {
+                newChat = this.chats.group.get(data.id);
+                // if the chat is the current chat, select none
+                const isCurrentChat = this.isCurrentChat(data.type,data.id);
+                if(isCurrentChat)
+                    await getDispatch().selectNoChat();
+                newChat.isStillMember = true;
+                // reload all messages
+                await newChat.reloadMessages();
+                // select chat again
+                if(isCurrentChat) {
+                    await getDispatch().selectChat(newChat);
+                }
+                const message = newChat.getFirstMessage();
+                await getDispatch().newMsg(newChat, 1, message.getMessageObject(true));
+                return;
+            }
         }
         newChat.unreadMessages = 1;
         /*
             event gets triggered
          */
-        getDispatch().addChat(newChat);
+        await getDispatch().addChat(newChat);
     }
     /*
         a new normalChat gets added
@@ -356,7 +377,7 @@ class ChatSocket{
          */
         const members = [];
 
-        for(let i=0;i<data.members.length;i++) {
+            for (let i = 0; i < data.members.length; i++) {
 
             const member = data.members[i];
             /*
