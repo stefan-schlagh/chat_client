@@ -243,10 +243,14 @@ export default class ChatContainer extends Component{
                     {renderAlertNotInChat()}
                     {renderBtnToBottom()}
                 </div>
-                <MessageForm
-                    chatType={this.props.chatType}
-                    chatId={this.props.chatId}
-                />
+                {/* render MessageForm only if member is still in chat */}
+                {this.global.currentChat.isStillMember ?
+                    <MessageForm
+                        chatType={this.props.chatType}
+                        chatId={this.props.chatId}
+                    />
+                    : null
+                }
             </div>
         )
     }
