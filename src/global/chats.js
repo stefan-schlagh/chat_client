@@ -140,7 +140,8 @@ export function initChatReducers(){
                     type: chat.type,
                     id: chat.id,
                     messages: chat.getMessages(),
-                    newMessages: 0
+                    newMessages: 0,
+                    isStillMember: chat.type !== "groupChat" || chat.isStillMember
                 },
                 chats: chatsClone,
                 tempChat: null,
@@ -161,7 +162,8 @@ export function initChatReducers(){
             currentChat: {
                 type: '',
                 id: 0,
-                messages: []
+                messages: [],
+                isStillMember: true
             },
         }
     });
@@ -254,7 +256,8 @@ export function initChatReducers(){
             currentChat: {
                 type: 'tempChat',
                 id: 0,
-                messages: []
+                messages: [],
+                isStillMember: true
             }
         }
     });
@@ -266,7 +269,8 @@ export function initChatReducers(){
         currentChat: {
             type: 'tempChat',
             id: 0,
-            messages: []
+            messages: [],
+            isStillMember: true
         }
     }));
     /*

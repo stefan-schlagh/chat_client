@@ -2,6 +2,8 @@
 
 $cDateContainerBorder: #80b3ff;
 $cDateContainerBG: #cce6ff;
+$cErrorContainerBorder: #dc3545;
+$cErrorContainerBG: #f0a8af;
 
 .chat-container{
   height: 100%;
@@ -12,7 +14,7 @@ $cDateContainerBG: #cce6ff;
     overflow-x: hidden;
     padding-top: 10px;
 
-    .date-container{
+    .date-container, .error-container {
       float: left;
       width: 100%;
       text-align: center;
@@ -24,6 +26,16 @@ $cDateContainerBG: #cce6ff;
       border: $cDateContainerBorder 1px solid;
       border-radius: 2px;
       background-color: $cDateContainerBG;
+    }
+    .error-container div {
+      width: 400px;
+      max-width: 80%;
+      margin: auto;
+      border: $cErrorContainerBorder 1px solid;
+      border-radius: 5px;
+      height: 50px;
+      padding: 10px;
+      background-color: $cErrorContainerBG;
     }
   }
 }

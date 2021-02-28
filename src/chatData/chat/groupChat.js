@@ -6,11 +6,13 @@ export class GroupChat extends Chat{
     _users = [];
     //Array mit uids von den usern, die gerade schreibem
     _usersTyping = [];
+    _isStillMember;
 
-    constructor(id,chatName,uids,unreadMessages = 0) {
+    constructor(id,chatName,uids,unreadMessages = 0,isStillMember) {
         super('groupChat',id,chatName);
         this.users = uids;
         this.unreadMessages = unreadMessages;
+        this.isStillMember = isStillMember;
     }
 
     getUsersTyping(){
@@ -104,5 +106,13 @@ export class GroupChat extends Chat{
 
     set usersTyping(value) {
         this._usersTyping = value;
+    }
+
+    get isStillMember() {
+        return this._isStillMember;
+    }
+
+    set isStillMember(value) {
+        this._isStillMember = value;
     }
 }

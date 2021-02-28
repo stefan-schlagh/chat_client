@@ -140,15 +140,9 @@ class ChatSocket{
             chat.stoppedTyping(data.uid);
         });
         /*
-            the result of the search in new chat
-         */
-        this.socket.on('users-noChat',data => {
-            chatSocket.event.trigger('users-noChat',data);
-        });
-        /*
             the user has been added to a new chat
          */
-        this.socket.on("new chat",data => {
+        this.socket.on('new chat',data => {
             this.addNewChat(data);
         });
         /*
@@ -165,7 +159,7 @@ class ChatSocket{
     }
 
     async initChats(){
-
+        // select all chats of the user
         const response = await selectChats();
 
         if(response.status === 200) {
@@ -395,7 +389,8 @@ class ChatSocket{
                 data.id,
                 data.chatName,
                 members,
-                data.unreadMessages
+                data.unreadMessages,
+                data.isStillMember
             );
         /*
             first message is initialized

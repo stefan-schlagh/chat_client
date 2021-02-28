@@ -37,7 +37,8 @@ export function initGlobal(){
             /*
                 the messages in the currentChat, displayed in chatContainer
              */
-            messages: []
+            messages: [],
+            isStillMember: true
         },
         /*
             the shown tempChat
@@ -90,7 +91,8 @@ export function initGlobal(){
             type: '',
             id: 0,
             newMessages: 0,
-            messages: []
+            messages: [],
+            isStillMember: true
         },
         tempChat: null,
         chats: [],

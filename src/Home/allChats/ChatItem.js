@@ -41,7 +41,7 @@ export default class ChatItem extends Component{
     render() {
 
         const renderUnreadMsg = () => {
-            if(this.props.unreadMessages === 0)
+            if(this.props.unreadMessages === 0 || !this.props.isStillMember)
                 return null;
             else
                 return(
@@ -72,7 +72,13 @@ export default class ChatItem extends Component{
         };
 
         const renderMsg = () => {
-            if(this.props.latestMessage)
+            if(!this.props.isStillMember)
+                return(
+                    <span>
+                        Du bist nicht mehr Mitglied
+                    </span>
+                );
+            else if(this.props.latestMessage)
                 return(
                     <span>
                         {this.props.latestMessage.msgString}
@@ -87,7 +93,9 @@ export default class ChatItem extends Component{
         };
 
         const renderDate = () => {
-            if(this.props.latestMessage)
+            if(!this.props.isStillMember)
+                return null;
+            else if(this.props.latestMessage)
                 return(
                     <div className="lastMsg-date">
                         {this.props.latestMessage.dateString}

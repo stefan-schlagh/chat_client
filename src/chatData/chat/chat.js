@@ -16,6 +16,7 @@ export class Chat {
         are all messages already loaded?
      */
     _reachedTopMessages = false;
+    _latestMsgDate;
 
     constructor(type, id,chatName) {
         this.type = type;
@@ -27,7 +28,7 @@ export class Chat {
      */
     initFirstMessage(messageData){
 
-        if(!messageData.empty)
+        if(!messageData.empty && messageData.canBeShown)
             this.messages.add(
                 messageData.mid,
                 new Message(
@@ -39,6 +40,9 @@ export class Chat {
                     messageData.content
                 )
             );
+        else if(messageData.date){
+            this.latestMsgDate = new Date(messageData.date);
+        }
     }
     /*
         messages are loaded
@@ -173,31 +177,42 @@ export class Chat {
         an object of this chat is returned
      */
     getChatObject(){
+        if(this.id === 81) {
+            console.log(this)
+            console.log(this.getLatestMessageObject())
+        }
         return {
             type: this.type,
             id: this.id,
             chatName: this.chatName,
             latestMessage: this.getLatestMessageObject(),
-            unreadMessages: this.unreadMessages
+            unreadMessages: this.unreadMessages,
+            isStillMember: this.type !== 'groupChat' || this.isStillMember
         };
     }
     /*
         an object with the latest message is returned
      */
     getLatestMessageObject(){
-        /*
-            are there messages?
-        */
-        if(this.messages.length === 0){
-            return null;
-        }else{
-            const lm = this.getFirstMessage();
+        // get first message
+        const lm = this.getFirstMessage();
+        // does it return something else than null
+        if(lm) {
             return {
                 msgString: lm.getChatViewMsgString(),
                 dateString: lm.getChatViewDateString(),
                 date: lm.date
             };
         }
+        else if(this.latestMsgDate) {
+            console.log(this.latestMsgDate)
+            return {
+                msgString: "",
+                dateString: "",
+                date: this.latestMsgDate
+            };
+        }
+        else return null;
     }
 
     get type() {
@@ -254,5 +269,13 @@ export class Chat {
 
     set reachedTopMessages(value) {
         this._reachedTopMessages = value;
+    }
+
+    get latestMsgDate() {
+        return this._latestMsgDate;
+    }
+
+    set latestMsgDate(value) {
+        this._latestMsgDate = value;
     }
 }

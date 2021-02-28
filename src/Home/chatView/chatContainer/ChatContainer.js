@@ -208,6 +208,19 @@ export default class ChatContainer extends Component{
             return null;
         };
 
+        const renderAlertNotInChat = () => {
+            console.log(this.global.currentChat);
+            if(!this.global.currentChat.isStillMember)
+                return(
+                    <div className="error-container">
+                        <div>
+                            Du bist nicht mehr im chat
+                        </div>
+                    </div>
+                );
+            return null;
+        };
+
         return(
             <div className="chat-container">
                 <div className="messages"
@@ -226,6 +239,7 @@ export default class ChatContainer extends Component{
                         );
                     })}
                     {renderAlertNoMessages()}
+                    {renderAlertNotInChat()}
                     {renderBtnToBottom()}
                 </div>
                 <MessageForm

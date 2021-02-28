@@ -71,6 +71,7 @@ export default class ChatList extends Component{
                                         name={chat.chatName}
                                         unreadMessages={chat.unreadMessages}
                                         latestMessage={chat.latestMessage}
+                                        isStillMember={chat.isStillMember}
                                     />
                                 );
                             }
