@@ -3,6 +3,7 @@ import Message from "../message/message";
 import EventHandler from "../../util/Event";
 import {getDispatch} from 'reactn';
 import {loadMessages} from "../apiCalls";
+import chatSocket from "../chatSocket";
 
 export class Chat {
 
@@ -221,6 +222,26 @@ export class Chat {
             };
         }
         else return null;
+    }
+    /*
+        reload the messages of the chat
+        // TODO update members
+     */
+    async updateChat(data,isStillMember){
+        // if the chat is the current chat, select none
+        const isCurrentChat = chatSocket.isCurrentChat(data.type,data.id);
+        if(isCurrentChat)
+            await getDispatch().selectNoChat();
+        this.isStillMember = isStillMember;
+        // reload all messages
+        await this.reloadMessages();
+        // select chat again
+        if(isCurrentChat) {
+            await getDispatch().selectChat(this);
+        }
+        const message = this.getFirstMessage();
+        await getDispatch().updateChat(this);
+        await getDispatch().newMsg(this, 1, message.getMessageObject(true));
     }
 
     get type() {

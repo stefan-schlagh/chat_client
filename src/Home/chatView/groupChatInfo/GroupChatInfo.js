@@ -9,16 +9,12 @@ import ChatNameEdit from "./edit/editChatName";
 
 import'./groupChatInfo.scss';
 
-/*
-    TODO groupchatinfo change socket events
- */
 class GroupChatInfo extends Component{
 
     constructor(props) {
         super(props);
         this.state = {
-            error: false,
-            data: null
+            error: false
         }
     }
 

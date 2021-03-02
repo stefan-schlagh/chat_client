@@ -30,7 +30,7 @@ export default class EventHandler{
             wenn event existiert
          */
         if(this.events.has(event)){
-            const e = this.events.get(event);
+            const e = this.events.get(event)
             for(let i=0;i<e.length;i++)
                 //wenn element die gesuchte function, wird sie gelöscht
                 if(e[i] === fn)
@@ -48,8 +48,9 @@ export default class EventHandler{
             /*
                 es werden alle functions aufgerufen
              */
-            for(let i=0;i<this.events.get(event).length;i++)
-                this.events.get(event)[i](...rest);
+            const e = this.events.get(event)
+            for(let i = 0;i < e.length;i++)
+                e[i](...rest);
         }
     }
 
