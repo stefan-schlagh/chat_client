@@ -5,9 +5,6 @@
   margin-left: 0;
   margin-right: 0;
   position: relative;
-  display: flex;
-  flex-wrap: nowrap;
-  justify-content: flex-end;
 
   .mc-left {
     width: 25%;
@@ -18,9 +15,18 @@
     padding-top: 1rem;
   }
   .mc-right {
-    flex-grow: 2;
     height: 100%;
     overflow-y: auto;
     padding: 0;
+  }
+}
+@media screen and (min-width: 765px){
+  .main-container {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+  }
+  .mc-right {
+    flex-grow: 2;
   }
 }
