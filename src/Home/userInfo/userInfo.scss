@@ -1,0 +1,43 @@
+@import '../../sass/colors';
+@import '../../sass/list';
+
+.userInfo {
+
+  h3 {
+    padding: 5px;
+  }
+  .groupList {
+    list-style-type: none;
+    cursor: pointer;
+    padding-left: 0;
+    @extend .v-list;
+
+    li {
+      @extend .v-list-item;
+      padding: 2px;
+
+      a {
+        color: $cBlack2HoverNo;
+        width: 100%;
+        padding: 6px;
+        display: inline-block;
+
+        &:hover {
+          text-decoration: none;
+          color: $cBlack2HoverYes;
+        }
+      }
+    }
+  }
+}
+@media screen and (min-width: 765px){
+  .userInfo {
+    h3 {
+      margin-left: 3%;
+    }
+    .groupList {
+      margin-left: 4%;
+      max-width: 300px;
+    }
+  }
+}
