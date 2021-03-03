@@ -143,7 +143,11 @@ class ChatSocket{
             the user has been added to a new chat
          */
         this.socket.on('new chat',async data => {
-            await this.addNewChat(data);
+            await this.addNewChat({
+                // isStillMember is always true
+                isStillMember: true,
+                ...data
+            });
         });
         /*
             user has been removed from groupChat

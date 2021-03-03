@@ -68,7 +68,13 @@ class GroupChatInfo extends Component{
                         role="button"
                     />
                 </Dropdown>
-
+                {this.props.data.memberSelf.isStillMember ?
+                    null
+                    :
+                    <div className={"error"}>
+                        Du bist nicht mehr im chat
+                    </div>
+                }
                 <h4>
                     {this.props.data.members.length}
                     &nbsp;Mitglieder:
