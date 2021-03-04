@@ -3,6 +3,9 @@ import {Link} from 'react-router-dom';
 import {ModalHeader, ModalMain} from "../../utilComp/Modal";
 import Dummy from "../../utilComp/Dummy";
 import {fetchUserInfo} from "./userInfoApiCalls";
+import chatSocket from "../../chatData/chatSocket";
+
+import './userInfo.scss'
 
 export const errorCode = {
     none: 0,
@@ -22,6 +25,7 @@ export default class UserInfo extends Component{
             uid: 0,
             loaded: false,
             error: errorCode.none,
+            // the loaded data
             userInfo: null
         }
     }
@@ -72,7 +76,26 @@ export default class UserInfo extends Component{
                         </h1>
                     </ModalHeader>
                     <ModalMain>
-                        <h2>Gruppen</h2>
+                        <div className="userInfo">
+                            {this.state.userInfo.groups.length > 0 ?
+                                <Dummy>
+                                    <h3>gemeinsame Gruppen:</h3>
+                                    <ul className={"groupList"}>
+                                        {this.state.userInfo.groups.map((item,index) => (
+                                            <li key={index}>
+                                                <Link to={"/chat/groupInfo/" + item.id}>
+                                                    {item.chatName}
+                                                </Link>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </Dummy>
+                                :
+                                <h3>
+                                    keine gemeinsamen Gruppen
+                                </h3>
+                            }
+                        </div>
                     </ModalMain>
                 </Dummy>
             )
@@ -94,8 +117,9 @@ export default class UserInfo extends Component{
             });
             try {
                 const data = await fetchUserInfo(uid)
+                const uidSelf = chatSocket.userSelf.uid;
 
-                if (data.uidSelf === uid) {
+                if (uidSelf === uid) {
                     this.setState({
                         error: errorCode.isSelf,
                         loaded: true

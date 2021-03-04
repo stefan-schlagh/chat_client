@@ -11,7 +11,6 @@ describe('UserInfo', () => {
             await renderedComponent.update()
             expect(renderedComponent.state('error')).toEqual(errorCode.none)
             const userData = renderedComponent.state('userInfo');
-            expect(userData.uidSelf).toEqual(2);
             expect(userData.username).toEqual('test123');
         })
 

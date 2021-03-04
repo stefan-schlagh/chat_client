@@ -9,16 +9,12 @@ import ChatNameEdit from "./edit/editChatName";
 
 import'./groupChatInfo.scss';
 
-/*
-    TODO groupchatinfo change socket events
- */
 class GroupChatInfo extends Component{
 
     constructor(props) {
         super(props);
         this.state = {
-            error: false,
-            data: null
+            error: false
         }
     }
 
@@ -72,7 +68,13 @@ class GroupChatInfo extends Component{
                         role="button"
                     />
                 </Dropdown>
-
+                {this.props.data.memberSelf.isStillMember ?
+                    null
+                    :
+                    <div className={"error"}>
+                        Du bist nicht mehr im chat
+                    </div>
+                }
                 <h4>
                     {this.props.data.members.length}
                     &nbsp;Mitglieder:

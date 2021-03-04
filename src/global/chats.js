@@ -101,6 +101,40 @@ export function initChatReducers(){
         }
     });
     /*
+        gets called when chat should be updated
+            toTop: should chat be appended at top?
+     */
+    addReducer('updateChat',(global,dispatch,chat) => {
+        const index = findIndex(global,chat);
+        /*
+            if the index is -1, the chat does not exist
+         */
+        if(index !== -1) {
+            /*
+                chat is not selected
+                    latestMessageObject is updated
+                    newMessage counter gets incremented
+             */
+            const chatsClone = global.chats.splice(0);
+            /*
+                item is deleted from array
+             */
+            chatsClone.splice(index,1);
+            /*
+                get chat object
+             */
+            const chatObject = chat.getChatObject();
+            /*
+                item is added to start of the array
+             */
+            chatsClone.unshift(chatObject);
+
+            return {
+                chats: chatsClone
+            };
+        }
+    });
+    /*
         gets called out of changeCurrentChat in chatSocket
      */
     addReducer('selectChat',(global,dispatch,chat) => {
@@ -140,7 +174,8 @@ export function initChatReducers(){
                     type: chat.type,
                     id: chat.id,
                     messages: chat.getMessages(),
-                    newMessages: 0
+                    newMessages: 0,
+                    isStillMember: chat.type !== "groupChat" || chat.isStillMember
                 },
                 chats: chatsClone,
                 tempChat: null,
@@ -161,7 +196,9 @@ export function initChatReducers(){
             currentChat: {
                 type: '',
                 id: 0,
-                messages: []
+                messages: [],
+                newMessages: 0,
+                isStillMember: true
             },
         }
     });
@@ -254,7 +291,8 @@ export function initChatReducers(){
             currentChat: {
                 type: 'tempChat',
                 id: 0,
-                messages: []
+                messages: [],
+                isStillMember: true
             }
         }
     });
@@ -266,7 +304,8 @@ export function initChatReducers(){
         currentChat: {
             type: 'tempChat',
             id: 0,
-            messages: []
+            messages: [],
+            isStillMember: true
         }
     }));
     /*

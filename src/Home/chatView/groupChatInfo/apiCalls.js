@@ -27,9 +27,7 @@ export const addMembers = async(gcid,users) => {
             '/group/' + gcid + '/members',
             config
         );
-    if(response.ok){
-        return await response.json();
-    }else{
+    if(!response.ok){
         throw new Error("Error adding members");
     }
 }

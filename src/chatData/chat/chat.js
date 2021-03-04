@@ -3,6 +3,7 @@ import Message from "../message/message";
 import EventHandler from "../../util/Event";
 import {getDispatch} from 'reactn';
 import {loadMessages} from "../apiCalls";
+import chatSocket from "../chatSocket";
 
 export class Chat {
 
@@ -16,6 +17,7 @@ export class Chat {
         are all messages already loaded?
      */
     _reachedTopMessages = false;
+    _latestMsgDate;
 
     constructor(type, id,chatName) {
         this.type = type;
@@ -27,7 +29,10 @@ export class Chat {
      */
     initFirstMessage(messageData){
 
-        if(!messageData.empty)
+        if(messageData.canBeShown === undefined)
+            messageData.canBeShown = true;
+
+        if(!messageData.empty && messageData.canBeShown)
             this.messages.add(
                 messageData.mid,
                 new Message(
@@ -39,6 +44,19 @@ export class Chat {
                     messageData.content
                 )
             );
+        else if(messageData.date){
+            this.latestMsgDate = new Date(messageData.date);
+        }
+    }
+    /*
+        reload messages
+     */
+    async reloadMessages(){
+        // override messages with empty array
+        this.messages = new BinSearchArray();
+        this.reachedTopMessages = false;
+        // load messages
+        await this.loadMessages(10);
     }
     /*
         messages are loaded
@@ -178,26 +196,52 @@ export class Chat {
             id: this.id,
             chatName: this.chatName,
             latestMessage: this.getLatestMessageObject(),
-            unreadMessages: this.unreadMessages
+            unreadMessages: this.unreadMessages,
+            isStillMember: this.type !== 'groupChat' || this.isStillMember
         };
     }
     /*
         an object with the latest message is returned
      */
     getLatestMessageObject(){
-        /*
-            are there messages?
-        */
-        if(this.messages.length === 0){
-            return null;
-        }else{
-            const lm = this.getFirstMessage();
+        // get first message
+        const lm = this.getFirstMessage();
+        // does it return something else than null
+        if(lm) {
             return {
                 msgString: lm.getChatViewMsgString(),
                 dateString: lm.getChatViewDateString(),
                 date: lm.date
             };
         }
+        else if(this.latestMsgDate) {
+            return {
+                msgString: "",
+                dateString: "",
+                date: this.latestMsgDate
+            };
+        }
+        else return null;
+    }
+    /*
+        reload the messages of the chat
+        // TODO update members
+     */
+    async updateChat(data,isStillMember){
+        // if the chat is the current chat, select none
+        const isCurrentChat = chatSocket.isCurrentChat(data.type,data.id);
+        if(isCurrentChat)
+            await getDispatch().selectNoChat();
+        this.isStillMember = isStillMember;
+        // reload all messages
+        await this.reloadMessages();
+        // select chat again
+        if(isCurrentChat) {
+            await getDispatch().selectChat(this);
+        }
+        const message = this.getFirstMessage();
+        await getDispatch().updateChat(this);
+        await getDispatch().newMsg(this, 1, message.getMessageObject(true));
     }
 
     get type() {
@@ -254,5 +298,13 @@ export class Chat {
 
     set reachedTopMessages(value) {
         this._reachedTopMessages = value;
+    }
+
+    get latestMsgDate() {
+        return this._latestMsgDate;
+    }
+
+    set latestMsgDate(value) {
+        this._latestMsgDate = value;
     }
 }

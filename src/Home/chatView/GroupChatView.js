@@ -150,9 +150,27 @@ export default class GroupChatView extends Component{
             this.dispatch.selectChat(chat);
         }
     }
+    reloadChatInfo = () => {
+        if(this.state.error === groupChatErrorCode.none) {
+            const gcid = parseInt(this.props.gcid);
+            this.loadGroupChatInfo(gcid).then(() => {
+            });
+        }
+    }
+    /*
+        set socket listener for groupChat updated
+     */
+    setChatUpdated = () => {
+        chatSocket.event.on('groupChat updated',this.reloadChatInfo);
+    }
+    // remove socket listener
+    removeChatUpdated = () => {
+        chatSocket.event.rm('groupChat updated',this.reloadChatInfo)
+    }
 
-    componentDidMount() {
+    componentDidMount = () => {
         this.chatChanged();
+        this.setChatUpdated();
     }
 
     componentDidUpdate(prevProps, prevState, snapshot) {
@@ -161,11 +179,11 @@ export default class GroupChatView extends Component{
          */
         if(prevProps.gcid !== this.props.gcid){
             this.chatChanged();
-
         }
     }
 
     componentWillUnmount() {
+        this.removeChatUpdated();
         this.setGlobal({
             infoHeaderCenter: infoHeaderCenter.none,
             ihcData: null

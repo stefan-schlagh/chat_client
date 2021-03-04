@@ -19,9 +19,7 @@ export default class ChatContainer extends Component{
         this.assignMessagesRef = this.assignMessagesRef.bind(this);
         this.state = {
             msgLoading: false,
-            scrollToBottom: 0,
-            messages: [],
-            typeMessages: []
+            scrollToBottom: 0
         };
     }
     //scroll: https://jsfiddle.net/jwm6k66c/2480/
@@ -32,7 +30,7 @@ export default class ChatContainer extends Component{
         /*
             wenn oben angelangt, werden Nachrichten geladen
          */
-        if (this.messagesNode.scrollTop === 0)
+        if (this.messagesNode.scrollTop === 0 && this.isChatSelected())
             this.loadMessages();
     };
 
@@ -84,9 +82,13 @@ export default class ChatContainer extends Component{
         /*
             if scrollToBottom is 0, the messages are loaded
          */
-        if (this.messagesNode.scrollTop === 0)
+        if (this.messagesNode.scrollTop === 0 && this.isChatSelected())
             this.loadMessages();
     };
+
+    isChatSelected = () => {
+        return !(this.global.currentChat.type === '' && this.global.currentChat.id === 0);
+    }
 
     componentDidMount() {
         this.messagesNode = ReactDOM.findDOMNode(this.messages);
@@ -208,6 +210,18 @@ export default class ChatContainer extends Component{
             return null;
         };
 
+        const renderAlertNotInChat = () => {
+            if(!this.global.currentChat.isStillMember)
+                return(
+                    <div className="error-container">
+                        <div>
+                            Du bist nicht mehr im chat
+                        </div>
+                    </div>
+                );
+            return null;
+        };
+
         return(
             <div className="chat-container">
                 <div className="messages"
@@ -226,12 +240,17 @@ export default class ChatContainer extends Component{
                         );
                     })}
                     {renderAlertNoMessages()}
+                    {renderAlertNotInChat()}
                     {renderBtnToBottom()}
                 </div>
-                <MessageForm
-                    chatType={this.props.chatType}
-                    chatId={this.props.chatId}
-                />
+                {/* render MessageForm only if member is still in chat */}
+                {this.global.currentChat.isStillMember ?
+                    <MessageForm
+                        chatType={this.props.chatType}
+                        chatId={this.props.chatId}
+                    />
+                    : null
+                }
             </div>
         )
     }

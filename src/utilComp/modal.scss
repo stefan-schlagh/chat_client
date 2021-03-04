@@ -58,8 +58,9 @@ $cBtnCloseHover: #ccc;
  */
 @media screen and (max-width: 765px){
   .m-main {
-    height: calc(100% - 70px);
+    height: calc(100% - 120px);
     padding: 10px 10px 0;
+    overflow-y: auto;
   }
   .m-header {
     height: 70px;

@@ -140,16 +140,26 @@ class ChatSocket{
             chat.stoppedTyping(data.uid);
         });
         /*
-            the result of the search in new chat
-         */
-        this.socket.on('users-noChat',data => {
-            chatSocket.event.trigger('users-noChat',data);
-        });
-        /*
             the user has been added to a new chat
          */
-        this.socket.on("new chat",data => {
-            this.addNewChat(data);
+        this.socket.on('new chat',async data => {
+            await this.addNewChat({
+                // isStillMember is always true
+                isStillMember: true,
+                ...data
+            });
+        });
+        /*
+            user has been removed from groupChat
+         */
+        this.socket.on('removed chat',async data => {
+            await this.removedGroupChat(data);
+        });
+        /*
+            groupChat has been updated
+         */
+        this.socket.on('groupChat updated',() => {
+           this.event.trigger('groupChat updated');
         });
         /*
             Bei disconnect wird Seite neu geladen
@@ -165,7 +175,7 @@ class ChatSocket{
     }
 
     async initChats(){
-
+        // select all chats of the user
         const response = await selectChats();
 
         if(response.status === 200) {
@@ -291,7 +301,7 @@ class ChatSocket{
     /*
         a new chat gets added
      */
-    addNewChat(data){
+    async addNewChat(data){
 
         let newChat;
 
@@ -302,14 +312,33 @@ class ChatSocket{
             newChat = this.addNewNormalChat(data);
 
         }else if(data.type === 'groupChat'){
-
-            newChat = this.addNewGroupChat((data));
+            /*
+                does group already exist?
+                    --> member has been added again
+             */
+            if(this.chats.group.getIndex(data.id) === -1) {
+                newChat = this.addNewGroupChat((data));
+            }else {
+                newChat = this.chats.group.get(data.id);
+                // update chat
+                await newChat.updateChat(data,true);
+                return;
+            }
         }
         newChat.unreadMessages = 1;
         /*
             event gets triggered
          */
-        getDispatch().addChat(newChat);
+        await getDispatch().addChat(newChat);
+    }
+    /*
+        groupChat has been removed
+     */
+    async removedGroupChat(data){
+        if(this.chats.group.getIndex(data.id) !== -1) {
+            const chat = this.chats.group.get(data.id);
+            await chat.updateChat(data,false);
+        }
     }
     /*
         a new normalChat gets added
@@ -362,7 +391,7 @@ class ChatSocket{
          */
         const members = [];
 
-        for(let i=0;i<data.members.length;i++) {
+            for (let i = 0; i < data.members.length; i++) {
 
             const member = data.members[i];
             /*
@@ -395,7 +424,8 @@ class ChatSocket{
                 data.id,
                 data.chatName,
                 members,
-                data.unreadMessages
+                data.unreadMessages,
+                data.isStillMember
             );
         /*
             first message is initialized

@@ -1,10 +1,22 @@
 @import '../../../sass/colors';
 @import '../../../sass/list';
 
+
 .groupChatInfo {
   padding: 20px;
   max-width: 800px;
   position: relative;
+
+  .error {
+    width: 400px;
+    max-width: 80%;
+    border: $cErrorContainerBorder 1px solid;
+    border-radius: 5px;
+    height: 50px;
+    padding: 10px;
+    margin: 10px;
+    background-color: $cErrorContainerBG;
+  }
 
   .chatName {
 
