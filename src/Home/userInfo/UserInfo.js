@@ -77,16 +77,24 @@ export default class UserInfo extends Component{
                     </ModalHeader>
                     <ModalMain>
                         <div className="userInfo">
-                        <h3>gemeinsame Gruppen:</h3>
-                        <ul className={"groupList"}>
-                            {this.state.userInfo.groups.map((item,index) => (
-                                <li key={index}>
-                                    <Link to={"/chat/groupInfo/" + item.id}>
-                                        {item.chatName}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
+                            {this.state.userInfo.groups.length > 0 ?
+                                <Dummy>
+                                    <h3>gemeinsame Gruppen:</h3>
+                                    <ul className={"groupList"}>
+                                        {this.state.userInfo.groups.map((item,index) => (
+                                            <li key={index}>
+                                                <Link to={"/chat/groupInfo/" + item.id}>
+                                                    {item.chatName}
+                                                </Link>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </Dummy>
+                                :
+                                <h3>
+                                    keine gemeinsamen Gruppen
+                                </h3>
+                            }
                         </div>
                     </ModalMain>
                 </Dummy>
