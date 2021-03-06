@@ -15,3 +15,21 @@ export const fetchUserInfo = async (uid) => {
         throw new Error("Error fetching UserInfo");
     }
 }
+export const blockUser = async (uid) => {
+    const config = {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json'
+        }
+    };
+    return await makeRequest('/user/block/' + uid, config);
+}
+export const unblockUser = async (uid) => {
+    const config = {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/json'
+        }
+    };
+    return await makeRequest('/user/unblock/' + uid, config);
+}

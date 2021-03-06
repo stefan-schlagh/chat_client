@@ -1,12 +1,14 @@
 export const fetchUserInfo = jest.fn(() => ({
             username: "test123",
-            blocked: false,
+            blockedBySelf: false,
+            blockedByOther: false,
             userExists: true
         }))
     //success
     .mockImplementationOnce(() => ({
         username: "test123",
-        blocked: false,
+        blockedBySelf: false,
+        blockedByOther: false,
         userExists: true
     }))
     //error while fetching
@@ -17,9 +19,17 @@ export const fetchUserInfo = jest.fn(() => ({
     .mockImplementationOnce(() => ({
         userExists: false
     }))
-    //blocked by this user
+    //blocked by other user
     .mockImplementationOnce(() => ({
         username: "test321",
-        blocked: true,
+        blockedBySelf: false,
+        blockedByOther: true,
+        userExists: true
+    }))
+    //blocked by user self
+    .mockImplementationOnce(() => ({
+        username: "test321",
+        blockedBySelf: true,
+        blockedByOther: false,
         userExists: true
     }));

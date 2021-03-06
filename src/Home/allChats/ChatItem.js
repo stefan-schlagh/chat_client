@@ -78,6 +78,18 @@ export default class ChatItem extends Component{
                         Du bist nicht mehr Mitglied
                     </span>
                 );
+            else if(this.props.blockedByOther)
+                return (
+                    <span>
+                        Du wurdest von {this.props.name} blockiert
+                    </span>
+                );
+            else if(this.props.blockedBySelf)
+                return (
+                    <span>
+                        Du hast {this.props.name} blockiert
+                    </span>
+                );
             else if(this.props.latestMessage)
                 return(
                     <span>

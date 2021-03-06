@@ -4,7 +4,7 @@ import ChatViewLoader from "./ChatViewLoader";
 import ChatContainer from "./chatContainer/ChatContainer";
 import TempChatContainer from "./TempChatContainer";
 import {infoHeaderCenter} from "../Header/HeaderLeft";
-import {UserErrorCode,getUserNormalChat} from "../../chatData/User";
+import {UserErrorCode,getUserNormalChat} from "../../chatData/user";
 import {
     AddressNotValid,
     BlockedByThisUser,

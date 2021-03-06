@@ -2,6 +2,7 @@ import Colors from "../util/Color";
 import BinSearchArray from "../util/BinSearch";
 import chatSocket from "./chatSocket";
 import {selectUser} from "./apiCalls";
+import {getDispatch} from 'reactn';
 
 export const UserErrorCode = {
     none: 0,
@@ -105,6 +106,16 @@ export default class User{
 
     removeGroupChat(gcid){
         this.groupChats.remove(gcid);
+    }
+
+    updateChatBlockInfo(userInfo){
+        const index = chatSocket.chats.normal.getIndex(this.normalChat);
+        if(index !== -1) {
+            const chat = chatSocket.chats.normal.get(this.normalChat);
+            chat.blockedByOther = userInfo.blockedByOther;
+            chat.blockedBySelf = userInfo.blockedBySelf;
+            getDispatch().updateChat(chat).then(r => {});
+        }
     }
 
     get uid() {

@@ -1,5 +1,5 @@
 import io from 'socket.io-client';
-import User from "./User";
+import User from "./user";
 import BinSearchArray from "../util/BinSearch";
 import {NormalChat} from './chat/normalChat';
 import {GroupChat} from "./chat/groupChat";
@@ -365,7 +365,9 @@ class ChatSocket{
             data.id,
             data.chatName,
             otherUser.uid,
-            data.unreadMessages
+            data.unreadMessages,
+            data.blockedBySelf,
+            data.blockedByOther
         );
         /*
             normalChat is set at other user

@@ -5,11 +5,16 @@ export class NormalChat extends Chat{
 
     _otherUser;
     _isTyping = false;
+    // block info
+    _blockedBySelf;
+    _blockedByOther;
 
-    constructor(id,chatName,uid,unreadMessages = 0) {
+    constructor(id,chatName,uid,unreadMessages = 0,blockedBySelf,blockedByOther) {
         super('normalChat',id,chatName);
         this.otherUser = uid;
         this.unreadMessages = unreadMessages;
+        this.blockedBySelf = blockedBySelf;
+        this.blockedByOther = blockedByOther;
     }
 
     getUsersTyping(){
@@ -70,5 +75,21 @@ export class NormalChat extends Chat{
 
     set isTyping(value) {
         this._isTyping = value;
+    }
+
+    get blockedBySelf() {
+        return this._blockedBySelf;
+    }
+
+    set blockedBySelf(value) {
+        this._blockedBySelf = value;
+    }
+
+    get blockedByOther() {
+        return this._blockedByOther;
+    }
+
+    set blockedByOther(value) {
+        this._blockedByOther = value;
     }
 }

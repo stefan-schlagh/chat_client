@@ -72,6 +72,8 @@ export default class ChatList extends Component{
                                         unreadMessages={chat.unreadMessages}
                                         latestMessage={chat.latestMessage}
                                         isStillMember={chat.isStillMember}
+                                        blockedBySelf={chat.blockedBySelf}
+                                        blockedByOther={chat.blockedByOther}
                                     />
                                 );
                             }

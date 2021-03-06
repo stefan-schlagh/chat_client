@@ -46,7 +46,7 @@ $cBtnCloseHover: #ccc;
   .m-header {
     height: 100px;
     background-color: $cModalHeaderBG;
-    padding: 20px;
+    padding: 20px 100px 20px 20px;
     color: $cModalHeader;
   }
   .m-main{
@@ -65,7 +65,7 @@ $cBtnCloseHover: #ccc;
   .m-header {
     height: 70px;
     background-color: $cModalHeaderBG;
-    padding: 5px;
+    padding: 5px 70px 5px 5px;
     color: $cModalHeader;
   }
   .m-header a {

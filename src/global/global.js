@@ -30,6 +30,8 @@ export function initGlobal(){
         currentChat: {
             type: '',
             id: 0,
+            // the name of the chat
+            chatName: '',
             /*
                 unread messages inside the currentChat
              */
@@ -38,7 +40,9 @@ export function initGlobal(){
                 the messages in the currentChat, displayed in chatContainer
              */
             messages: [],
-            isStillMember: true
+            isStillMember: true,
+            blockedBySelf: false,
+            blockedByOther: false
         },
         /*
             the shown tempChat
@@ -90,9 +94,12 @@ export function initGlobal(){
         currentChat: {
             type: '',
             id: 0,
+            chatName: '',
             newMessages: 0,
             messages: [],
-            isStillMember: true
+            isStillMember: true,
+            blockedBySelf: false,
+            blockedByOther: false
         },
         tempChat: null,
         chats: [],

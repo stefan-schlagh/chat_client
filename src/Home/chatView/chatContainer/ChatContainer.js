@@ -222,6 +222,50 @@ export default class ChatContainer extends Component{
             return null;
         };
 
+        const renderAlertBlockedBySelf = () => {
+            if(this.global.currentChat.blockedBySelf)
+                return(
+                    <div className="error-container">
+                        <div>
+                            Du hast {this.global.currentChat.chatName} blockiert
+                        </div>
+                    </div>
+                );
+            return null;
+        };
+
+        const renderAlertBlockedByOther = () => {
+            if(this.global.currentChat.blockedByOther)
+                return(
+                    <div className="error-container">
+                        <div>
+                            Du wurdest von {this.global.currentChat.chatName} blockiert
+                        </div>
+                    </div>
+                );
+            return null;
+        };
+
+        const renderMessageForm = () => {
+            /*
+                render MessageForm only if:
+                    member is still in chat
+                    user is not blocked
+                    user did not bliock other user
+             */
+            if(this.global.currentChat.isStillMember
+                && !this.global.currentChat.blockedBySelf
+                && !this.global.currentChat.blockedByOther
+            )
+                return(
+                    <MessageForm
+                        chatType={this.props.chatType}
+                        chatId={this.props.chatId}
+                    />
+                )
+            return null;
+        }
+
         return(
             <div className="chat-container">
                 <div className="messages"
@@ -241,16 +285,11 @@ export default class ChatContainer extends Component{
                     })}
                     {renderAlertNoMessages()}
                     {renderAlertNotInChat()}
+                    {renderAlertBlockedByOther()}
+                    {renderAlertBlockedBySelf()}
                     {renderBtnToBottom()}
                 </div>
-                {/* render MessageForm only if member is still in chat */}
-                {this.global.currentChat.isStillMember ?
-                    <MessageForm
-                        chatType={this.props.chatType}
-                        chatId={this.props.chatId}
-                    />
-                    : null
-                }
+                {renderMessageForm()}
             </div>
         )
     }

@@ -160,6 +160,7 @@ export function initChatReducers(){
                 unreadMessages is set to 0
              */
             item.unreadMessages = 0;
+            chat.unreadMessages = 0;
             chatsClone[index] = item;
             /*
                 change is emitted to server
@@ -173,9 +174,12 @@ export function initChatReducers(){
                 currentChat: {
                     type: chat.type,
                     id: chat.id,
+                    chatName: chat.chatName,
                     messages: chat.getMessages(),
                     newMessages: 0,
-                    isStillMember: chat.type !== "groupChat" || chat.isStillMember
+                    isStillMember: chat.type !== "groupChat" || chat.isStillMember,
+                    blockedBySelf: chat.isBlockedBySelf(),
+                    blockedByOther: chat.isBlockedByOther()
                 },
                 chats: chatsClone,
                 tempChat: null,
@@ -196,9 +200,12 @@ export function initChatReducers(){
             currentChat: {
                 type: '',
                 id: 0,
+                chatName: '',
                 messages: [],
                 newMessages: 0,
-                isStillMember: true
+                isStillMember: true,
+                blockedBySelf: false,
+                blockedByOther: false
             },
         }
     });
@@ -291,8 +298,12 @@ export function initChatReducers(){
             currentChat: {
                 type: 'tempChat',
                 id: 0,
+                chatName: '',
                 messages: [],
-                isStillMember: true
+                isStillMember: true,
+                // TODO get blockInfo
+                blockedBySelf: false,
+                blockedByOther: false
             }
         }
     });
@@ -304,8 +315,11 @@ export function initChatReducers(){
         currentChat: {
             type: 'tempChat',
             id: 0,
+            chatName: '',
             messages: [],
-            isStillMember: true
+            isStillMember: true,
+            blockedBySelf: false,
+            blockedByOther: false
         }
     }));
     /*

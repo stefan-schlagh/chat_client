@@ -1,10 +1,24 @@
 @import '../../sass/colors';
 @import '../../sass/list';
 
+.user-options-btn {
+  float: right;
+  margin-top: 5px;
+}
 .userInfo {
 
   h3 {
     padding: 5px;
+  }
+  .error {
+    width: 400px;
+    max-width: 80%;
+    border: $cErrorContainerBorder 1px solid;
+    border-radius: 5px;
+    height: 50px;
+    padding: 10px;
+    margin: 10px;
+    background-color: $cErrorContainerBG;
   }
   .groupList {
     list-style-type: none;

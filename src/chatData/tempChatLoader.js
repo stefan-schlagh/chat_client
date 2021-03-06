@@ -1,6 +1,6 @@
 import {NormalChat} from "./chat/normalChat";
 import chatSocket from "./chatSocket";
-import User from "./User";
+import User from "./user";
 import Message from "./message/message";
 import {getDispatch} from 'reactn';
 import {globalData} from "../global/globalData";

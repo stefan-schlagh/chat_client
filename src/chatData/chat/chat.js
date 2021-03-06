@@ -197,10 +197,21 @@ export class Chat {
             chatName: this.chatName,
             latestMessage: this.getLatestMessageObject(),
             unreadMessages: this.unreadMessages,
-            isStillMember: this.type !== 'groupChat' || this.isStillMember
+            isStillMember: this.type !== 'groupChat' || this.isStillMember,
+            blockedBySelf: this.isBlockedBySelf(),
+            blockedByOther: this.isBlockedByOther()
         };
     }
-    /*
+    isBlockedBySelf = () => {
+        if(this.type !== 'normalChat')
+            return false;
+        return this.blockedBySelf
+    }
+    isBlockedByOther = () => {
+        if(this.type !== 'normalChat')
+            return false;
+        return this.blockedByOther
+    }    /*
         an object with the latest message is returned
      */
     getLatestMessageObject(){
