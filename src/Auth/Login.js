@@ -92,9 +92,9 @@ class Login extends Component{
                    // success
                    if(response.status === 200){
                        const data = await response.json();
-                       this.dispatch.setUserSelf(data.uid,this.state.username);
+                       await this.dispatch.setUserSelf(data.uid,this.state.username);
                        // set auth tokens
-                       this.dispatch.setAuthTokens(data.tokens);
+                       await this.dispatch.setAuthTokens(data.tokens);
                        // go to chat home
                        this.props.history.push('/chat');
                    // wrong password

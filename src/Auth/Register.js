@@ -114,9 +114,9 @@ class Register extends Component{
                                 errorMessage: 'Benutzername bereits vergeben'
                             });
                         }else{
-                            this.dispatch.setUserSelf(data.uid,this.state.username);
+                            await this.dispatch.setUserSelf(data.uid,this.state.username);
                             // set auth tokens
-                            this.dispatch.setAuthTokens(data.tokens);
+                            await this.dispatch.setAuthTokens(data.tokens);
                             // account created
                             this.setState({
                                 accountCreated: true,
