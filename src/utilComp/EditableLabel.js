@@ -1,5 +1,5 @@
 import React,{Component} from "react";
-import "./EditableLabel.scss";
+import "./editableLabel.scss";
 
 export default class EditableLabel extends Component{
 
@@ -52,12 +52,12 @@ export default class EditableLabel extends Component{
                                 })
                             }}
                         />
-                        &nbsp;
+                        &nbsp;&nbsp;
                         <i
                             className="fas fa-check fa-lg edit-submit"
                             onClick={this.submitEdit}
                         />
-                        &nbsp;
+                        &nbsp;&nbsp;
                         <i
                             className="fas fa-times fa-lg edit-cancel"
                             onClick={this.cancelEdit}

@@ -5,7 +5,7 @@ import {Link} from "react-router-dom";
 
 import "./settings.scss";
 import {getUserSelf, setEmail} from "./apiCalls";
-import EditableLabel from "../../util/EditableLabel";
+import EditableLabel from "../../utilComp/EditableLabel";
 import Permissions from "./Permissions";
 
 export default class Settings extends Component{

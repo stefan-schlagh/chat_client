@@ -1,4 +1,4 @@
-import EditableLabel from "../../util/EditableLabel";
+import EditableLabel from "../../utilComp/EditableLabel";
 import {shallow} from "enzyme";
 import React from "react";
 

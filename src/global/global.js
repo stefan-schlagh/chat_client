@@ -56,9 +56,6 @@ export function initGlobal(){
             number of chats with new messages
          */
         newMessages: 0
-        /*
-            TODO: notifications
-         */
     });
 
     initChats();
