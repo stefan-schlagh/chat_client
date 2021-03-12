@@ -1,4 +1,4 @@
-@import "../sass/colors";
+@import "src/sass/colors";
 
 .label-edit {
 
@@ -9,6 +9,7 @@
       border-color: #ddd;
       border-width: 1px;
       padding-left: 3px;
+      min-width: 20ch;
     }
   }
 

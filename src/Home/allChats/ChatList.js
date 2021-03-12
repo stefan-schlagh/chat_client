@@ -33,6 +33,7 @@ export default class ChatList extends Component{
             /*
                 is tempChat not null?
              */
+            //TODO block info
             if(this.global.tempChat){
                 return(
                     <ChatItem
@@ -41,6 +42,7 @@ export default class ChatList extends Component{
                         type={'tempChat'}
                         name={this.global.tempChat.chatName}
                         unreadMessages={0}
+                        isStillMember={true}
                         latestMessage={null}
                     />
                 );

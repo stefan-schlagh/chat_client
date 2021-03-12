@@ -1,6 +1,6 @@
 import React,{Component} from "react";
 import {makeRequest} from "../../../../global/requests";
-import EditableLabel from "../../../../util/EditableLabel";
+import EditableLabel from "../../../../utilComp/EditableLabel";
 
 export default class ChatNameEdit extends Component{
 
