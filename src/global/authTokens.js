@@ -2,6 +2,7 @@ import {addReducer} from 'reactn';
 import {fetchData} from "./globalData";
 import {resetChatSocket} from "../chatData/chatSocket";
 import {reqUserSelf} from "./apiCalls";
+import {subscribePush, unsubscribePush} from "./push";
 
 export function authTokens(){
 
@@ -11,6 +12,7 @@ export function authTokens(){
         /*
             TODO: without reload
          */
+        unsubscribePush();
         // eslint-disable-next-line no-restricted-globals
         location.reload();
         dispatch.deleteUserSelf();
@@ -48,6 +50,13 @@ export function authTokens(){
                 userSelf is updated
              */
             else {
+                // get permissions
+                const permissions = JSON.parse(localStorage.getItem('permissions'));
+                if(permissions !== null && permissions.notifications)
+                    await subscribePush(existingTokens);
+                else
+                    unsubscribePush();
+
                 const data = await response.json();
 
                 const {uid, username} = data;
@@ -66,9 +75,11 @@ export function authTokens(){
         }
     });
 
-    addReducer('setAuthTokens',(global,dispatch,tokens) => {
+    addReducer('setAuthTokens',async (global,dispatch,tokens) => {
 
         localStorage.setItem("authTokens", JSON.stringify(tokens));
+
+        await subscribePush(tokens);
 
         return({
             loaded: true,
