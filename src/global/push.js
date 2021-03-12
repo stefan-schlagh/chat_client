@@ -1,47 +1,40 @@
 import {makeRequest} from "./requests";
 
 export async function subscribePush(tokens) {
-    // ask for permission to send notifications
-    const permiss = await Notification.requestPermission();
+    // Get the server's public key
+    const response = await makeRequest('/push/vapidPublicKey', {method: 'get'}, tokens);
+    const vapidPublicKey = await response.text();
+    // Chrome doesn't accept the base64-encoded (string) vapidPublicKey yet
+    const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
 
-    if(permiss === 'granted') {
+    await navigator.serviceWorker.register('/push-service-worker.js');
 
-        // Get the server's public key
-        const response = await makeRequest('/push/vapidPublicKey', {method: 'get'}, tokens);
-        const vapidPublicKey = await response.text();
-        // Chrome doesn't accept the base64-encoded (string) vapidPublicKey yet
-        const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
+    navigator.serviceWorker.ready.then(registration => {
+        if (!registration.pushManager) {
+            console.log("Push Unsupported")
+            return
+        }
 
-        await navigator.serviceWorker.register('/push-service-worker.js');
-
-        navigator.serviceWorker.ready.then(registration => {
-            if (!registration.pushManager) {
-                console.log("Push Unsupported")
-                return
-            }
-
-            registration.pushManager
-                .subscribe({
-                    userVisibleOnly: true, //Always display notifications
-                    applicationServerKey: convertedVapidKey
-                })
-                .then(subscription => {
-                    return makeRequest('/push/register', {
-                        method: 'post',
-                        headers: {
-                            'Content-type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            subscription: subscription
-                        }),
-                    }, tokens)
-                })
-                .catch(err => console.error("Push subscription error: ", err))
-        }).catch(err => {
-            console.error(err.message, err)
-        });
-    }else
-        unsubscribePush();
+        registration.pushManager
+            .subscribe({
+                userVisibleOnly: true, //Always display notifications
+                applicationServerKey: convertedVapidKey
+            })
+            .then(subscription => {
+                return makeRequest('/push/register', {
+                    method: 'post',
+                    headers: {
+                        'Content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        subscription: subscription
+                    }),
+                }, tokens)
+            })
+            .catch(err => console.error("Push subscription error: ", err))
+    }).catch(err => {
+        console.error(err.message, err)
+    });
 }
 export function unsubscribePush() {
     if(navigator.serviceWorker)

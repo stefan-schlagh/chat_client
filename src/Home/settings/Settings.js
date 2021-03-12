@@ -3,9 +3,10 @@ import {ModalHeader, ModalMain} from "../../utilComp/Modal";
 import Dummy from "../../utilComp/Dummy";
 import {Link} from "react-router-dom";
 
-import "./Settings.scss";
+import "./settings.scss";
 import {getUserSelf, setEmail} from "./apiCalls";
 import EditableLabel from "../../util/EditableLabel";
+import Permissions from "./Permissions";
 
 export default class Settings extends Component{
 
@@ -102,6 +103,7 @@ export default class Settings extends Component{
                             <div className={"settings-about"}>
                                 <Link to={"/about"}>über diese Seite</Link>
                             </div>
+                            <Permissions/>
                         </div>
                     : (!this.state.error ?
                         <span className="loading">

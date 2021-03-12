@@ -50,7 +50,12 @@ export function authTokens(){
                 userSelf is updated
              */
             else {
-                await subscribePush(existingTokens);
+                // get permissions
+                const permissions = JSON.parse(localStorage.getItem('permissions'));
+                if(permissions !== null && permissions.notifications)
+                    await subscribePush(existingTokens);
+                else
+                    unsubscribePush();
 
                 const data = await response.json();
 
