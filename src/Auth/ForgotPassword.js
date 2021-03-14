@@ -118,7 +118,7 @@ export default class ForgotPassword extends Component {
     }
     render() {
         return (
-            <div className="h-100" style={{display: "flex"}}>
+            <div className="h-100" style={{display: "flex",overflowY: "auto"}}>
                 <div className="col-sm-12 my-auto">
                     <div className="container border rounded p-3" style={{maxWidth: "800px"}}>
                         <BackToLogin/>
