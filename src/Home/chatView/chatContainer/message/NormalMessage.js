@@ -18,9 +18,9 @@ export default function NormalMessage(props){
                 </div>
                 : null}
             <div className="content">
-                <p>
-                    {msg.content.text}
-                </p>
+                <MessageText
+                    text={msg.content.text}
+                />
             </div>
             <div className="date-outer">
                 <div className="date">
@@ -28,5 +28,31 @@ export default function NormalMessage(props){
                 </div>
             </div>
         </div>
+    )
+}
+function MessageText(props){
+
+    const linkRegex = new RegExp(/(\b(?:https?:\/\/)?(?:(?:[a-z]+\.)+)[^\s,]+\b)/g)
+    const httpRegex = new RegExp(/(https?:\/\/)/igm);
+
+    function getHref(word){
+        if(httpRegex.test(word))
+            return word;
+        else {
+            return "https://" + word
+        }
+    }
+    // split text
+    const words = props.text.split(linkRegex)
+
+    return (
+        <p>
+            {words.map((word) => {
+                if(linkRegex.test(word))
+                    return <a href={getHref(word)} target={"_blank"} rel={"noreferrer"}>{word}</a>
+                else
+                    return word
+            })}
+        </p>
     )
 }
