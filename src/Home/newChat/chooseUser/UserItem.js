@@ -1,6 +1,6 @@
 import React, {Component} from "react";
 import {Link,withRouter} from "react-router-dom";
-import chatSocket from "../../chatData/chatSocket";
+import chatSocket from "../../../chatData/chatSocket";
 
 class UserItem extends Component{
 

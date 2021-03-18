@@ -1,5 +1,4 @@
 import {makeRequest} from "../../global/requests";
-import {globalData} from "../../global/globalData";
 
 export async function loadGroupChat(gcid){
     const config = {
@@ -20,4 +19,14 @@ export async function sendMessage(body){
         body: JSON.stringify(body)
     };
     return  await makeRequest('/message', config);
+}
+export async function joinGroupChat(gcid){
+    const config = {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        }
+    };
+    return  await makeRequest('/group/' + gcid + '/join/',config);
 }

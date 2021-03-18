@@ -42,3 +42,14 @@ export async function fetchUsers(body){
         throw new Error("Error fetching users");
     }
 }
+export async function fetchPublicGroups(body){
+    const config = {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body)
+    };
+    return  await makeRequest('/group/public/', config);
+}

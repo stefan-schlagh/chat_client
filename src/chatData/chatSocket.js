@@ -148,6 +148,7 @@ class ChatSocket{
                 isStillMember: true,
                 ...data
             });
+            this.event.trigger('new chat',data);
         });
         /*
             user has been removed from groupChat
@@ -158,8 +159,26 @@ class ChatSocket{
         /*
             groupChat has been updated
          */
-        this.socket.on('groupChat updated',() => {
-           this.event.trigger('groupChat updated');
+        this.socket.on('groupChat updated',data => {
+
+            const chat = this.chats.group.get(data.id);
+            if(chat) {
+                chat.chatName = data.chatName;
+                /*
+                    update the members of the chat
+                 */
+                const uids = [];
+                for(const member of data.members){
+                    const user = this.users.get(member.uid);
+                    if(!user)
+                        this.users.add(new User(member.uid,member.username),member.uid)
+                    uids.push(member.uid)
+                }
+                chat.users = uids;
+                // update chat
+                getDispatch().updateChat(chat);
+                this.event.trigger('groupChat updated');
+            }
         });
         /*
             Bei disconnect wird Seite neu geladen
