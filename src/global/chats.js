@@ -1,5 +1,6 @@
 import {addReducer} from "reactn";
 import chatSocket from "../chatData/chatSocket";
+import {infoHeaderCenter} from "../Home/Header/HeaderLeft";
 
 export function initChatReducers(){
 
@@ -119,7 +120,7 @@ export function initChatReducers(){
             /*
                 item is deleted from array
              */
-            chatsClone.splice(index,1);
+            chatsClone.splice(index, 1);
             /*
                 get chat object
              */
@@ -129,9 +130,19 @@ export function initChatReducers(){
              */
             chatsClone.unshift(chatObject);
 
-            return {
-                chats: chatsClone
-            };
+            if (chatSocket.isCurrentChat(chat.type, chat.id))
+                return {
+                    infoHeaderCenter: infoHeaderCenter.groupChat,
+                    ihcData: {
+                        name: chat.chatName,
+                        gcid: chat.id
+                    },
+                    chats: chatsClone
+                };
+            else
+                return {
+                    chats: chatsClone
+                };
         }
     });
     /*
@@ -251,12 +262,16 @@ export function initChatReducers(){
                 chats: [chatObject]
             };
 
+        let added = false;
         for (let i = 0; i < chatsClone.length; i++) {
             if (isDateBefore(chatsClone[i], chatObject)) {
                 chatsClone.splice(i, 0, chatObject);
+                added = true;
                 break;
             }
         }
+        if(!added)
+            chatsClone.push(chatObject);
 
         return {
             chats: chatsClone

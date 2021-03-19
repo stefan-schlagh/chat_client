@@ -1,5 +1,8 @@
 import React from "react";
 
+import './chatViewErrors.scss';
+import {joinGroupChat} from "./apiCalls";
+
 export function AddressNotValid() {
     return(
         <div>
@@ -28,10 +31,22 @@ export function UserNotExisting(){
         </div>
     );
 }
-export function NoMemberInPublicChat(){
+export function NoMemberInPublicChat(props){
+
+    function joinChat(){
+        joinGroupChat(props.gcid)
+            .then(() => {
+                props.onJoined()
+            })
+            .catch(() => {})
+    }
+
     return (
-        <div>
-            <h2>Du bist nicht Mitglied in diesem chat jetzt beitreten</h2>
+        <div className={"notMemberPublicChat"}>
+            <h3>Du bist nicht Mitglied in diesem chat</h3>
+            <button onClick={joinChat}>
+                jetzt beitreten
+            </button>
         </div>
     );
 }

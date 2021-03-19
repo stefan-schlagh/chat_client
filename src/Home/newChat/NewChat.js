@@ -1,5 +1,6 @@
 import React,{Component} from "react";
 import ChooseUser from "./chooseUser/ChooseUser";
+import ChooseGroup from "./chooseGroup/ChooseGroup";
 import NewGroup from "./newGroup/NewGroup";
 import Dummy from "../../utilComp/Dummy";
 import {ModalHeader,ModalMain} from "../../utilComp/Modal";
@@ -51,9 +52,7 @@ export default class NewChat extends Component{
 
                 case tabs.chooseGroup:{
                     return(
-                        <div>
-                            <h4>chooseGroup</h4>
-                        </div>
+                        <ChooseGroup/>
                     );
                 }
 

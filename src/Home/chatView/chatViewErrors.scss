@@ -1,0 +1,19 @@
+@import "../../sass/colors";
+
+.notMemberPublicChat {
+  padding: 20px;
+
+  button {
+    padding: 10px;
+    color: white;
+    background-color: $cNotificationBlue;
+    cursor: pointer;
+    border: none;
+    margin: 5px;
+    border-radius: 2px;
+
+    &:hover {
+      background-color: $cNotificationBlueLight;
+    }
+  }
+}

@@ -1,6 +1,5 @@
 import React,{Component} from "react";
 import Dummy from "../../utilComp/Dummy";
-import UserItem from "./UserItem";
 import InfiniteScroll from 'react-infinite-scroller';
 
 import './selectChat.scss';
@@ -172,12 +171,7 @@ export default class SelectChat extends Component{
                             <ul
                                 className="selectChat">
                                 {this.state.searchResult.map((item, index) => (
-                                    <UserItem
-                                        key={index}
-                                        uid={item.uid}
-                                        username={item.username}
-                                        hide={this.props.hide}
-                                    />
+                                    this.props.renderItem(item,index)
                                 ))}
                                 {this.state.searchResult.length === 0 ?
                                     <div key={-1} className="nothingFound">

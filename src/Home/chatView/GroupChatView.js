@@ -59,16 +59,13 @@ export default class GroupChatView extends Component{
                 });
 
                 if(data.error) {
-
-                    if (data.error === 'not part of chat')
-                        return groupChatErrorCode.notPartOfChat;
-
-                    else
-                        return groupChatErrorCode.general
+                    return groupChatErrorCode.general
 
                 }else if(chatSocket.chats.group.getIndex(gcid) !== -1){
 
                     return groupChatErrorCode.none;
+                }else if(data.public){
+                    return groupChatErrorCode.notPartOfChat
                 }
             }
             else {
@@ -113,6 +110,12 @@ export default class GroupChatView extends Component{
                                     gcid: gcid
                                 }
                             }).then();
+                        } else if(r === groupChatErrorCode.notPartOfChat){
+                            this.setState({
+                                loaded: true,
+                                error: r,
+                                gcid: gcid
+                            });
                         } else {
                             this.setState({
                                 loaded: true,
@@ -243,7 +246,10 @@ export default class GroupChatView extends Component{
 
                     case groupChatErrorCode.notPartOfChat:
                         return (
-                            <NoMemberInPublicChat/>
+                            <NoMemberInPublicChat
+                                gcid={this.state.gcid}
+                                onJoined={this.chatChanged}
+                            />
                         );
 
                     case groupChatErrorCode.private:

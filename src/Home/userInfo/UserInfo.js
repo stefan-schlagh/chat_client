@@ -123,7 +123,7 @@ export default class UserInfo extends Component{
                                         <ul className={"groupList"}>
                                             {this.state.userInfo.groups.map((item,index) => (
                                                 <li key={index}>
-                                                    <Link to={"/chat/groupInfo/" + item.id}>
+                                                    <Link to={"/chat/group/" + item.id}>
                                                         {item.chatName}
                                                     </Link>
                                                 </li>

@@ -3,11 +3,12 @@ import {tabs} from "../NewChat";
 import Dummy from "../../../utilComp/Dummy";
 import SelectChat from "../../selectChat/SelectChat";
 import Dropdown from 'rc-dropdown';
+import {requestUsersNoChat} from "../apiCalls";
+import UserItem from "./UserItem";
 
 import 'rc-dropdown/assets/index.css';
 
 import './chooseUser.scss';
-import {requestUsersNoChat} from "../apiCalls";
 
 const errorCode={
     none: 0,
@@ -112,6 +113,13 @@ export default class ChooseUser extends Component{
                     showSearchBar={false}
                     searchValue={this.state.searchValue}
                     loadChats={this.loadChats}
+                    renderItem={(item,index) => (
+                        <UserItem
+                            key={index}
+                            uid={item.uid}
+                            username={item.username}
+                        />
+                    )}
                 />
             </Dummy>
         );

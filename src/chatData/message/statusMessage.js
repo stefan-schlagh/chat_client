@@ -9,13 +9,17 @@ export const middleStringD = {
 };
 
 export const statusMessagesD = [
-    "den chat erstellt",
-    "hinzugefügt",
-    "entfernt",
-    "dem chat beigetreten",
-    "den chat verlassen",
-    "zum Admin gemacht",
-    "nicht mehr Admin"
+    "den Chat erstellt",            //0
+    "zum Chat hinzugefügt",         //1
+    "aus dem Chat entfernt",        //2
+    "dem Chat beigetreten",         //3
+    "den Chat verlassen",           //4
+    "zum Admin befördert",          //5
+    "den Admin-Status entfernt",    //6
+    "nicht mehr Admin",             //7
+    "den Chatnamen geändert",       //8
+    "die Chat-Beschreibung geändert",    //9
+    "Sichtbarkeit des Chats geändert", //10
 ];
 
 export function getStatusMessageString(msg,useReact){
@@ -85,6 +89,38 @@ export function getStatusMessageString(msg,useReact){
                     globalData.statusMessageTypes.usersRemovedAdmin
                 );
 
+            case globalData.statusMessageTypes.userResignedAdmin:
+                return renderStringD(
+                    userTop,
+                    middleStringD.ist,
+                    [],
+                    globalData.statusMessageTypes.userResignedAdmin
+                )
+
+            case globalData.statusMessageTypes.chatNameChanged:
+                return renderStringD(
+                    userTop,
+                    middleStringD.hatHast,
+                    [],
+                    globalData.statusMessageTypes.chatNameChanged
+                )
+
+            case globalData.statusMessageTypes.descriptionChanged:
+                return renderStringD(
+                    userTop,
+                    middleStringD.hatHast,
+                    [],
+                    globalData.statusMessageTypes.descriptionChanged
+                )
+
+            case globalData.statusMessageTypes.isPublicChanged:
+                return renderStringD(
+                    userTop,
+                    middleStringD.hatHast,
+                    [],
+                    globalData.statusMessageTypes.isPublicChanged
+                )
+
             default:
                 break;
         }
@@ -98,10 +134,10 @@ export function getStatusMessageString(msg,useReact){
             switch (middle) {
 
                 case middleStringD.hatHast:
-                    return msg.bySelf ? " hast " : " hat ";
+                    return msg.bySelf ? ' hast ' : ' hat ';
 
                 case middleStringD.ist:
-                    return ' ist';
+                    return msg.bySelf ? ' bist ' : ' ist ';
             }
         }
 
@@ -111,21 +147,37 @@ export function getStatusMessageString(msg,useReact){
                 return "";
             }else if(passiveUsers.length === 1){
 
-                const user = chatSocket.users.get(passiveUsers[0]);
+                if(uidSelfInPassiveUsers())
+                    return "dich ";
+                else {
+                    const user = chatSocket.users.get(passiveUsers[0]);
 
-                if(user)
-                    if(useReact)
-                        return(
-                            <UsernameSpan user={user}/>
-                        );
+                    if (user)
+                        if (useReact)
+                            return (
+                                <UsernameSpan user={user}/>
+                            );
+                        else
+                            return user.username;
                     else
-                        return user.username;
-                else
-                    return "1 Benutzer";
-
+                        return "1 Benutzer";
+                }
             }else{
-                return passiveUsers.length + " Benutzer";
+                if(passiveUsers.length === 2 && uidSelfInPassiveUsers())
+                    return "dich und einen weiteren Benutzer";
+                else if(uidSelfInPassiveUsers())
+                    return "dich und " + (passiveUsers.length - 1) + " weitere Benutzer "
+                else
+                    return passiveUsers.length + " Benutzer";
             }
+        }
+
+        function uidSelfInPassiveUsers() {
+            for(const passiveUser of passiveUsers){
+                if(passiveUser === chatSocket.userSelf.uid)
+                    return true;
+            }
+            return false;
         }
 
         function getTString(){
