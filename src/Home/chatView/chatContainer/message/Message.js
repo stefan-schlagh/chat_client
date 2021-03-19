@@ -15,14 +15,18 @@ export default function Message(props){
         case globalData.messageTypes.normalMessage: {
 
             return (
-                <NormalMessage msg={msg}/>
+                <div className={"msg-container-outer"}>
+                    <NormalMessage msg={msg}/>
+                </div>
             )
         }
 
         case globalData.messageTypes.statusMessage: {
 
             return (
-                <StatusMessage msg={msg}/>
+                <div className={"msg-container-outer"}>
+                    <StatusMessage msg={msg}/>
+                </div>
             );
         }
 
