@@ -44,7 +44,7 @@ export default class TempChatLoader{
     /*
         a new normalChat is created out of the current tempChat
      */
-    async createNewNormalChat(msg){
+    async createNewNormalChat(messageContentSelf,messageContentSend){
 
         /*
             the request gets sent to the server
@@ -57,11 +57,7 @@ export default class TempChatLoader{
             username: otherUsername,
             message: {
                 type: globalData.messageTypes.normalMessage,
-                content: {
-                    text: msg,
-                    mentions: [],
-                    media: []
-                }
+                content: messageContentSend
             }
         });
 
@@ -92,20 +88,16 @@ export default class TempChatLoader{
                 newChat,
                 new Date(Date.now()),
                 globalData.messageTypes.normalMessage,
-                {
-                    text: msg,
-                    mentions: [],
-                    media: []
-                }
+                messageContentSelf
             );
             newChat.messages.add(message.mid,message);
 
             //args: chat
-            getDispatch().addChat(newChat);
+            await getDispatch().addChat(newChat);
             /*
                 currentChat gets changed
              */
-            getDispatch().selectChat(newChat);
+            await getDispatch().selectChat(newChat);
             /*
                 tempChat is hidden
              */

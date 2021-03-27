@@ -205,10 +205,10 @@ export default class Message {
         return `${hs}:${ms}`;
     }
     /*
-        es wird überprüft, ob date2 an einem anderen Tag war
+        check if date 2 is on an other day
      */
     isDifferentDay(date2){
-        return this.date.getDay() !== date2.getDay()
+        return this.date.getDate() !== date2.getDate()
             || this.date.getMonth() !== date2.getMonth()
             || this.date.getFullYear() !== date2.getFullYear();
     }

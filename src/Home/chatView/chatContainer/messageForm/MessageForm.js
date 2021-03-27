@@ -1,11 +1,14 @@
 import React,{Component} from "react";
-import chatSocket from "../../../chatData/chatSocket";
+import chatSocket from "../../../../chatData/chatSocket";
 import 'emoji-mart/css/emoji-mart.css';
 import { Picker } from 'emoji-mart';
 import {withRouter} from "react-router-dom";
-import Dummy from "../../../utilComp/Dummy";
-import {globalData} from "../../../global/globalData";
-import {sendMessage} from "../apiCalls";
+import Dummy from "../../../../utilComp/Dummy";
+import {globalData} from "../../../../global/globalData";
+import {sendMessage} from "../../apiCalls";
+import Responsive from "../../../../responsive/Responsive";
+import FileChooser from "./FileChooser";
+import {FileList} from "./FileList";
 
 import './messageForm.scss';
 
@@ -23,6 +26,9 @@ class MessageForm extends Component{
         super(props);
         this.state = {
             message: '',
+            files: [],
+            //TODO: error message, e.g. react-alert
+            tooManyFiles: false,
             showEmoji: false
         }
     }
@@ -65,8 +71,17 @@ class MessageForm extends Component{
         /*
             es kann keine leere Nachricht geschickt werden
          */
-        if(this.state.message !== ''){
-            const message = this.state.message;
+        if(this.state.message !== '' || this.state.files.length > 0){
+            // is held at the client
+            const messageContentSelf = {
+                text: this.state.message,
+                files: this.state.files
+            };
+            // gets send to the server
+            const messageContentSend = {
+                text: this.state.message,
+                files: this.getFileIds()
+            };
             /*
                 input wird geleert
              */
@@ -79,7 +94,7 @@ class MessageForm extends Component{
                 /*
                     the chat is created
                  */
-                chatSocket.temporaryChat.createNewNormalChat(message)
+                chatSocket.temporaryChat.createNewNormalChat(messageContentSelf,messageContentSend)
                     .then(redirect => {
                         if(redirect) {
                             this.props.history.replace("/chat");
@@ -88,8 +103,12 @@ class MessageForm extends Component{
                     });
             }else{
 
-                this.sendMessage(message)
+                this.sendMessage(messageContentSend)
                     .then(mid => {
+                        // reset file array
+                        this.setState({
+                            files: []
+                        })
                         /*
                             message is added to chat
                          */
@@ -98,11 +117,7 @@ class MessageForm extends Component{
                             chatSocket.userSelf.uid,
                             mid,
                             globalData.messageTypes.normalMessage,
-                            {
-                                text: message,
-                                mentions: [],
-                                media: []
-                            }
+                            messageContentSelf
                         );
                     })
                     .catch(err => {});
@@ -110,17 +125,13 @@ class MessageForm extends Component{
         }
     };
 
-    sendMessage = async msg => {
+    sendMessage = async msgContent => {
         /*
             message is sent to server
          */
         const response = await sendMessage({
             type: globalData.messageTypes.normalMessage,
-            content: {
-                text: msg,
-                mentions: [],
-                media: []
-            }
+            content: msgContent
         });
 
         if (response.ok) {
@@ -131,7 +142,7 @@ class MessageForm extends Component{
              */
             return data.mid;
         }
-        return new Error();
+        throw new Error();
     };
 
     onEmojiInput = emoji => {
@@ -148,9 +159,51 @@ class MessageForm extends Component{
         }))
     };
 
+    addFiles = files => {
+        this.setState(state => {{
+            if(state.files.length + files.length <= 10)
+                return {
+                    files: [...state.files, ...files],
+                    tooManyFiles: false
+                }
+            else
+                return {
+                    tooManyFiles: true
+                }
+        }})
+    }
+
+    deleteFile = file => {
+        this.setState(state => {
+            let filesClone = state.files.slice()
+            let i = 0
+            for(const stateFile of filesClone){
+                if(stateFile.fid === file.fid) {
+                    filesClone.splice(i, 1)
+                    break
+                }
+                i++
+            }
+            return {
+                files: filesClone
+            }
+        })
+    }
+
+    getFileIds = () => {
+        const fileIds = []
+        for(const file of this.state.files)
+            fileIds.push(file.fid)
+        return fileIds
+    }
+
     render() {
         return(
             <Dummy>
+                <FileList
+                    files={this.state.files}
+                    deleteFile={this.deleteFile}
+                />
                 <form onSubmit={this.onSubmit}
                       className="msg-form">
                     <div className="message-input">
@@ -160,8 +213,13 @@ class MessageForm extends Component{
                                value={this.state.message}
                                onChange={this.onTyping}
                         />
-                        <i className="far fa-smile fa-2x emoji-toggle"
-                           onClick={this.toggleEmoji}
+                        <Responsive displayIn={["Laptop","Tablet"]}>
+                            <i className="far fa-smile fa-2x emoji-toggle"
+                               onClick={this.toggleEmoji}
+                            />
+                        </Responsive>
+                        <FileChooser
+                            onFileUpload={this.addFiles}
                         />
                     </div>
                     <button className="btn-submit" type="submit">

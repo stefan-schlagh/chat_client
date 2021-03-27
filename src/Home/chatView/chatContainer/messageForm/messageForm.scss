@@ -1,4 +1,4 @@
-@import "../../../sass/colors";
+@import "src/sass/colors";
 
 $cMessageFormBG: #ccc;
 
@@ -21,10 +21,24 @@ $cMessageFormBG: #ccc;
       border-radius: 20px;
     }
   }
-  .emoji-toggle{
+  .file-chooser {
     position: absolute;
     top: 4px;
     right: 20px;
+    cursor: pointer;
+    color: $cBlack2HoverNo;
+
+    &:hover {
+      color: $cBlack2HoverYes;
+    }
+    input {
+      display: none;
+    }
+  }
+  .emoji-toggle{
+    position: absolute;
+    top: 4px;
+    right: 60px;
     cursor: pointer;
     color: $cBlack2HoverNo;
 

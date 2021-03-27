@@ -1,0 +1,36 @@
+.file-list {
+  position: fixed;
+  bottom: 50px;
+  display: flex;
+  overflow: auto;
+
+  .file {
+    margin:5px;
+    padding: 5px;
+    background-color: #ddd;
+    border-radius: 2px;
+
+    .close {
+      font-size: 12pt;
+      cursor: pointer;
+      margin-left: 2px;
+      position: relative;
+      top: -5px;
+    }
+  }
+}
+@media screen and (min-width: 765px){
+  .file-list  {
+    flex-direction: row;
+    max-width: 50%;
+
+    .file {
+      min-width: max-content;
+    }
+  }
+}
+@media screen and (max-width: 765px){
+  .file-list  {
+    flex-direction: column;
+  }
+}
