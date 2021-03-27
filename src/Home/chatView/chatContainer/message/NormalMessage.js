@@ -1,5 +1,6 @@
 import React from "react";
 import {UsernameSpan} from "./Message";
+import File from "./File";
 
 export default function NormalMessage(props){
 
@@ -18,6 +19,9 @@ export default function NormalMessage(props){
                 </div>
                 : null}
             <div className="content">
+                {msg.content.files.map((item,index) => (
+                    <File key={index} file={item}/>
+                ))}
                 <MessageText
                     text={msg.content.text}
                 />

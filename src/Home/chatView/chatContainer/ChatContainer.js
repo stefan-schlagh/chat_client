@@ -1,6 +1,6 @@
 import React,{Component} from "reactn";
 import ReactDOM from 'react-dom';
-import MessageForm from "./MessageForm";
+import MessageForm from "./messageForm/MessageForm";
 import chatSocket from "../../../chatData/chatSocket";
 import Message from "./message/Message";
 import {isDifferentDay} from '../../../chatData/message/message'

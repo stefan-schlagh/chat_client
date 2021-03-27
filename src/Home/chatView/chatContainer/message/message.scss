@@ -36,6 +36,39 @@
     p{
       margin-bottom: 0;
     }
+    .file {
+      display: inline-block;
+      padding: 5px;
+      margin: 5px;
+      border: 1px $cBorder solid;
+      border-radius: 5px;
+
+      .download {
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        border-radius: 12px;
+        border: 1px solid $cBlack1HoverNo;
+        cursor: pointer;
+        position: relative;
+        top: 1px;
+
+        i {
+          position: relative;
+          bottom: 2px;
+          left: 4px;
+          color: $cBlack1HoverNo;
+
+          &:hover {
+            color: $cBlack1HoverYes;
+            text-decoration: none;
+          }
+        }
+        &:hover {
+          background-color: $cLightGrey;
+        }
+      }
+    }
   }
   .date-outer{
     width: 100%;
