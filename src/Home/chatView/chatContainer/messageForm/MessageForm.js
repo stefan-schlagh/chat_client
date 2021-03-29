@@ -1,9 +1,8 @@
-import React,{Component} from "react";
+import React, {Component, Fragment} from "react";
 import chatSocket from "../../../../chatData/chatSocket";
 import 'emoji-mart/css/emoji-mart.css';
 import { Picker } from 'emoji-mart';
 import {withRouter} from "react-router-dom";
-import Dummy from "../../../../utilComp/Dummy";
 import {globalData} from "../../../../global/globalData";
 import {sendMessage} from "../../apiCalls";
 import Responsive from "../../../../responsive/Responsive";
@@ -27,8 +26,6 @@ class MessageForm extends Component{
         this.state = {
             message: '',
             files: [],
-            //TODO: error message, e.g. react-alert
-            tooManyFiles: false,
             showEmoji: false
         }
     }
@@ -163,12 +160,7 @@ class MessageForm extends Component{
         this.setState(state => {{
             if(state.files.length + files.length <= 10)
                 return {
-                    files: [...state.files, ...files],
-                    tooManyFiles: false
-                }
-            else
-                return {
-                    tooManyFiles: true
+                    files: [...state.files, ...files]
                 }
         }})
     }
@@ -199,7 +191,7 @@ class MessageForm extends Component{
 
     render() {
         return(
-            <Dummy>
+            <Fragment>
                 <FileList
                     files={this.state.files}
                     deleteFile={this.deleteFile}
@@ -220,6 +212,7 @@ class MessageForm extends Component{
                         </Responsive>
                         <FileChooser
                             onFileUpload={this.addFiles}
+                            files={this.state.files}
                         />
                     </div>
                     <button className="btn-submit" type="submit">
@@ -242,7 +235,7 @@ class MessageForm extends Component{
                         />
                     </div>
                 : null}
-            </Dummy>
+            </Fragment>
         )
     }
 

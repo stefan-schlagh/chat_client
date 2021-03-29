@@ -3,13 +3,8 @@ import {makeRequest} from "../../../../global/requests";
 
 export default function File(props){
 
-    const getFile = async () => {
-        const response = await makeRequest('/message/file/' + props.file.fid + '/' + props.file.fileName, {
-            method: 'GET'
-        })
-        // https://stackoverflow.com/a/42274086/12913973
-        const blob = await response.blob()
-        const url = window.URL.createObjectURL(blob);
+    const downloadFile = async () => {
+        const url = await getFile(props.file)
         const a = document.createElement('a');
         a.href = url;
         a.download = props.file.fileName;
@@ -26,10 +21,17 @@ export default function File(props){
             &nbsp;
             <div
                 className="download"
-                onClick={getFile}
+                onClick={downloadFile}
             >
                 <i className="fas fa-arrow-down"/>
             </div>
         </div>
     )
+}
+export async function getFile(file) {
+    const response = await makeRequest('/message/file/' + file.fid + '/' + file.fileName, {
+        method: 'GET'
+    })
+    const blob = await response.blob()
+    return window.URL.createObjectURL(blob)
 }
