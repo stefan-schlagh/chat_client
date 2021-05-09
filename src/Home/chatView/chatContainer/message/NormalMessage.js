@@ -1,5 +1,4 @@
 import React from "react";
-import LazyLoad from 'react-lazyload';
 import {UsernameSpan} from "./Message";
 import File from "./File";
 import {Image} from "./Image";
