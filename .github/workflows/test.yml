@@ -26,6 +26,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
+          ref: ${{github.event.pull_request.head.ref}}
+          repository: ${{github.event.pull_request.head.repo.full_name}}
           path: chat_client
       # node.js setup
       - uses: actions/setup-node@v1
@@ -55,6 +57,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
+          ref: ${{github.event.pull_request.head.ref}}
+          repository: ${{github.event.pull_request.head.repo.full_name}}
           path: chat_client
       # chat server repository is checked out
       - name: Checkout server repo
